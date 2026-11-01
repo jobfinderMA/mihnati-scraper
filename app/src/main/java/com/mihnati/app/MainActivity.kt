@@ -51,6 +51,9 @@ class MainActivity : ComponentActivity() {
         // 3. Automatically fetch latest scraped concours from Cloud CDN
         EmploiPublicRepository.triggerLiveSync()
 
+        // 4. Initialize Cloud Backend (Universal Adapter - Firebase)
+        com.mihnati.app.data.cloud.CloudServiceManager.init(this, "Firebase")
+
         val activeUser = com.mihnati.app.security.MihnatiSecurityVault.getCurrentUser(this)
         if (activeUser != null) {
             MihnatiRepository.applyAuthenticatedAccount(activeUser)
