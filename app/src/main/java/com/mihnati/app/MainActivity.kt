@@ -51,6 +51,11 @@ class MainActivity : ComponentActivity() {
         // 3. Automatically fetch latest scraped concours from Cloud CDN
         EmploiPublicRepository.triggerLiveSync()
 
+        val activeUser = com.mihnati.app.security.MihnatiSecurityVault.getCurrentUser(this)
+        if (activeUser != null) {
+            MihnatiRepository.applyAuthenticatedAccount(activeUser)
+        }
+
         val initialOppId = intent?.getStringExtra(MihnatiNotificationHelper.EXTRA_OPPORTUNITY_ID)
 
         setContent {

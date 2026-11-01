@@ -156,7 +156,9 @@ data class UserAccount(
     val googleIdToken: String = "g_tok_2026_morocco",
     val cnieNumber: String = "BK654321",
     val phoneNumber: String = "+212 6 61 23 45 67",
-    val lastLoginDate: String = "01 Novembre 2026"
+    val lastLoginDate: String = "01 Novembre 2026",
+    val provider: String = "Google OAuth 2.0",
+    val isVerified: Boolean = true
 )
 
 data class AlertPreferences(

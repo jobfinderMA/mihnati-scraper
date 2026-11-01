@@ -807,7 +807,29 @@ object MihnatiRepository {
         _userProfile.update { it.copy(preferences = preferences) }
     }
 
-    // Google Account Methods
+    // Google & Secure Authentication Methods
+    fun applyAuthenticatedAccount(account: com.mihnati.app.data.model.UserAccount) {
+        _userProfile.update { profile ->
+            profile.copy(
+                fullName = account.displayName,
+                account = profile.account.copy(
+                    email = account.email,
+                    displayName = account.displayName,
+                    isSignedInWithGoogle = true,
+                    lastLoginDate = account.lastLoginDate
+                )
+            )
+        }
+        val notif = AppNotification(
+            id = "notif-auth-" + UUID.randomUUID().toString().take(6),
+            title = "Authentification Sécurisée 🔒",
+            message = "Session validée pour ${account.email} (${account.provider}). Chiffrement matériel AES-256.",
+            timeAgo = "À l'instant",
+            type = NotificationType.STATUS_DOSSIER
+        )
+        _notifications.update { listOf(notif) + it }
+    }
+
     fun signInWithGoogle(email: String, displayName: String) {
         _userProfile.update { profile ->
             profile.copy(
