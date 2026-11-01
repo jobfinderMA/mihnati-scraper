@@ -38,6 +38,31 @@ object EmploiPublicRepository {
     )
     val syncStatus: StateFlow<ScraperSyncStatus> = _syncStatus.asStateFlow()
 
+    init {
+        // Automatically bring scraped data from the Cloud CDN on app startup
+        triggerLiveSync { success, _ ->
+            if (success) {
+                MihnatiRepository.addNotification(
+                    AppNotification(
+                        id = "notif-auto-sync-" + System.currentTimeMillis(),
+                        title = "Synchronisation Cloud ☁️",
+                        message = "Concours officiels récents synchronisés automatiquement depuis le bot cloud.",
+                        timeAgo = "À l'instant",
+                        type = NotificationType.NOUVELLE_OFFRE
+                    )
+                )
+            }
+        }
+
+        // Periodic background auto-sync every 15 minutes while app is running
+        scope.launch {
+            while (true) {
+                kotlinx.coroutines.delay(15 * 60 * 1000L)
+                triggerLiveSync()
+            }
+        }
+    }
+
     fun triggerLiveSync(onComplete: ((Boolean, String) -> Unit)? = null) {
         if (_syncStatus.value.isSyncing) return
 

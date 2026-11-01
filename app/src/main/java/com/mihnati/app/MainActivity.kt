@@ -34,11 +34,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // Automatically fetch latest scraped concours from Cloud CDN
+        EmploiPublicRepository.triggerLiveSync()
         setContent {
             MihnatiTheme {
                 MainAppScaffold()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Automatically refresh cloud data when user returns to app
+        EmploiPublicRepository.triggerLiveSync()
     }
 }
 

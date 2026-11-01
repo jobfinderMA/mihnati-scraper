@@ -762,6 +762,10 @@ object MihnatiRepository {
         _notifications.update { list -> list.map { it.copy(isRead = true) } }
     }
 
+    fun addNotification(notification: AppNotification) {
+        _notifications.update { listOf(notification) + it }
+    }
+
     // Profile & Degree methods
     fun updateUserProfile(
         name: String,

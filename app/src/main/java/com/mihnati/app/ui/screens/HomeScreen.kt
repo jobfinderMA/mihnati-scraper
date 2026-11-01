@@ -60,6 +60,10 @@ fun HomeScreen(
     var showDiplomaEligibility by remember { mutableStateOf(false) }
     var showOralExamPrep by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        com.mihnati.app.data.repository.EmploiPublicRepository.triggerLiveSync()
+    }
+
     val urgentOpportunity = opportunities.find { it.id == "mef-admin-2026" } ?: opportunities.firstOrNull()
 
     Column(
