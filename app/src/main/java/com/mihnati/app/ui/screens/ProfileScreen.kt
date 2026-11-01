@@ -902,7 +902,43 @@ fun ProfileScreen(
             }
         }
 
-        // 7. Guides & Footer
+        // 7. Paramètres d'Affichage & Thème
+        val isDarkModeActive by com.mihnati.app.ui.theme.ThemeManager.isDarkMode.collectAsState()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(18.dp))
+                .background(SurfaceContainerLowest)
+                .padding(16.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(text = if (isDarkModeActive) "🌙" else "☀️", fontSize = 18.sp)
+                    Text(
+                        text = "Apparence & Mode Sombre",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = OnSurface
+                        )
+                    )
+                }
+
+                PreferenceRow(
+                    title = "Mode Sombre Royal 🌙",
+                    subtitle = "Thème noir profond émeraude pour le confort visuel et l'autonomie",
+                    checked = isDarkModeActive,
+                    onCheckedChange = {
+                        com.mihnati.app.ui.theme.ThemeManager.setDarkMode(it)
+                    }
+                )
+            }
+        }
+
+        // 8. Guides & Footer
         Column(
             modifier = Modifier
                 .fillMaxWidth()

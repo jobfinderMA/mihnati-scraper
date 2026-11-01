@@ -704,16 +704,18 @@ private fun FilterChipPill(
     count: Int,
     isSelected: Boolean,
     emoji: String? = null,
-    activeColor: Color = Primary,
+    activeColor: Color = Color.Unspecified,
     onClick: () -> Unit
 ) {
+    val effectiveActiveColor = if (activeColor != Color.Unspecified) activeColor else Primary
+
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(if (isSelected) activeColor else SurfaceContainerLowest)
+            .background(if (isSelected) effectiveActiveColor else SurfaceContainerLowest)
             .border(
                 1.dp,
-                if (isSelected) activeColor else SurfaceContainerHighest,
+                if (isSelected) effectiveActiveColor else SurfaceContainerHighest,
                 RoundedCornerShape(20.dp)
             )
             .clickable { onClick() }

@@ -12,6 +12,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -151,6 +153,22 @@ fun MihnatiTopBar(
                             contentDescription = "Actualiser",
                             tint = Secondary,
                             modifier = Modifier.size(13.dp)
+                        )
+                    }
+
+                    // Dark / Light Theme Quick Toggle Button
+                    val isDark by ThemeManager.isDarkMode.collectAsState()
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .background(SurfaceContainerLow)
+                            .clickable { ThemeManager.toggleDarkMode() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = if (isDark) "☀️" else "🌙",
+                            fontSize = 16.sp
                         )
                     }
 
@@ -296,14 +314,17 @@ fun MihnatiBottomBar(
 @Composable
 fun TagBadge(
     text: String,
-    backgroundColor: Color = SurfaceContainer,
-    textColor: Color = OnSurfaceVariant,
+    backgroundColor: Color = Color.Unspecified,
+    textColor: Color = Color.Unspecified,
     icon: ImageVector? = null
 ) {
+    val effectiveBg = if (backgroundColor != Color.Unspecified) backgroundColor else SurfaceContainer
+    val effectiveText = if (textColor != Color.Unspecified) textColor else OnSurfaceVariant
+
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(backgroundColor)
+            .background(effectiveBg)
             .padding(horizontal = 9.dp, vertical = 3.5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -312,14 +333,14 @@ fun TagBadge(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = textColor,
+                tint = effectiveText,
                 modifier = Modifier.size(13.dp)
             )
         }
         Text(
             text = text,
             style = MaterialTheme.typography.labelSmall.copy(
-                color = textColor,
+                color = effectiveText,
                 fontWeight = FontWeight.SemiBold
             )
         )
