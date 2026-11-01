@@ -100,8 +100,51 @@ fun NotificationsSheet(
 
             DemoDataBanner(
                 label = "Alertes synchronisées avec emploi-public.ma et vos candidatures",
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 4.dp)
             )
+
+            // Android System Push Notifications Banner & Test Action
+            val context = androidx.compose.ui.platform.LocalContext.current
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp),
+                shape = RoundedCornerShape(12.dp),
+                color = SecondaryContainer.copy(alpha = 0.35f),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Secondary.copy(alpha = 0.25f))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(text = "🔔", fontSize = 14.sp)
+                            Text(
+                                text = "Alertes Système Android",
+                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = OnSecondaryContainer)
+                            )
+                        }
+                        Text(
+                            text = "Actives 24/7 en arrière-plan (WorkManager Cloud)",
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, color = OnSurfaceVariant)
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            com.mihnati.app.notifications.MihnatiNotificationHelper.showTestNotification(context)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(text = "Tester 📲", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                    }
+                }
+            }
 
             HorizontalDivider(color = SurfaceContainerHigh)
 

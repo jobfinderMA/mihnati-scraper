@@ -1,11 +1,16 @@
 package com.mihnati.app
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,8 +25,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.mihnati.app.data.repository.EmploiPublicRepository
 import com.mihnati.app.data.repository.MihnatiRepository
+import com.mihnati.app.notifications.MihnatiNotificationHelper
 import com.mihnati.app.ui.components.MihnatiBottomBar
 import com.mihnati.app.ui.components.MihnatiTopBar
 import com.mihnati.app.ui.components.NavigationTab
@@ -34,11 +41,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        // Automatically fetch latest scraped concours from Cloud CDN
+
+        // 1. Initialize Android System Notification Channels
+        MihnatiNotificationHelper.initNotificationChannels(this)
+
+        // 2. Schedule 24/7 background WorkManager cloud sync
+        MihnatiNotificationHelper.schedulePeriodicCloudSync(this)
+
+        // 3. Automatically fetch latest scraped concours from Cloud CDN
         EmploiPublicRepository.triggerLiveSync()
+
+        val initialOppId = intent?.getStringExtra(MihnatiNotificationHelper.EXTRA_OPPORTUNITY_ID)
+
         setContent {
             MihnatiTheme {
-                MainAppScaffold()
+                MainAppScaffold(initialOpportunityId = initialOppId)
             }
         }
     }
@@ -51,13 +68,30 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainAppScaffold() {
+fun MainAppScaffold(initialOpportunityId: String? = null) {
     val context = LocalContext.current
     var currentTab by remember { mutableStateOf(NavigationTab.ACCUEIL) }
-    var selectedOpportunityId by remember { mutableStateOf<String?>(null) }
+    var selectedOpportunityId by remember { mutableStateOf(initialOpportunityId) }
     var showWhatsAppAssistant by remember { mutableStateOf(false) }
     var showNotificationsSheet by remember { mutableStateOf(false) }
     var showGuidesDialog by remember { mutableStateOf(false) }
+
+    // Request Android 13+ Notification Permission on startup
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Toast.makeText(context, "Alertes concours activées 🔔", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!MihnatiNotificationHelper.hasNotificationPermission(context)) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
 
     val notifications by MihnatiRepository.notifications.collectAsState()
     val unreadCount = remember(notifications) { notifications.count { !it.isRead } }
