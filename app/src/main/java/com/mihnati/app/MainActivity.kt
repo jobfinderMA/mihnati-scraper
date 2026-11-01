@@ -55,8 +55,10 @@ class MainActivity : ComponentActivity() {
         com.mihnati.app.data.cloud.CloudServiceManager.init(this, "Firebase")
 
         val activeUser = com.mihnati.app.security.MihnatiSecurityVault.getCurrentUser(this)
-        if (activeUser != null) {
+        if (activeUser != null && activeUser.provider != "guest" && activeUser.email.isNotEmpty()) {
             MihnatiRepository.applyAuthenticatedAccount(activeUser)
+        } else {
+            MihnatiRepository.resetToGuestProfile()
         }
 
         val initialOppId = intent?.getStringExtra(MihnatiNotificationHelper.EXTRA_OPPORTUNITY_ID)

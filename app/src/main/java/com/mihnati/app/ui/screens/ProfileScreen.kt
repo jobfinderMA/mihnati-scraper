@@ -58,6 +58,7 @@ fun ProfileScreen(
     var showGoogleSignInDialog by remember { mutableStateOf(false) }
     var showUploadDocDialog by remember { mutableStateOf(false) }
     var selectedCategoryToUpload by remember { mutableStateOf(DocumentCategory.CV) }
+    val isGuest = userProfile.account.provider == "guest" || userProfile.fullName == "Invité" || (!userProfile.account.isSignedInWithGoogle && userProfile.account.email.isEmpty())
 
     Column(
         modifier = Modifier
@@ -94,20 +95,22 @@ fun ProfileScreen(
                             tint = Primary,
                             modifier = Modifier.size(42.dp)
                         )
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .size(20.dp)
-                                .clip(CircleShape)
-                                .background(Secondary),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Verified,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(12.dp)
-                            )
+                        if (!isGuest && userProfile.isVerified) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .size(20.dp)
+                                    .clip(CircleShape)
+                                    .background(Secondary),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Verified,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                            }
                         }
                     }
 
@@ -127,9 +130,9 @@ fun ProfileScreen(
                                     .background(Secondary)
                             )
                             Text(
-                                text = if (userProfile.isActivelySearching) "En recherche active" else "En veille d'opportunités",
+                                text = if (isGuest) "Mode Invité • Non connecté" else if (userProfile.isActivelySearching) "En recherche active" else "En veille d'opportunités",
                                 style = MaterialTheme.typography.labelSmall.copy(
-                                    color = OnSecondaryContainer,
+                                    color = if (isGuest) OnSurfaceVariant else OnSecondaryContainer,
                                     fontWeight = FontWeight.Bold
                                 )
                             )
@@ -229,7 +232,7 @@ fun ProfileScreen(
             }
         }
 
-        // Google Account Banner (Gmail Sync & Auth)
+        // Account Banner (Google Sync & Auth Status)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -246,37 +249,49 @@ fun ProfileScreen(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.weight(1f)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(38.dp)
                             .clip(CircleShape)
-                            .background(SurfaceContainerLow),
+                            .background(if (isGuest) PrimaryFixed else SurfaceContainerLow),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("G", fontWeight = FontWeight.ExtraBold, fontSize = 20.sp, color = Color(0xFF4285F4))
+                        Text(
+                            text = if (isGuest) "👤" else if (userProfile.account.isSignedInWithGoogle) "G" else "🔒",
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 18.sp,
+                            color = if (isGuest) Primary else Color(0xFF4285F4)
+                        )
                     }
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = "Compte Google",
+                                text = if (isGuest) "Compte Mihnati" else if (userProfile.account.isSignedInWithGoogle) "Compte Google" else "Compte Candidat",
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = OnSurface)
                             )
-                            if (userProfile.account.isSignedInWithGoogle) {
-                                Box(
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(6.dp))
-                                        .background(SecondaryContainer)
-                                        .padding(horizontal = 5.dp, vertical = 1.dp)
-                                ) {
-                                    Text("Connecté", style = MaterialTheme.typography.labelSmall.copy(color = OnSecondaryContainer, fontWeight = FontWeight.Bold, fontSize = 9.sp))
-                                }
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(if (isGuest) SurfaceContainerHigh else SecondaryContainer)
+                                    .padding(horizontal = 5.dp, vertical = 1.dp)
+                            ) {
+                                Text(
+                                    text = if (isGuest) "Non connecté" else "Connecté",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        color = if (isGuest) OnSurfaceVariant else OnSecondaryContainer,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 9.sp
+                                    )
+                                )
                             }
                         }
                         Text(
-                            text = userProfile.account.email,
-                            style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.5.sp)
+                            text = if (isGuest) "Créez votre compte pour postuler et synchroniser vos candidatures" else userProfile.account.email,
+                            style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.5.sp),
+                            maxLines = 1
                         )
                     }
                 }
@@ -284,14 +299,14 @@ fun ProfileScreen(
                 Button(
                     onClick = { showGoogleSignInDialog = true },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (userProfile.account.isSignedInWithGoogle) SurfaceContainerLow else Primary,
-                        contentColor = if (userProfile.account.isSignedInWithGoogle) Primary else Color.White
+                        containerColor = if (isGuest) Primary else SurfaceContainerLow,
+                        contentColor = if (isGuest) Color.White else Primary
                     ),
                     shape = RoundedCornerShape(10.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = if (userProfile.account.isSignedInWithGoogle) "Gérer" else "Connexion Gmail",
+                        text = if (isGuest) "Connexion" else "Gérer",
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -441,9 +456,9 @@ fun ProfileScreen(
                         )
                     }
                     TagBadge(
-                        text = "Bac+5 Validé",
-                        backgroundColor = PrimaryFixed,
-                        textColor = OnPrimaryFixed
+                        text = if (userProfile.degrees.isNotEmpty()) "${userProfile.degrees.size} Diplôme(s)" else "0 Diplôme",
+                        backgroundColor = if (userProfile.degrees.isNotEmpty()) PrimaryFixed else SurfaceContainer,
+                        textColor = if (userProfile.degrees.isNotEmpty()) OnPrimaryFixed else OnSurfaceVariant
                     )
                 }
 
@@ -694,7 +709,7 @@ fun ProfileScreen(
                         )
                     }
                     TagBadge(
-                        text = "${userProfile.documents.size} Pièces vérifiées",
+                        text = "${userProfile.documents.size} Pièce(s)",
                         backgroundColor = SecondaryFixed,
                         textColor = OnSecondaryFixed
                     )
@@ -980,6 +995,58 @@ fun ProfileScreen(
                         backgroundColor = SecondaryContainer,
                         textColor = OnSecondaryContainer
                     )
+                }
+            }
+
+            // Session & Demo Actions Card
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(SurfaceContainerLowest)
+                    .padding(16.dp)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = "Session & Démonstration",
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold, color = OnSurface)
+                    )
+
+                    if (!isGuest) {
+                        Button(
+                            onClick = {
+                                MihnatiRepository.signOut(context)
+                                Toast.makeText(context, "Session déconnectée avec succès", Toast.LENGTH_SHORT).show()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = ErrorContainer, contentColor = OnErrorContainer),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Se Déconnecter", fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            if (userProfile.fullName.contains("Démo") || userProfile.fullName.contains("Yassine")) {
+                                MihnatiRepository.resetToGuestProfile()
+                                Toast.makeText(context, "Mode Invité rétabli", Toast.LENGTH_SHORT).show()
+                            } else {
+                                MihnatiRepository.loadDemoProfile()
+                                Toast.makeText(context, "Exemple de profil ENSIAS chargé", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(
+                            text = if (userProfile.fullName.contains("Démo") || userProfile.fullName.contains("Yassine")) "🗑️ Réinitialiser le profil (Mode Invité)" else "🧪 Charger un profil exemple (Démo ENSIAS)",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
                 }
             }
 

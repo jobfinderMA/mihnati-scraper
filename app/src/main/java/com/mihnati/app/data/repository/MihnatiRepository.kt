@@ -484,8 +484,34 @@ object MihnatiRepository {
         )
     )
 
-    // Initial User Profile from Profile Screen design
-    private val initialUserProfile = UserProfile(
+    // Clean Unauthenticated Guest Profile (Default for new users)
+    val guestUserProfile = UserProfile(
+        fullName = "Invité",
+        headline = "Compte non connecté",
+        bio = "Créez votre compte gratuit pour postuler aux concours et synchroniser votre dossier.",
+        location = "Maroc",
+        isVerified = false,
+        isActivelySearching = false,
+        completionPercentage = 0,
+        targetLevel = "",
+        targetField = "",
+        degrees = emptyList(),
+        skills = emptyList(),
+        languages = emptyList(),
+        documents = emptyList(),
+        preferences = AlertPreferences(),
+        account = com.mihnati.app.data.model.UserAccount(
+            email = "",
+            displayName = "Invité",
+            isSignedInWithGoogle = false,
+            provider = "guest",
+            isVerified = false,
+            lastLoginDate = "Jamais connecté"
+        )
+    )
+
+    // Demo Sample Profile (ENSIAS Engineer) for testing & showcase
+    val sampleDemoUserProfile = UserProfile(
         fullName = "Yassine Benali",
         headline = "Diplômé Ingénieur d'État - Génie Informatique (Promotion 2026)",
         bio = "Diplômé de l'ENSIAS spécialisé en génie logiciel, cloud et sécurité. En recherche active de concours de la fonction publique (Échelle 11) ou opportunités d'ingénieur en CDI.",
@@ -593,7 +619,7 @@ object MihnatiRepository {
     private val _notifications = MutableStateFlow(initialNotifications)
     val notifications: StateFlow<List<AppNotification>> = _notifications.asStateFlow()
 
-    private val _userProfile = MutableStateFlow(initialUserProfile)
+    private val _userProfile = MutableStateFlow(guestUserProfile)
     val userProfile: StateFlow<UserProfile> = _userProfile.asStateFlow()
 
     private val _chatMessages = MutableStateFlow(initialChatMessages)
@@ -852,11 +878,36 @@ object MihnatiRepository {
         _notifications.update { listOf(notif) + it }
     }
 
+    fun resetToGuestProfile() {
+        _userProfile.value = guestUserProfile
+    }
+
+    fun loadDemoProfile() {
+        _userProfile.value = sampleDemoUserProfile
+    }
+
+    fun signOut(context: android.content.Context) {
+        com.mihnati.app.security.MihnatiSecurityVault.logout(context)
+        try {
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+        } catch (_: Exception) {}
+        resetToGuestProfile()
+        val notif = AppNotification(
+            id = "notif-logout-" + java.util.UUID.randomUUID().toString().take(6),
+            title = "Déconnexion effectuée",
+            message = "Vous naviguez maintenant en mode invité.",
+            timeAgo = "À l'instant",
+            type = NotificationType.STATUS_DOSSIER
+        )
+        _notifications.update { listOf(notif) + it }
+    }
+
     fun signOutGoogle() {
         _userProfile.update { profile ->
             profile.copy(
                 account = profile.account.copy(
-                    isSignedInWithGoogle = false
+                    isSignedInWithGoogle = false,
+                    provider = "guest"
                 )
             )
         }

@@ -82,8 +82,10 @@ fun HomeScreen(
         ) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    val isGuest = userProfile.account.provider == "guest" || userProfile.fullName == "Invité"
+                    val greetingTitle = if (!isGuest && userProfile.fullName.isNotBlank()) "Bonjour ${userProfile.fullName.split(" ").firstOrNull() ?: ""}" else "Bienvenue sur Mihnati"
                     Text(
-                        text = "Bonjour ${userProfile.fullName.split(" ").firstOrNull() ?: "Yassine"}",
+                        text = greetingTitle,
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -114,8 +116,13 @@ fun HomeScreen(
                         .clip(CircleShape)
                         .background(Secondary)
                 )
+                val pillText = if (userProfile.account.provider != "guest" && userProfile.fullName != "Invité") {
+                    if (userProfile.targetLevel.isNotBlank()) "${userProfile.targetLevel} Vérifié" else "Profil Vérifié"
+                } else {
+                    "Créer un profil"
+                }
                 Text(
-                    text = "Bac+5 Vérifié",
+                    text = pillText,
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = OnSecondaryContainer,
                         fontWeight = FontWeight.Bold

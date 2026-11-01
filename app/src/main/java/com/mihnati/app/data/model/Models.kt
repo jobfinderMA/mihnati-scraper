@@ -149,16 +149,16 @@ data class UserDocument(
 )
 
 data class UserAccount(
-    val email: String = "yassine.benali@gmail.com",
-    val displayName: String = "Yassine Benali",
+    val email: String = "",
+    val displayName: String = "Invité",
     val photoUrl: String? = null,
-    val isSignedInWithGoogle: Boolean = true,
-    val googleIdToken: String = "g_tok_2026_morocco",
-    val cnieNumber: String = "BK654321",
-    val phoneNumber: String = "+212 6 61 23 45 67",
-    val lastLoginDate: String = "01 Novembre 2026",
-    val provider: String = "Google OAuth 2.0",
-    val isVerified: Boolean = true
+    val isSignedInWithGoogle: Boolean = false,
+    val googleIdToken: String = "",
+    val cnieNumber: String = "",
+    val phoneNumber: String = "",
+    val lastLoginDate: String = "Non connecté",
+    val provider: String = "guest",
+    val isVerified: Boolean = false
 )
 
 data class AlertPreferences(
@@ -169,15 +169,15 @@ data class AlertPreferences(
 )
 
 data class UserProfile(
-    val fullName: String = "Yassine Benali",
-    val headline: String = "Diplômé Ingénieur d'État - Génie Informatique (Promotion 2024)",
-    val bio: String = "Jeune diplômé de l'ENSIAS passionné par le génie logiciel, le cloud et la cybersécurité. En recherche active de concours de la fonction publique (Échelle 11) ou postes d'ingénieur en CDI.",
-    val location: String = "Casablanca, Maroc",
-    val isVerified: Boolean = true,
-    val isActivelySearching: Boolean = true,
-    val completionPercentage: Int = 85,
-    val targetLevel: String = "Bac+5 / Ingénieur",
-    val targetField: String = "Informatique & SI",
+    val fullName: String = "Invité",
+    val headline: String = "Compte non connecté",
+    val bio: String = "Créez votre compte pour postuler aux concours et enregistrer vos candidatures.",
+    val location: String = "Maroc",
+    val isVerified: Boolean = false,
+    val isActivelySearching: Boolean = false,
+    val completionPercentage: Int = 0,
+    val targetLevel: String = "",
+    val targetField: String = "",
     val degrees: List<Degree> = emptyList(),
     val skills: List<String> = emptyList(),
     val languages: List<String> = emptyList(),

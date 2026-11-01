@@ -181,6 +181,20 @@ fun GoogleSignInDialog(
                                 }
                             }
                         }
+
+                        OutlinedButton(
+                            onClick = {
+                                MihnatiRepository.signOut(context)
+                                onDismiss()
+                            },
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Error),
+                            modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Se Déconnecter", fontWeight = FontWeight.Bold, color = Error)
+                        }
                     }
 
                     OutlinedTextField(
