@@ -1,0 +1,75 @@
+2026-11-01 14:59:37,983 [INFO] Starting one-off scrape run...
+2026-11-01 14:59:37,983 [INFO] ============================================================
+2026-11-01 14:59:37,983 [INFO] Running scheduled scrape job at 2026-11-01 14:59:37
+2026-11-01 14:59:37,983 [INFO] ============================================================
+2026-11-01 14:59:37,991 [INFO] Starting scrape from https://www.emploi-public.ma/fr/concours-liste (max 3 pages)...
+2026-11-01 14:59:38,489 [INFO] Page 1: found 9 concours cards
+2026-11-01 14:59:39,940 [INFO] Page 2: found 9 concours cards
+2026-11-01 14:59:41,405 [INFO] Page 3: found 9 concours cards
+2026-11-01 14:59:42,409 [INFO] Total concours scraped: 27
+2026-11-01 14:59:42,410 [INFO] Checking convocations (écrit & oral) for 10 recent concours...
+2026-11-01 14:59:49,917 [INFO] Total active convocations identified: 0
+2026-11-01 14:59:49,934 [INFO] Database updated successfully: C:\Users\bilal\OneDrive\Documents\job finder app\scraper\emploi_public.db
+2026-11-01 14:59:49,936 [INFO] Exported data to C:\Users\bilal\OneDrive\Documents\job finder app\scraper\scraped_data.json
+2026-11-01 14:59:49,938 [INFO] Synchronized with Android assets: C:\Users\bilal\OneDrive\Documents\job finder app\app\src\main\assets\scraped_emploi_public.json
+2026-11-01 14:59:49,938 [INFO] Scrape job completed successfully!
+2026-11-01 14:59:49,938 [INFO] Done. To keep running hourly, use: python emploi_public_bot.py --hourly
+2026-11-01 15:37:03,109 [INFO] Scheduling scraper bot to run every hour daily...
+2026-11-01 15:42:45,213 [INFO] Executing initial scrape extraction on startup...
+2026-11-01 15:42:45,214 [INFO] ============================================================
+2026-11-01 15:42:45,214 [INFO] Running scheduled scrape job at 2026-11-01 15:42:45
+2026-11-01 15:42:45,214 [INFO] ============================================================
+2026-11-01 15:42:45,222 [INFO] Starting scrape from https://www.emploi-public.ma/fr/concours-liste (max 3 pages)...
+2026-11-01 15:42:45,805 [INFO] Page 1: found 9 concours cards
+2026-11-01 15:42:47,298 [INFO] Page 2: found 9 concours cards
+2026-11-01 15:42:48,689 [INFO] Page 3: found 9 concours cards
+2026-11-01 15:42:49,691 [INFO] Total concours scraped: 27
+2026-11-01 15:42:49,694 [INFO] Checking convocations (écrit & oral) for 10 recent concours...
+2026-11-01 15:42:58,053 [INFO] Total active convocations identified: 0
+2026-11-01 15:42:58,060 [INFO] Database updated successfully: C:\Users\bilal\OneDrive\Documents\job finder app\scraper\emploi_public.db
+2026-11-01 15:42:58,062 [INFO] Exported data to C:\Users\bilal\OneDrive\Documents\job finder app\scraper\scraped_data.json
+2026-11-01 15:42:58,064 [INFO] Synchronized with Android assets: C:\Users\bilal\OneDrive\Documents\job finder app\app\src\main\assets\scraped_emploi_public.json
+2026-11-01 15:42:58,064 [INFO] Scrape job completed successfully!
+2026-11-01 15:42:58,064 [INFO] Hourly scheduler activated: the bot will now automatically scrape every hour daily.
+2026-11-01 16:42:58,105 [INFO] ============================================================
+2026-11-01 16:42:58,108 [INFO] Running scheduled scrape job at 2026-11-01 16:42:58
+2026-11-01 16:42:58,108 [INFO] ============================================================
+2026-11-01 16:42:58,115 [INFO] Starting scrape from https://www.emploi-public.ma/fr/concours-liste (max 3 pages)...
+2026-11-01 16:42:58,755 [INFO] Page 1: found 9 concours cards
+2026-11-01 16:43:00,258 [INFO] Page 2: found 9 concours cards
+2026-11-01 16:43:01,713 [INFO] Page 3: found 9 concours cards
+2026-11-01 16:43:02,716 [INFO] Total concours scraped: 27
+2026-11-01 16:43:02,718 [INFO] Checking convocations (écrit & oral) for 10 recent concours...
+2026-11-01 16:43:09,491 [INFO] Total active convocations identified: 0
+2026-11-01 16:43:09,511 [INFO] Database updated successfully: C:\Users\bilal\OneDrive\Documents\job finder app\scraper\emploi_public.db
+2026-11-01 16:43:09,513 [INFO] Exported data to C:\Users\bilal\OneDrive\Documents\job finder app\scraper\scraped_data.json
+2026-11-01 16:43:09,515 [INFO] Synchronized with Android assets: C:\Users\bilal\OneDrive\Documents\job finder app\app\src\main\assets\scraped_emploi_public.json
+2026-11-01 16:43:09,515 [INFO] Scrape job completed successfully!
+2026-11-01 17:43:09,554 [INFO] ============================================================
+2026-11-01 17:43:09,558 [INFO] Running scheduled scrape job at 2026-11-01 17:43:09
+2026-11-01 17:43:09,559 [INFO] ============================================================
+2026-11-01 17:43:09,568 [INFO] Starting scrape from https://www.emploi-public.ma/fr/concours-liste (max 3 pages)...
+2026-11-01 17:43:10,166 [INFO] Page 1: found 9 concours cards
+2026-11-01 17:43:12,798 [INFO] Page 2: found 9 concours cards
+2026-11-01 17:43:14,460 [INFO] Page 3: found 9 concours cards
+2026-11-01 17:43:15,462 [INFO] Total concours scraped: 27
+2026-11-01 17:43:15,464 [INFO] Checking convocations (écrit & oral) for 10 recent concours...
+2026-11-01 17:43:22,512 [INFO] Total active convocations identified: 0
+2026-11-01 17:43:22,530 [INFO] Database updated successfully: C:\Users\bilal\OneDrive\Documents\job finder app\scraper\emploi_public.db
+2026-11-01 17:43:22,531 [INFO] Exported data to C:\Users\bilal\OneDrive\Documents\job finder app\scraper\scraped_data.json
+2026-11-01 17:43:22,533 [INFO] Synchronized with Android assets: C:\Users\bilal\OneDrive\Documents\job finder app\app\src\main\assets\scraped_emploi_public.json
+2026-11-01 17:43:22,533 [INFO] Scrape job completed successfully!
+2026-11-01 18:43:22,560 [INFO] ============================================================
+2026-11-01 18:43:22,564 [INFO] Running scheduled scrape job at 2026-11-01 18:43:22
+2026-11-01 18:43:22,564 [INFO] ============================================================
+2026-11-01 18:43:22,569 [INFO] Starting scrape from https://www.emploi-public.ma/fr/concours-liste (max 3 pages)...
+2026-11-01 18:43:23,149 [INFO] Page 1: found 9 concours cards
+2026-11-01 18:43:24,606 [INFO] Page 2: found 9 concours cards
+2026-11-01 18:43:26,201 [INFO] Page 3: found 9 concours cards
+2026-11-01 18:43:27,204 [INFO] Total concours scraped: 27
+2026-11-01 18:43:27,205 [INFO] Checking convocations (écrit & oral) for 10 recent concours...
+2026-11-01 18:43:34,173 [INFO] Total active convocations identified: 0
+2026-11-01 18:43:34,180 [INFO] Database updated successfully: C:\Users\bilal\OneDrive\Documents\job finder app\scraper\emploi_public.db
+2026-11-01 18:43:34,181 [INFO] Exported data to C:\Users\bilal\OneDrive\Documents\job finder app\scraper\scraped_data.json
+2026-11-01 18:43:34,183 [INFO] Synchronized with Android assets: C:\Users\bilal\OneDrive\Documents\job finder app\app\src\main\assets\scraped_emploi_public.json
+2026-11-01 18:43:34,183 [INFO] Scrape job completed successfully!

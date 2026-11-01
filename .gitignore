@@ -1,0 +1,25 @@
+# Android / Gradle
+.gradle/
+build/
+app/build/
+*.iml
+.idea/
+local.properties
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.png
+
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.venv/
+env/
+venv/
+ENV/

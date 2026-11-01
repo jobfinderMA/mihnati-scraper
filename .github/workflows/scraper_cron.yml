@@ -1,0 +1,45 @@
+name: Hourly Emploi-Public Scraper Bot
+
+on:
+  schedule:
+    # Runs every hour at minute 0 (e.g. 10:00, 11:00, 12:00 UTC)
+    - cron: '0 * * * *'
+  # Allows you to manually trigger the scraper anytime from GitHub website
+  workflow_dispatch:
+
+jobs:
+  scrape-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allows pushing the updated JSON/database back to GitHub
+
+    steps:
+      - name: 📥 Check out repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scraper/requirements.txt
+
+      - name: 🚀 Run Emploi-Public Scraper Bot
+        run: |
+          python scraper/emploi_public_bot.py --once
+
+      - name: 💾 Commit and Push Updated Data
+        run: |
+          git config --global user.name "Mihnati Scraper Bot"
+          git config --global user.email "bot@mihnati.ma"
+          git add scraper/scraped_data.json scraper/emploi_public.db
+          if git diff --staged --quiet; then
+            echo "No new changes detected."
+          else
+            git commit -m "Auto-update: Scraped latest concours [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]"
+            git push
+          fi
