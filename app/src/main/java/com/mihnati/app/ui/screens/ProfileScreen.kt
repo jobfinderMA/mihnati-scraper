@@ -29,6 +29,8 @@ import com.mihnati.app.data.model.UserDocument
 import com.mihnati.app.data.repository.MihnatiRepository
 import com.mihnati.app.ui.components.DemoDataBanner
 import com.mihnati.app.ui.components.GoogleSignInDialog
+import com.mihnati.app.ui.components.WhatsAppGatewayConfigDialog
+import com.mihnati.app.security.WhatsAppOtpManager
 import com.mihnati.app.ui.components.SecureDocumentUploadBottomSheet
 import com.mihnati.app.ui.components.TagBadge
 import com.mihnati.app.ui.theme.*
@@ -56,6 +58,8 @@ fun ProfileScreen(
     var newDegreeMention by remember { mutableStateOf("") }
 
     var showGoogleSignInDialog by remember { mutableStateOf(false) }
+    var initialAuthRegisterMode by remember { mutableStateOf(false) }
+    var showWhatsAppGatewayDialog by remember { mutableStateOf(false) }
     var showUploadDocDialog by remember { mutableStateOf(false) }
     var selectedCategoryToUpload by remember { mutableStateOf(DocumentCategory.CV) }
     val isGuest = userProfile.account.provider == "guest" || userProfile.fullName == "Invité" || (!userProfile.account.isSignedInWithGoogle && userProfile.account.email.isEmpty())
@@ -296,19 +300,54 @@ fun ProfileScreen(
                     }
                 }
 
-                Button(
-                    onClick = { showGoogleSignInDialog = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isGuest) Primary else SurfaceContainerLow,
-                        contentColor = if (isGuest) Color.White else Primary
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = if (isGuest) "Connexion" else "Gérer",
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-                    )
+                if (isGuest) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        OutlinedButton(
+                            onClick = {
+                                initialAuthRegisterMode = false
+                                showGoogleSignInDialog = true
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = "Connexion",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                initialAuthRegisterMode = true
+                                showGoogleSignInDialog = true
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = "Créer compte",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
+                    }
+                } else {
+                    Button(
+                        onClick = {
+                            initialAuthRegisterMode = false
+                            showGoogleSignInDialog = true
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = SurfaceContainerLow,
+                            contentColor = Primary
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = "Gérer",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
                 }
             }
         }
@@ -917,6 +956,101 @@ fun ProfileScreen(
             }
         }
 
+        // 6.1 Passerelle WhatsApp & Suivi Convocations (Green-API)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(18.dp))
+                .background(SurfaceContainerLowest)
+                .padding(16.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text("💬", fontSize = 20.sp)
+                        Column {
+                            Text(
+                                text = "Passerelle WhatsApp & Convocations",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = OnSurface
+                                )
+                            )
+                            Text(
+                                text = "Envoi instantané des listes Écrit/Oral & Admis avec PDF",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 11.sp,
+                                    color = OnSurfaceVariant
+                                )
+                            )
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(
+                                if (WhatsAppOtpManager.isGatewayConfigured()) Color(0xFF16A34A).copy(alpha = 0.15f)
+                                else SurfaceContainerHigh
+                            )
+                            .padding(horizontal = 7.dp, vertical = 3.dp)
+                    ) {
+                        Text(
+                            text = if (WhatsAppOtpManager.isGatewayConfigured()) "✓ Connectée" else "Passerelle par défaut",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = if (WhatsAppOtpManager.isGatewayConfigured()) Color(0xFF16A34A) else OnSurfaceVariant,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 10.sp
+                            )
+                        )
+                    }
+                }
+
+                val currentPhone = userProfile.account.phoneNumber.ifEmpty { com.mihnati.app.security.MihnatiSecurityVault.getUserPhoneNumber(context) }
+                if (currentPhone.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Numéro WhatsApp lié :",
+                            fontSize = 12.sp,
+                            color = OnSurfaceVariant
+                        )
+                        Text(
+                            text = currentPhone,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Primary
+                        )
+                    }
+                }
+
+                Button(
+                    onClick = { showWhatsAppGatewayDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366)),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Icon(Icons.Default.Settings, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if (WhatsAppOtpManager.isGatewayConfigured()) "Modifier la configuration Green-API" else "Configurer la passerelle Green-API",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp
+                    )
+                }
+            }
+        }
+
         // 7. Paramètres d'Affichage & Thème
         val isDarkModeActive by com.mihnati.app.ui.theme.ThemeManager.isDarkMode.collectAsState()
         Box(
@@ -1243,7 +1377,14 @@ fun ProfileScreen(
 
     if (showGoogleSignInDialog) {
         GoogleSignInDialog(
+            initialRegisterMode = initialAuthRegisterMode,
             onDismiss = { showGoogleSignInDialog = false }
+        )
+    }
+
+    if (showWhatsAppGatewayDialog) {
+        WhatsAppGatewayConfigDialog(
+            onDismiss = { showWhatsAppGatewayDialog = false }
         )
     }
 

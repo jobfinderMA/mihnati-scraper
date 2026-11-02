@@ -46,6 +46,54 @@ object WhatsAppOtpManager {
     /**
      * Optional custom REST Gateway endpoint (e.g., Green-API, UltraMsg, or your server webhook)
      */
+    private const val PREFS_NAME = "mihnati_whatsapp_gateway_config"
+    private const val KEY_GREEN_API_ID = "green_api_instance_id"
+    private const val KEY_GREEN_API_TOKEN = "green_api_token"
+    private const val KEY_CUSTOM_GATEWAY_URL = "custom_gateway_url"
+
+    var configuredInstanceId: String? = null
+        private set
+    var configuredToken: String? = null
+        private set
+
+    fun loadGatewayConfig(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val id = prefs.getString(KEY_GREEN_API_ID, null)
+        val token = prefs.getString(KEY_GREEN_API_TOKEN, null)
+        val customUrl = prefs.getString(KEY_CUSTOM_GATEWAY_URL, null)
+
+        configuredInstanceId = id
+        configuredToken = token
+
+        if (!id.isNullOrEmpty() && !token.isNullOrEmpty()) {
+            externalWhatsAppGatewayUrl = "https://api.green-api.com/waInstance$id/sendMessage/$token"
+            externalWhatsAppApiKey = token
+            Log.i(TAG, "Green-API Gateway initialized with instance: $id")
+        } else if (!customUrl.isNullOrEmpty()) {
+            externalWhatsAppGatewayUrl = customUrl
+            Log.i(TAG, "Custom Gateway initialized: $customUrl")
+        }
+    }
+
+    fun saveGreenApiConfig(context: Context, instanceId: String, apiToken: String) {
+        val cleanId = instanceId.trim()
+        val cleanToken = apiToken.trim()
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+            .putString(KEY_GREEN_API_ID, cleanId)
+            .putString(KEY_GREEN_API_TOKEN, cleanToken)
+            .apply()
+
+        configuredInstanceId = cleanId
+        configuredToken = cleanToken
+        externalWhatsAppGatewayUrl = "https://api.green-api.com/waInstance$cleanId/sendMessage/$cleanToken"
+        externalWhatsAppApiKey = cleanToken
+        Log.i(TAG, "Green-API Gateway updated: instance $cleanId")
+    }
+
+    fun isGatewayConfigured(): Boolean {
+        return !externalWhatsAppGatewayUrl.isNullOrEmpty()
+    }
+
     var externalWhatsAppGatewayUrl: String? = null
     var externalWhatsAppApiKey: String? = null
 
@@ -247,18 +295,59 @@ object WhatsAppOtpManager {
         val gatewayUrl = externalWhatsAppGatewayUrl
         if (!gatewayUrl.isNullOrEmpty()) {
             try {
+                // 1. Send structured text alert with PDF link
                 sendViaWhatsAppGateway(
                     gatewayUrl = gatewayUrl,
                     apiKey = externalWhatsAppApiKey,
                     phone = normalized,
                     message = messageText
                 )
+
+                // 2. If Green-API instance is configured and URL is a PDF, also deliver the PDF document straight to WhatsApp
+                val instId = configuredInstanceId
+                val token = configuredToken
+                if (!instId.isNullOrEmpty() && !token.isNullOrEmpty() && (pdfUrl.contains("pdf", ignoreCase = true) || pdfUrl.startsWith("http"))) {
+                    try {
+                        sendPdfFileViaGreenApi(
+                            instanceId = instId,
+                            token = token,
+                            phone = normalized,
+                            pdfUrl = pdfUrl,
+                            fileName = "Convocation_${stageType}.pdf",
+                            caption = "📄 Liste officielle $stageHeader - $ministry"
+                        )
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Green-API sendFileByUrl failed: ${e.message}")
+                    }
+                }
             } catch (e: Exception) {
                 Log.w(TAG, "Failed sending WhatsApp webhook: ${e.message}")
             }
         }
 
         Result.success(true)
+    }
+
+    suspend fun sendGreenApiTestMessage(context: Context, targetPhone: String): Result<String> = withContext(Dispatchers.IO) {
+        val normalized = normalizeMoroccanPhoneNumber(targetPhone)
+            ?: return@withContext Result.failure(IllegalArgumentException("Numéro marocain invalide."))
+
+        val gatewayUrl = externalWhatsAppGatewayUrl
+        if (gatewayUrl.isNullOrEmpty()) {
+            return@withContext Result.failure(IllegalStateException("Passerelle Green-API non configurée."))
+        }
+
+        try {
+            sendViaWhatsAppGateway(
+                gatewayUrl = gatewayUrl,
+                apiKey = externalWhatsAppApiKey,
+                phone = normalized,
+                message = "🇲🇦 *Mihnati (مهنتي)*\n\n✅ *Passerelle WhatsApp Connectée !*\n\nVotre compte Green-API est opérationnel. Vous recevrez désormais automatiquement :\n- Vos codes de validation\n- Les listes des convoqués à l'écrit\n- Les convocations aux oraux\n- Les résultats finaux & listes des admis avec fichiers PDF."
+            )
+            Result.success("Message de test WhatsApp envoyé avec succès !")
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     fun getLastActiveOtpForDebug(): String? = lastGeneratedOtp
@@ -297,6 +386,37 @@ object WhatsAppOtpManager {
         OutputStreamWriter(conn.outputStream).use { it.write(jsonPayload) }
         val responseCode = conn.responseCode
         Log.d(TAG, "WhatsApp Gateway response code: $responseCode")
+        conn.disconnect()
+    }
+
+    private fun sendPdfFileViaGreenApi(
+        instanceId: String,
+        token: String,
+        phone: String,
+        pdfUrl: String,
+        fileName: String,
+        caption: String
+    ) {
+        val sendFileUrl = "https://api.green-api.com/waInstance$instanceId/sendFileByUrl/$token"
+        val url = URL(sendFileUrl)
+        val conn = url.openConnection() as HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type", "application/json")
+        conn.doOutput = true
+
+        val cleanPhone = phone.replace("+", "").replace(" ", "")
+        val jsonPayload = """
+            {
+              "chatId": "$cleanPhone@c.us",
+              "urlFile": "$pdfUrl",
+              "fileName": "$fileName",
+              "caption": ${jsonEscape(caption)}
+            }
+        """.trimIndent()
+
+        OutputStreamWriter(conn.outputStream).use { it.write(jsonPayload) }
+        val code = conn.responseCode
+        Log.d(TAG, "Green-API sendFileByUrl response code: $code")
         conn.disconnect()
     }
 

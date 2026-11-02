@@ -288,8 +288,11 @@ def scrape_convocations_and_results(concours_list):
 def dispatch_whatsapp_notification(conv):
     """
     Dispatches automated WhatsApp notification for Écrit, Oral or Final Admis lists.
-    Supports Green-API, UltraMsg, or Webhook via env variables.
+    Supports Green-API (instance ID & token) or generic WHATSAPP_GATEWAY_URL.
+    Sends both message text and direct PDF file.
     """
+    instance_id = os.environ.get('GREEN_API_INSTANCE_ID')
+    token = os.environ.get('GREEN_API_TOKEN')
     gateway_url = os.environ.get('WHATSAPP_GATEWAY_URL')
     api_key = os.environ.get('WHATSAPP_API_KEY')
     phone = os.environ.get('WHATSAPP_ADMIN_OR_TEST_PHONE', '+212600000000')
@@ -308,12 +311,40 @@ def dispatch_whatsapp_notification(conv):
     )
     
     logger.info(f"[WhatsApp Alert Ready] {stage}: {conv.get('title')}")
+    clean_phone = phone.replace('+', '').replace(' ', '')
     
-    if gateway_url:
+    # 1. Official Green-API Integration (Automated Message & File Delivery)
+    if instance_id and token:
+        try:
+            send_msg_url = f"https://api.green-api.com/waInstance{instance_id}/sendMessage/{token}"
+            payload = {
+                "chatId": f"{clean_phone}@c.us",
+                "message": msg
+            }
+            resp = requests.post(send_msg_url, json=payload, headers={"Content-Type": "application/json"}, timeout=10)
+            logger.info(f"[Green-API Message] Response: {resp.status_code}")
+            
+            # Send actual PDF file directly to WhatsApp chat
+            pdf_url = conv.get('pdf_url')
+            if pdf_url and ('pdf' in pdf_url.lower() or pdf_url.startswith('http')):
+                send_file_url = f"https://api.green-api.com/waInstance{instance_id}/sendFileByUrl/{token}"
+                file_payload = {
+                    "chatId": f"{clean_phone}@c.us",
+                    "urlFile": pdf_url,
+                    "fileName": f"Convocation_{stage}_{conv.get('concours_id')}.pdf",
+                    "caption": f"📄 Liste officielle ({stage}) - {conv.get('administration')}"
+                }
+                f_resp = requests.post(send_file_url, json=file_payload, headers={"Content-Type": "application/json"}, timeout=15)
+                logger.info(f"[Green-API PDF File] Response: {f_resp.status_code}")
+        except Exception as e:
+            logger.warning(f"[Green-API] Dispatch error: {e}")
+            
+    # 2. Generic REST Gateway fallback
+    elif gateway_url:
         try:
             payload = {
-                "chatId": f"{phone.replace('+', '')}@c.us",
-                "phone": phone.replace('+', ''),
+                "chatId": f"{clean_phone}@c.us",
+                "phone": clean_phone,
                 "message": msg
             }
             headers = {"Content-Type": "application/json"}

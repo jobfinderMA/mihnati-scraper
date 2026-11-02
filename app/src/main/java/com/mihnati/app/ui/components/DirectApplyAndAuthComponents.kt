@@ -59,6 +59,7 @@ import com.google.firebase.FirebaseNetworkException
  */
 @Composable
 fun GoogleSignInDialog(
+    initialRegisterMode: Boolean = false,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -75,7 +76,7 @@ fun GoogleSignInDialog(
     var phoneInput by remember { mutableStateOf(account.phoneNumber.ifEmpty { "" }) }
     var waOtpSent by remember { mutableStateOf(false) }
     var waOtpInput by remember { mutableStateOf("") }
-    var isPasswordRegisterMode by remember { mutableStateOf(false) } // Default to Login
+    var isPasswordRegisterMode by remember { mutableStateOf(initialRegisterMode) }
 
     var emailInput by remember { mutableStateOf(if (account.isVerified) account.email else "") }
     var nameInput by remember { mutableStateOf(if (userProfile.fullName != "Invité") userProfile.fullName else "") }
@@ -86,6 +87,7 @@ fun GoogleSignInDialog(
     var isProcessing by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var resendCooldown by remember { mutableStateOf(45) }
+    var showGatewayConfigDialog by remember { mutableStateOf(false) }
 
     // ==========================================
     // 1. REAL GOOGLE PLAY SERVICES ACCOUNT PICKER
@@ -305,17 +307,59 @@ fun GoogleSignInDialog(
                     }
 
                 // ==========================================
-                // CASE B: STEP 0 - Main Auth Choices
+                // CASE B: STEP 0 - Main Auth Choices (Unified Login & Sign Up)
                 // ==========================================
                 } else if (authStep == 0) {
 
-                    // 1. REAL GOOGLE PLAY SERVICES 1-TAP BUTTON
+                    // 1. TOP-LEVEL UNIFIED MODE: Se connecter vs Créer un compte
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        FilterChip(
+                            selected = !isPasswordRegisterMode,
+                            onClick = { isPasswordRegisterMode = false; errorMessage = null },
+                            label = {
+                                Text(
+                                    text = "🔑 Se connecter",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Primary,
+                                selectedLabelColor = Color.White
+                            )
+                        )
+                        FilterChip(
+                            selected = isPasswordRegisterMode,
+                            onClick = { isPasswordRegisterMode = true; errorMessage = null },
+                            label = {
+                                Text(
+                                    text = "📝 Créer un compte",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Primary,
+                                selectedLabelColor = Color.White
+                            )
+                        )
+                    }
+
+                    // 2. REAL GOOGLE PLAY SERVICES 1-TAP BUTTON
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable(enabled = !isProcessing) {
                                 errorMessage = null
-                                // Launches the REAL Android Google Account Chooser
                                 googleAuthLauncher.launch(googleSignInClient.signInIntent)
                             },
                         shape = RoundedCornerShape(12.dp),
@@ -326,7 +370,7 @@ fun GoogleSignInDialog(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 14.dp),
+                                .padding(horizontal = 16.dp, vertical = 13.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Box(
@@ -341,13 +385,13 @@ fun GoogleSignInDialog(
                             Spacer(modifier = Modifier.width(14.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Continuer avec Google",
+                                    text = if (isPasswordRegisterMode) "S'inscrire avec Google" else "Continuer avec Google",
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp,
+                                    fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Sélectionnez votre vrai compte Google",
+                                    text = "Authentification officielle Google Play",
                                     fontSize = 11.sp,
                                     color = OnSurfaceVariant
                                 )
@@ -361,16 +405,16 @@ fun GoogleSignInDialog(
                         }
                     }
 
-                    // 2. SEPARATOR
+                    // 3. SEPARATOR
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = 2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         HorizontalDivider(modifier = Modifier.weight(1f), color = OutlineVariant.copy(alpha = 0.5f))
                         Text(
-                            text = "  OU AVEC VOTRE NUMÉRO / EMAIL  ",
+                            text = if (isPasswordRegisterMode) "  OU INSCRIPTION DIRECTE  " else "  OU CONNEXION DIRECTE  ",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = OnSurfaceVariant,
@@ -379,7 +423,7 @@ fun GoogleSignInDialog(
                         HorizontalDivider(modifier = Modifier.weight(1f), color = OutlineVariant.copy(alpha = 0.5f))
                     }
 
-                    // 3. SUB-TABS: WhatsApp 💬 vs Code Email 📧 vs Mot de passe 🔑
+                    // 4. SUB-TABS: WhatsApp vs Email & Mot de passe
                     TabRow(
                         selectedTabIndex = emailAuthMode,
                         containerColor = SurfaceContainerLow,
@@ -389,17 +433,12 @@ fun GoogleSignInDialog(
                         Tab(
                             selected = emailAuthMode == 0,
                             onClick = { emailAuthMode = 0; errorMessage = null },
-                            text = { Text("WhatsApp 💬", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text("WhatsApp 💬", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                         )
                         Tab(
                             selected = emailAuthMode == 1,
                             onClick = { emailAuthMode = 1; errorMessage = null },
-                            text = { Text("Code Email 📧", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
-                        )
-                        Tab(
-                            selected = emailAuthMode == 2,
-                            onClick = { emailAuthMode = 2; errorMessage = null },
-                            text = { Text("Mot de passe 🔑", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text("Email & Mot de passe 📧", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                         )
                     }
 
@@ -407,16 +446,18 @@ fun GoogleSignInDialog(
                     // SUB-OPTION 0: WhatsApp Verification (Code & Instant)
                     // ==========================================
                     if (emailAuthMode == 0) {
-                        OutlinedTextField(
-                            value = nameInput,
-                            onValueChange = { nameInput = it; errorMessage = null },
-                            label = { Text("Nom et Prénom") },
-                            placeholder = { Text("ex: Bilal Benali") },
-                            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp)
-                        )
+                        if (isPasswordRegisterMode) {
+                            OutlinedTextField(
+                                value = nameInput,
+                                onValueChange = { nameInput = it; errorMessage = null },
+                                label = { Text("Nom et Prénom") },
+                                placeholder = { Text("ex: Bilal Benali") },
+                                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                        }
 
                         OutlinedTextField(
                             value = phoneInput,
@@ -452,7 +493,10 @@ fun GoogleSignInDialog(
                             ) {
                                 Icon(Icons.Default.Notifications, contentDescription = null, tint = Color(0xFF198754), modifier = Modifier.size(16.dp))
                                 Text(
-                                    text = "Recevez votre code secret sur WhatsApp ainsi que les alertes automatiques pour vos concours (Écrit, Oral, Admis).",
+                                    text = if (isPasswordRegisterMode)
+                                        "Votre compte sera créé et vérifié avec un code reçu sur WhatsApp. Vous recevrez aussi les listes Écrit/Oral."
+                                    else
+                                        "Un code de connexion secret à 6 chiffres vous sera envoyé sur WhatsApp.",
                                     fontSize = 11.sp,
                                     color = Color(0xFF0F5132),
                                     lineHeight = 15.sp
@@ -468,6 +512,10 @@ fun GoogleSignInDialog(
                                         errorMessage = "Veuillez entrer un numéro marocain valide (ex: 06 12 34 56 78 ou 07...)."
                                         return@Button
                                     }
+                                    if (isPasswordRegisterMode && nameInput.trim().isBlank()) {
+                                        errorMessage = "Veuillez renseigner votre Nom et Prénom pour créer un compte."
+                                        return@Button
+                                    }
                                     isProcessing = true
                                     errorMessage = null
                                     coroutineScope.launch {
@@ -476,7 +524,6 @@ fun GoogleSignInDialog(
                                         res.onSuccess { code ->
                                             waOtpSent = true
                                             Toast.makeText(context, "Code WhatsApp : $code", Toast.LENGTH_LONG).show()
-                                            // Launch WhatsApp directly so the user receives it in WhatsApp
                                             try {
                                                 val waIntent = WhatsAppOtpManager.createWhatsAppDirectIntent(
                                                     normalized,
@@ -484,7 +531,7 @@ fun GoogleSignInDialog(
                                                 )
                                                 context.startActivity(waIntent)
                                             } catch (e: Exception) {
-                                                // If WhatsApp not installed on emulator, heads-up notification and toast already fired
+                                                // Notification already fired
                                             }
                                         }.onFailure { err ->
                                             errorMessage = err.localizedMessage
@@ -501,7 +548,10 @@ fun GoogleSignInDialog(
                                 } else {
                                     Icon(Icons.Default.Send, contentDescription = null, modifier = Modifier.size(16.dp))
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Envoyer le code sur WhatsApp", fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = if (isPasswordRegisterMode) "Créer mon compte via WhatsApp" else "Recevoir mon code WhatsApp",
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                             }
                         } else {
@@ -533,7 +583,8 @@ fun GoogleSignInDialog(
                                             )
                                             signRes.onSuccess { acc ->
                                                 MihnatiRepository.applyAuthenticatedAccount(acc)
-                                                Toast.makeText(context, "Compte validé avec succès !", Toast.LENGTH_SHORT).show()
+                                                val msg = if (isPasswordRegisterMode) "Compte créé et validé avec succès !" else "Connexion réussie !"
+                                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                                                 onDismiss()
                                             }
                                         } else {
@@ -544,7 +595,33 @@ fun GoogleSignInDialog(
                                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A)),
                                     shape = RoundedCornerShape(10.dp)
                                 ) {
-                                    Text("Valider & Se connecter", fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = if (isPasswordRegisterMode) "Valider & Créer mon compte" else "Valider & Se connecter",
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    TextButton(onClick = { waOtpSent = false; waOtpInput = "" }) {
+                                        Text("← Modifier numéro", fontSize = 11.sp, color = OnSurfaceVariant)
+                                    }
+                                    TextButton(
+                                        onClick = {
+                                            val normalized = WhatsAppOtpManager.normalizeMoroccanPhoneNumber(phoneInput)
+                                            if (normalized != null) {
+                                                coroutineScope.launch {
+                                                    WhatsAppOtpManager.generateAndSendOtp(context, normalized, nameInput.ifBlank { "Candidat Mihnati" })
+                                                    Toast.makeText(context, "Nouveau code renvoyé sur WhatsApp", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                        }
+                                    ) {
+                                        Text("Renvoyer le code", fontSize = 11.sp, color = Primary, fontWeight = FontWeight.SemiBold)
+                                    }
                                 }
 
                                 WhatsAppOtpManager.getLastActiveOtpForDebug()?.let { activePin ->
@@ -566,119 +643,11 @@ fun GoogleSignInDialog(
                                 }
                             }
                         }
-                    // ==========================================
-                    // SUB-OPTION 1: Code & Lien Email (Firebase Passwordless)
-                    // ==========================================
-                    } else if (emailAuthMode == 1) {
-                        OutlinedTextField(
-                            value = nameInput,
-                            onValueChange = { nameInput = it; errorMessage = null },
-                            label = { Text("Nom et Prénom") },
-                            placeholder = { Text("ex: Bilal Benali") },
-                            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp)
-                        )
-
-                        OutlinedTextField(
-                            value = emailInput,
-                            onValueChange = { emailInput = it; errorMessage = null },
-                            label = { Text("Votre adresse Email / Gmail") },
-                            placeholder = { Text("ex: nom.prenom@gmail.com") },
-                            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp)
-                        )
-
-                        Card(
-                            colors = CardDefaults.cardColors(containerColor = Primary.copy(alpha = 0.06f)),
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(Icons.Default.Lock, contentDescription = null, tint = Primary, modifier = Modifier.size(16.dp))
-                                Text(
-                                    text = "Firebase envoie un email officiel avec votre lien de connexion et code de sécurité pour créer votre compte sans mot de passe.",
-                                    fontSize = 11.sp,
-                                    color = OnSurfaceVariant,
-                                    lineHeight = 15.sp
-                                )
-                            }
-                        }
-
-                        // Send Code Button
-                        Button(
-                            onClick = {
-                                val cleanEmail = emailInput.trim().lowercase()
-                                if (cleanEmail.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(cleanEmail).matches()) {
-                                    errorMessage = "Veuillez entrer une adresse email valide (ex: nom@domaine.com)."
-                                    return@Button
-                                }
-                                isProcessing = true
-                                errorMessage = null
-                                coroutineScope.launch {
-                                    // 1. Dispatch official Firebase passwordless email link
-                                    CloudServiceManager.getService().sendPasswordlessSignInEmail(cleanEmail)
-
-                                    // 2. Dispatch 6-digit code OTP
-                                    val sendResult = EmailOtpManager.generateAndSendOtp(
-                                        context = context,
-                                        email = cleanEmail,
-                                        candidateName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
-                                    )
-                                    sendResult.onSuccess {
-                                        authStep = 1 // Move to OTP input step
-                                        Toast.makeText(context, "Code et lien officiel Firebase envoyés !", Toast.LENGTH_SHORT).show()
-                                    }.onFailure {
-                                        errorMessage = it.message ?: "Impossible d'envoyer le code de confirmation."
-                                    }
-                                    isProcessing = false
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth().height(48.dp),
-                            enabled = !isProcessing && emailInput.isNotBlank(),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Primary)
-                        ) {
-                            if (isProcessing) {
-                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
-                            } else {
-                                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, modifier = Modifier.size(16.dp))
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Envoyer le code & lien officiel (Firebase)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                            }
-                        }
 
                     // ==========================================
-                    // SUB-OPTION 2: Classic Email & Password (REAL FIREBASE AUTH)
+                    // SUB-OPTION 1: Classic Email & Password (REAL FIREBASE AUTH)
                     // ==========================================
                     } else {
-                        // Toggle Connexion vs Inscription
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            FilterChip(
-                                selected = !isPasswordRegisterMode,
-                                onClick = { isPasswordRegisterMode = false; errorMessage = null },
-                                label = { Text("Se connecter") },
-                                modifier = Modifier.weight(1f)
-                            )
-                            FilterChip(
-                                selected = isPasswordRegisterMode,
-                                onClick = { isPasswordRegisterMode = true; errorMessage = null },
-                                label = { Text("Créer un compte") },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-
                         if (isPasswordRegisterMode) {
                             OutlinedTextField(
                                 value = nameInput,
@@ -737,6 +706,10 @@ fun GoogleSignInDialog(
                                     errorMessage = "Le mot de passe doit comporter au moins 6 caractères (exigence Firebase)."
                                     return@Button
                                 }
+                                if (isPasswordRegisterMode && nameInput.trim().isBlank()) {
+                                    errorMessage = "Veuillez renseigner votre Nom et Prénom pour créer un compte."
+                                    return@Button
+                                }
 
                                 isProcessing = true
                                 errorMessage = null
@@ -753,39 +726,57 @@ fun GoogleSignInDialog(
                                         regResult.onSuccess { acc ->
                                             MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
                                             MihnatiRepository.applyAuthenticatedAccount(acc)
-                                            Toast.makeText(context, "Compte Firebase créé ! Email de validation envoyé.", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, "Compte Firebase créé avec succès : ${acc.email} !", Toast.LENGTH_LONG).show()
                                             onDismiss()
                                         }.onFailure { err ->
-                                            // DO NOT LOG IN. Display exact Firebase rejection reason
-                                            errorMessage = formatFirebaseAuthError(err)
+                                            errorMessage = when (err) {
+                                                is FirebaseAuthUserCollisionException ->
+                                                    "Un compte existe déjà avec cette adresse email. Veuillez vous connecter."
+                                                is FirebaseAuthWeakPasswordException ->
+                                                    "Mot de passe trop faible. Utilisez au moins 6 caractères avec chiffres."
+                                                is FirebaseAuthInvalidCredentialsException ->
+                                                    "Format d'email invalide selon les serveurs Firebase."
+                                                is FirebaseNetworkException ->
+                                                    "Erreur réseau Firebase. Vérifiez votre connexion internet."
+                                                else -> err.localizedMessage ?: "Échec de l'inscription sur le serveur."
+                                            }
                                         }
                                     } else {
                                         // REAL FIREBASE LOGIN
-                                        val loginResult = CloudServiceManager.getService().loginUser(
+                                        val logResult = CloudServiceManager.getService().loginUser(
                                             email = cleanEmail,
                                             passwordHash = passwordInput
                                         )
 
-                                        loginResult.onSuccess { acc ->
+                                        logResult.onSuccess { acc ->
                                             MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
                                             MihnatiRepository.applyAuthenticatedAccount(acc)
-                                            Toast.makeText(context, "Bon retour, ${acc.displayName} !", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, "Bienvenue ${acc.displayName} !", Toast.LENGTH_SHORT).show()
                                             onDismiss()
                                         }.onFailure { err ->
-                                            // DO NOT LOG IN. Display exact Firebase rejection reason
-                                            errorMessage = formatFirebaseAuthError(err)
+                                            errorMessage = when (err) {
+                                                is FirebaseAuthInvalidUserException ->
+                                                    "Aucun compte trouvé avec cette adresse email. Veuillez d'abord créer un compte."
+                                                is FirebaseAuthInvalidCredentialsException ->
+                                                    "Mot de passe incorrect ou compte inexistant."
+                                                is FirebaseNetworkException ->
+                                                    "Erreur réseau Firebase. Vérifiez votre connexion."
+                                                else -> err.localizedMessage ?: "Échec de la connexion Firebase."
+                                            }
                                         }
                                     }
                                     isProcessing = false
                                 }
                             },
-                            modifier = Modifier.fillMaxWidth().height(48.dp),
-                            enabled = !isProcessing && emailInput.isNotBlank() && passwordInput.isNotBlank(),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Primary)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            enabled = !isProcessing,
+                            colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                            shape = RoundedCornerShape(10.dp)
                         ) {
                             if (isProcessing) {
-                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White)
                             } else {
                                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -796,6 +787,26 @@ fun GoogleSignInDialog(
                                 )
                             }
                         }
+                    }
+
+                    // 5. Configurer la passerelle WhatsApp
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { showGatewayConfigDialog = true }
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Settings, contentDescription = null, tint = OnSurfaceVariant, modifier = Modifier.size(13.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = if (WhatsAppOtpManager.isGatewayConfigured()) "Passerelle WhatsApp : Connectée ✓" else "Configurer l'API WhatsApp (Green-API)",
+                            fontSize = 11.sp,
+                            color = if (WhatsAppOtpManager.isGatewayConfigured()) Color(0xFF16A34A) else OnSurfaceVariant,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
 
                 // ==========================================
@@ -1038,7 +1049,136 @@ fun GoogleSignInDialog(
             }
         }
     )
+
+    if (showGatewayConfigDialog) {
+        WhatsAppGatewayConfigDialog(
+            onDismiss = { showGatewayConfigDialog = false }
+        )
+    }
+
 }
+
+/**
+ * Universal Dialog to configure and test the WhatsApp Gateway (Green-API)
+ */
+@Composable
+fun WhatsAppGatewayConfigDialog(
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var instanceIdInput by remember { mutableStateOf(WhatsAppOtpManager.configuredInstanceId ?: "") }
+    var tokenInput by remember { mutableStateOf(WhatsAppOtpManager.configuredToken ?: "") }
+    var testPhoneInput by remember { mutableStateOf(MihnatiSecurityVault.getUserPhoneNumber(context).ifEmpty { "0612345678" }) }
+    var isSendingTest by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("💬", fontSize = 22.sp)
+                Text("Passerelle WhatsApp & Green-API", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    text = "Configurez votre instance Green-API gratuite pour envoyer automatiquement les codes SMS-free et les PDF de convocations (Écrit / Oral / Admis).",
+                    fontSize = 12.sp,
+                    color = OnSurfaceVariant,
+                    lineHeight = 16.sp
+                )
+
+                OutlinedTextField(
+                    value = instanceIdInput,
+                    onValueChange = { instanceIdInput = it.trim() },
+                    label = { Text("ID Instance (ex: 1101823456)") },
+                    placeholder = { Text("1101823456") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp)
+                )
+
+                OutlinedTextField(
+                    value = tokenInput,
+                    onValueChange = { tokenInput = it.trim() },
+                    label = { Text("Token API (ex: 7a8b9c...)") },
+                    placeholder = { Text("Token d'accès Green-API") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp)
+                )
+
+                if (WhatsAppOtpManager.isGatewayConfigured()) {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = OutlineVariant.copy(alpha = 0.5f))
+
+                    Text(
+                        text = "Tester l'envoi en direct sur votre WhatsApp :",
+                        fontSize = 11.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF0F5132)
+                    )
+
+                    OutlinedTextField(
+                        value = testPhoneInput,
+                        onValueChange = { testPhoneInput = it },
+                        label = { Text("Numéro WhatsApp de test") },
+                        placeholder = { Text("ex: 06 12 34 56 78") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+
+                    OutlinedButton(
+                        onClick = {
+                            isSendingTest = true
+                            coroutineScope.launch {
+                                val res = WhatsAppOtpManager.sendGreenApiTestMessage(context, testPhoneInput)
+                                isSendingTest = false
+                                res.onSuccess { msg ->
+                                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+                                }.onFailure { err ->
+                                    Toast.makeText(context, "Erreur test: ${err.localizedMessage}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        },
+                        enabled = !isSendingTest,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF16A34A))
+                    ) {
+                        if (isSendingTest) {
+                            CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
+                        } else {
+                            Text("⚡ Envoyer un message test WhatsApp", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (instanceIdInput.isNotBlank() && tokenInput.isNotBlank()) {
+                        WhatsAppOtpManager.saveGreenApiConfig(context, instanceIdInput, tokenInput)
+                        Toast.makeText(context, "Passerelle Green-API enregistrée !", Toast.LENGTH_SHORT).show()
+                    }
+                    onDismiss()
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366)),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text("Enregistrer", fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Fermer")
+            }
+        }
+    )
+}
+
 
 /**
  * Formats raw Firebase exceptions into crystal-clear French error messages

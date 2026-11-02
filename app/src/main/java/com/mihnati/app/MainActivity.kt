@@ -45,6 +45,9 @@ class MainActivity : ComponentActivity() {
         // 1. Initialize Android System Notification Channels
         MihnatiNotificationHelper.initNotificationChannels(this)
 
+        // 1.1 Load WhatsApp Gateway API Configuration
+        com.mihnati.app.security.WhatsAppOtpManager.loadGatewayConfig(this)
+
         // 2. Schedule 24/7 background WorkManager cloud sync
         MihnatiNotificationHelper.schedulePeriodicCloudSync(this)
 
