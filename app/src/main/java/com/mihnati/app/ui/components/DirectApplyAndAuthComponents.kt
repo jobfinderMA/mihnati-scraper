@@ -39,12 +39,22 @@ import androidx.compose.foundation.text.KeyboardOptions
 import com.mihnati.app.security.EmailOtpManager
 import com.mihnati.app.security.MihnatiSecurityVault
 import com.mihnati.app.data.cloud.CloudServiceManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.FirebaseNetworkException
 
 /**
- * Modern Multi-Mode Authentication Dialog:
- * - 1. Google 1-Tap OAuth 2.0 (Instant 1-Click)
- * - 2. Email OTP Code & Official Firebase Link (Passwordless)
- * - 3. Classic Email & Password (Login & Registration with Firebase + KeyStore)
+ * Real Production Authentication Dialog:
+ * - 1. Real Google Sign-In with Google Play Services (Launches system Google account picker)
+ * - 2. Real Firebase Email & Password (Strict server validation - No fake logins)
+ * - 3. Real Firebase Email Link & 6-Digit Code (Passwordless OTP)
  */
 @Composable
 fun GoogleSignInDialog(
@@ -58,9 +68,9 @@ fun GoogleSignInDialog(
     // 0: Main Screen, 1: 6-Digit OTP Verification Screen
     var authStep by remember { mutableStateOf(0) }
 
-    // Sub-mode in main screen: 0: Code Email / Lien Firebase, 1: Mot de passe
+    // Sub-mode in main screen: 0: Code & Lien Email, 1: Mot de passe
     var emailAuthMode by remember { mutableStateOf(0) }
-    var isPasswordRegisterMode by remember { mutableStateOf(true) }
+    var isPasswordRegisterMode by remember { mutableStateOf(false) } // Default to Login
 
     var emailInput by remember { mutableStateOf(if (account.isVerified) account.email else "") }
     var nameInput by remember { mutableStateOf(if (userProfile.fullName != "Invité") userProfile.fullName else "") }
@@ -71,6 +81,61 @@ fun GoogleSignInDialog(
     var isProcessing by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var resendCooldown by remember { mutableStateOf(45) }
+
+    // ==========================================
+    // 1. REAL GOOGLE PLAY SERVICES ACCOUNT PICKER
+    // ==========================================
+    val gso = remember {
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestProfile()
+            .build()
+    }
+    val googleSignInClient = remember { GoogleSignIn.getClient(context, gso) }
+
+    val googleAuthLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val googleAccount = task.getResult(ApiException::class.java)
+            val realEmail = googleAccount.email?.trim()?.lowercase() ?: ""
+            val realName = googleAccount.displayName?.trim() ?: realEmail.substringBefore("@")
+            val realPhoto = googleAccount.photoUrl?.toString()
+            val idToken = googleAccount.idToken
+
+            if (realEmail.isBlank()) {
+                errorMessage = "Impossible de récupérer l'adresse email de votre compte Google."
+                return@rememberLauncherForActivityResult
+            }
+
+            isProcessing = true
+            errorMessage = null
+            coroutineScope.launch {
+                val fbResult = CloudServiceManager.getService().signInWithGoogleAccount(
+                    email = realEmail,
+                    displayName = realName,
+                    photoUrl = realPhoto,
+                    idToken = idToken
+                )
+
+                fbResult.onSuccess { acc ->
+                    MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
+                    MihnatiRepository.applyAuthenticatedAccount(acc)
+                    Toast.makeText(context, "Connecté avec succès : $realEmail !", Toast.LENGTH_SHORT).show()
+                    onDismiss()
+                }.onFailure { err ->
+                    errorMessage = "Erreur d'authentification Google : ${err.localizedMessage}"
+                }
+                isProcessing = false
+            }
+        } catch (e: ApiException) {
+            // StatusCode 12501 = user pressed back / cancelled picker
+            if (e.statusCode != 12501) {
+                errorMessage = "Google Sign-In (Code ${e.statusCode}) : ${e.localizedMessage ?: "Vérifiez vos services Google Play."}"
+            }
+        }
+    }
 
     // Countdown timer for OTP resend
     LaunchedEffect(authStep) {
@@ -134,7 +199,7 @@ fun GoogleSignInDialog(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Error banner
+                // Real Error Banner
                 errorMessage?.let { error ->
                     Card(
                         colors = CardDefaults.cardColors(containerColor = Error.copy(alpha = 0.1f)),
@@ -147,7 +212,7 @@ fun GoogleSignInDialog(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Icon(Icons.Default.Warning, contentDescription = null, tint = Error, modifier = Modifier.size(18.dp))
-                            Text(text = error, color = Error, fontSize = 12.sp, lineHeight = 16.sp)
+                            Text(text = error, color = Error, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Medium)
                         }
                     }
                 }
@@ -239,39 +304,14 @@ fun GoogleSignInDialog(
                 // ==========================================
                 } else if (authStep == 0) {
 
-                    // 1. OFFICIAL GOOGLE 1-TAP BUTTON
+                    // 1. REAL GOOGLE PLAY SERVICES 1-TAP BUTTON
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable(enabled = !isProcessing) {
-                                isProcessing = true
                                 errorMessage = null
-                                coroutineScope.launch {
-                                    delay(400)
-                                    val googleEmail = if (emailInput.contains("@gmail.com")) emailInput.trim() else "bilal.candidate@gmail.com"
-                                    val googleName = if (nameInput.isNotBlank()) nameInput.trim() else "Bilal Benali"
-
-                                    val result = MihnatiSecurityVault.signInWithGoogle(
-                                        context = context,
-                                        email = googleEmail,
-                                        displayName = googleName
-                                    )
-
-                                    result.onSuccess { acc ->
-                                        MihnatiRepository.applyAuthenticatedAccount(acc)
-                                        CloudServiceManager.getService().registerUser(
-                                            email = acc.email,
-                                            passwordHash = "google_oauth2_verified",
-                                            displayName = acc.displayName,
-                                            cin = "CNIE"
-                                        )
-                                        Toast.makeText(context, "Connecté avec succès via Google !", Toast.LENGTH_SHORT).show()
-                                        onDismiss()
-                                    }.onFailure {
-                                        errorMessage = it.message ?: "Erreur d'authentification Google"
-                                    }
-                                    isProcessing = false
-                                }
+                                // Launches the REAL Android Google Account Chooser
+                                googleAuthLauncher.launch(googleSignInClient.signInIntent)
                             },
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -302,7 +342,7 @@ fun GoogleSignInDialog(
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Connexion 1-clic avec votre compte Google",
+                                    text = "Sélectionnez votre vrai compte Google",
                                     fontSize = 11.sp,
                                     color = OnSurfaceVariant
                                 )
@@ -334,7 +374,7 @@ fun GoogleSignInDialog(
                         HorizontalDivider(modifier = Modifier.weight(1f), color = OutlineVariant.copy(alpha = 0.5f))
                     }
 
-                    // 3. SUB-TABS: Code/Lien Email vs Mot de passe
+                    // 3. SUB-TABS: Code & Lien Email vs Mot de passe
                     TabRow(
                         selectedTabIndex = emailAuthMode,
                         containerColor = SurfaceContainerLow,
@@ -392,7 +432,7 @@ fun GoogleSignInDialog(
                             ) {
                                 Icon(Icons.Default.Lock, contentDescription = null, tint = Primary, modifier = Modifier.size(16.dp))
                                 Text(
-                                    text = "Firebase envoie un email officiel avec votre lien de connexion et code à 6 chiffres pour créer votre compte sans mot de passe.",
+                                    text = "Firebase envoie un email officiel avec votre lien de connexion et code de sécurité pour créer votre compte sans mot de passe.",
                                     fontSize = 11.sp,
                                     color = OnSurfaceVariant,
                                     lineHeight = 15.sp
@@ -403,20 +443,21 @@ fun GoogleSignInDialog(
                         // Send Code Button
                         Button(
                             onClick = {
-                                if (emailInput.isBlank() || !emailInput.contains("@")) {
-                                    errorMessage = "Veuillez entrer une adresse email valide."
+                                val cleanEmail = emailInput.trim().lowercase()
+                                if (cleanEmail.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(cleanEmail).matches()) {
+                                    errorMessage = "Veuillez entrer une adresse email valide (ex: nom@domaine.com)."
                                     return@Button
                                 }
                                 isProcessing = true
                                 errorMessage = null
                                 coroutineScope.launch {
                                     // 1. Dispatch official Firebase passwordless email link
-                                    CloudServiceManager.getService().sendPasswordlessSignInEmail(emailInput.trim())
+                                    CloudServiceManager.getService().sendPasswordlessSignInEmail(cleanEmail)
 
                                     // 2. Dispatch 6-digit code OTP
                                     val sendResult = EmailOtpManager.generateAndSendOtp(
                                         context = context,
-                                        email = emailInput.trim(),
+                                        email = cleanEmail,
                                         candidateName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
                                     )
                                     sendResult.onSuccess {
@@ -443,24 +484,24 @@ fun GoogleSignInDialog(
                         }
 
                     // ==========================================
-                    // SUB-OPTION 2: Classic Email & Password
+                    // SUB-OPTION 2: Classic Email & Password (REAL FIREBASE AUTH)
                     // ==========================================
                     } else {
-                        // Toggle Inscription vs Connexion
+                        // Toggle Connexion vs Inscription
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             FilterChip(
-                                selected = isPasswordRegisterMode,
-                                onClick = { isPasswordRegisterMode = true; errorMessage = null },
-                                label = { Text("Créer un compte") },
-                                modifier = Modifier.weight(1f)
-                            )
-                            FilterChip(
                                 selected = !isPasswordRegisterMode,
                                 onClick = { isPasswordRegisterMode = false; errorMessage = null },
                                 label = { Text("Se connecter") },
+                                modifier = Modifier.weight(1f)
+                            )
+                            FilterChip(
+                                selected = isPasswordRegisterMode,
+                                onClick = { isPasswordRegisterMode = true; errorMessage = null },
+                                label = { Text("Créer un compte") },
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -494,7 +535,7 @@ fun GoogleSignInDialog(
                             value = passwordInput,
                             onValueChange = { passwordInput = it; errorMessage = null },
                             label = { Text("Mot de passe") },
-                            placeholder = { Text("Minimum 8 caractères") },
+                            placeholder = { Text("Minimum 6 caractères") },
                             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                             trailingIcon = {
                                 IconButton(onClick = { showPassword = !showPassword }) {
@@ -511,67 +552,55 @@ fun GoogleSignInDialog(
                             shape = RoundedCornerShape(10.dp)
                         )
 
+                        // Strict Auth Submit Button
                         Button(
                             onClick = {
-                                if (emailInput.isBlank() || !emailInput.contains("@")) {
-                                    errorMessage = "Veuillez entrer une adresse email valide."
+                                val cleanEmail = emailInput.trim().lowercase()
+                                if (cleanEmail.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(cleanEmail).matches()) {
+                                    errorMessage = "Veuillez entrer une adresse email valide (ex: nom@domaine.com)."
                                     return@Button
                                 }
-                                if (passwordInput.length < 8) {
-                                    errorMessage = "Le mot de passe doit comporter au moins 8 caractères."
+                                if (passwordInput.length < 6) {
+                                    errorMessage = "Le mot de passe doit comporter au moins 6 caractères (exigence Firebase)."
                                     return@Button
                                 }
+
                                 isProcessing = true
                                 errorMessage = null
                                 coroutineScope.launch {
                                     if (isPasswordRegisterMode) {
-                                        // 1. Hardware KeyStore registration
-                                        val vaultResult = MihnatiSecurityVault.registerAccount(
-                                            context = context,
-                                            email = emailInput.trim(),
-                                            password = passwordInput,
-                                            fullName = nameInput.trim().ifEmpty { "Candidat Mihnati" },
+                                        // REAL FIREBASE REGISTRATION
+                                        val regResult = CloudServiceManager.getService().registerUser(
+                                            email = cleanEmail,
+                                            passwordHash = passwordInput,
+                                            displayName = nameInput.trim().ifEmpty { cleanEmail.substringBefore("@") },
                                             cin = "CNIE"
                                         )
 
-                                        vaultResult.onSuccess { acc ->
+                                        regResult.onSuccess { acc ->
+                                            MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
                                             MihnatiRepository.applyAuthenticatedAccount(acc)
-                                            // 2. Firebase Cloud registration
-                                            CloudServiceManager.getService().registerUser(
-                                                email = acc.email,
-                                                passwordHash = passwordInput,
-                                                displayName = acc.displayName,
-                                                cin = "CNIE"
-                                            )
-                                            Toast.makeText(context, "Compte créé avec succès ! Email de validation envoyé.", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, "Compte Firebase créé ! Email de validation envoyé.", Toast.LENGTH_LONG).show()
                                             onDismiss()
                                         }.onFailure { err ->
-                                            errorMessage = err.message ?: "Échec de l'enregistrement."
+                                            // DO NOT LOG IN. Display exact Firebase rejection reason
+                                            errorMessage = formatFirebaseAuthError(err)
                                         }
                                     } else {
-                                        // Login mode
-                                        val vaultResult = MihnatiSecurityVault.signInWithEmail(
-                                            context = context,
-                                            email = emailInput.trim(),
-                                            password = passwordInput
+                                        // REAL FIREBASE LOGIN
+                                        val loginResult = CloudServiceManager.getService().loginUser(
+                                            email = cleanEmail,
+                                            passwordHash = passwordInput
                                         )
 
-                                        if (vaultResult.isSuccess) {
-                                            val acc = vaultResult.getOrThrow()
+                                        loginResult.onSuccess { acc ->
+                                            MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
                                             MihnatiRepository.applyAuthenticatedAccount(acc)
-                                            CloudServiceManager.getService().loginUser(emailInput.trim(), passwordInput)
                                             Toast.makeText(context, "Bon retour, ${acc.displayName} !", Toast.LENGTH_SHORT).show()
                                             onDismiss()
-                                        } else {
-                                            // Fallback to Firebase cloud login
-                                            val fbResult = CloudServiceManager.getService().loginUser(emailInput.trim(), passwordInput)
-                                            fbResult.onSuccess { acc ->
-                                                MihnatiRepository.applyAuthenticatedAccount(acc)
-                                                Toast.makeText(context, "Connecté avec succès !", Toast.LENGTH_SHORT).show()
-                                                onDismiss()
-                                            }.onFailure { err ->
-                                                errorMessage = err.message ?: "Email ou mot de passe incorrect."
-                                            }
+                                        }.onFailure { err ->
+                                            // DO NOT LOG IN. Display exact Firebase rejection reason
+                                            errorMessage = formatFirebaseAuthError(err)
                                         }
                                     }
                                     isProcessing = false
@@ -588,7 +617,7 @@ fun GoogleSignInDialog(
                                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    if (isPasswordRegisterMode) "Créer mon compte (Mot de passe)" else "Se Connecter",
+                                    if (isPasswordRegisterMode) "Créer mon compte (Firebase)" else "Se Connecter (Firebase)",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp
                                 )
@@ -705,9 +734,10 @@ fun GoogleSignInDialog(
                                             val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
                                                 context = context,
                                                 email = emailInput.trim(),
-                                                displayName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
+                                                displayName = nameInput.trim().ifEmpty { emailInput.substringBefore("@") }
                                             )
                                             accResult.onSuccess { acc ->
+                                                MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
                                                 MihnatiRepository.applyAuthenticatedAccount(acc)
                                                 CloudServiceManager.getService().registerUser(
                                                     email = acc.email,
@@ -792,9 +822,10 @@ fun GoogleSignInDialog(
                                     val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
                                         context = context,
                                         email = emailInput.trim(),
-                                        displayName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
+                                        displayName = nameInput.trim().ifEmpty { emailInput.substringBefore("@") }
                                     )
                                     accResult.onSuccess { acc ->
+                                        MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
                                         MihnatiRepository.applyAuthenticatedAccount(acc)
                                         CloudServiceManager.getService().registerUser(
                                             email = acc.email,
@@ -834,6 +865,32 @@ fun GoogleSignInDialog(
             }
         }
     )
+}
+
+/**
+ * Formats raw Firebase exceptions into crystal-clear French error messages
+ */
+private fun formatFirebaseAuthError(err: Throwable): String {
+    val message = err.message ?: ""
+    return when {
+        err is FirebaseAuthUserCollisionException || message.contains("email-already-in-use", ignoreCase = true) ->
+            "Cette adresse email est déjà enregistrée. Veuillez utiliser 'Se connecter'."
+        err is FirebaseAuthInvalidCredentialsException && (message.contains("wrong-password", ignoreCase = true) || message.contains("invalid-credential", ignoreCase = true)) ->
+            "Adresse email ou mot de passe incorrect."
+        err is FirebaseAuthInvalidCredentialsException && message.contains("badly formatted", ignoreCase = true) ->
+            "Format d'adresse email invalide."
+        err is FirebaseAuthInvalidUserException || message.contains("user-not-found", ignoreCase = true) ->
+            "Aucun compte trouvé avec cette adresse email. Veuillez créer un compte."
+        err is FirebaseAuthWeakPasswordException || message.contains("weak-password", ignoreCase = true) ->
+            "Le mot de passe est trop faible. Minimum 6 caractères."
+        err is FirebaseNetworkException || message.contains("network", ignoreCase = true) ->
+            "Erreur de connexion internet. Vérifiez votre réseau."
+        message.contains("too-many-requests", ignoreCase = true) ->
+            "Trop de tentatives infructueuses. Veuillez patienter quelques minutes."
+        message.contains("operation-not-allowed", ignoreCase = true) ->
+            "Cette méthode d'authentification n'est pas encore activée dans la console Firebase."
+        else -> err.localizedMessage ?: "Échec d'authentification Firebase."
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

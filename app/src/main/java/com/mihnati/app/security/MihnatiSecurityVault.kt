@@ -241,6 +241,22 @@ object MihnatiSecurityVault {
     /**
      * Secure Logout: completely destroys session tokens and clears encrypted credentials
      */
+    /**
+     * Persists a verified session authenticated by Firebase / Google Play Services
+     */
+    fun saveAuthenticatedSession(context: Context, account: UserAccount) {
+        val prefs = getSecurePrefs(context)
+        val sessionToken = "mht_live_session_" + java.util.UUID.randomUUID().toString().replace("-", "")
+        prefs.edit()
+            .putString(KEY_AUTH_TOKEN, sessionToken)
+            .putString(KEY_CURRENT_USER_EMAIL, account.email.trim().lowercase())
+            .putString(KEY_CURRENT_USER_NAME, account.displayName.trim())
+            .putString(KEY_CURRENT_USER_PROVIDER, account.provider)
+            .putString(KEY_CURRENT_USER_CIN, account.cnieNumber.ifEmpty { "CNIE" })
+            .putBoolean(KEY_CURRENT_USER_VERIFIED, account.isVerified)
+            .apply()
+    }
+
     fun logout(context: Context) {
         val prefs = getSecurePrefs(context)
         prefs.edit()

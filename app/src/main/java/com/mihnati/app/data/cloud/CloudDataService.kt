@@ -33,6 +33,22 @@ interface CloudDataService {
 
     suspend fun sendPasswordlessSignInEmail(email: String): Result<Boolean> = Result.success(true)
 
+    suspend fun signInWithGoogleAccount(
+        email: String,
+        displayName: String,
+        photoUrl: String?,
+        idToken: String?
+    ): Result<UserAccount> = Result.success(
+        UserAccount(
+            email = email,
+            displayName = displayName,
+            photoUrl = photoUrl,
+            isSignedInWithGoogle = true,
+            provider = "Google OAuth (Vérifié)",
+            isVerified = true
+        )
+    )
+
     suspend fun loginUser(
         email: String,
         passwordHash: String

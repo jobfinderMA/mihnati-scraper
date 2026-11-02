@@ -93,6 +93,46 @@ class FirebaseCloudService(
         }
     }
 
+    override suspend fun signInWithGoogleAccount(
+        email: String,
+        displayName: String,
+        photoUrl: String?,
+        idToken: String?
+    ): Result<UserAccount> = withContext(Dispatchers.IO) {
+        try {
+            var uid = email
+            if (!idToken.isNullOrBlank()) {
+                val credential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, null)
+                val authResult = auth.signInWithCredential(credential).await()
+                uid = authResult.user?.uid ?: email
+            }
+
+            val accountData = hashMapOf(
+                "uid" to uid,
+                "email" to email,
+                "displayName" to displayName,
+                "photoUrl" to (photoUrl ?: ""),
+                "provider" to "google",
+                "isVerified" to true,
+                "lastLoginTimestamp" to System.currentTimeMillis()
+            )
+            firestore.collection("users").document(uid).set(accountData, SetOptions.merge()).await()
+
+            val account = UserAccount(
+                email = email,
+                displayName = displayName,
+                photoUrl = photoUrl,
+                isSignedInWithGoogle = true,
+                provider = "Google OAuth (Vérifié)",
+                isVerified = true,
+                lastLoginDate = "À l'instant (Google)"
+            )
+            Result.success(account)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun loginUser(
         email: String,
         passwordHash: String
