@@ -61,14 +61,22 @@ class ConcoursSyncWorker(
                         val deadline = newestConcoursToAlert.optString("deadline", "Bientôt").replace("\n", " ").trim()
                         val id = newestConcoursToAlert.optString("id", "ep-alert")
 
-                        MihnatiNotificationHelper.showConcoursAlert(
-                            context = appContext,
-                            concoursId = id,
-                            title = title,
-                            administration = admin,
-                            postsCount = posts,
-                            deadline = deadline
-                        )
+                        val alertPrefs = com.mihnati.app.security.MihnatiSecurityVault.loadAlertPreferences(appContext)
+                        val deg = newestConcoursToAlert.optString("degree_required", "")
+                        val shouldNotify = if (alertPrefs.onlyFilteredPushNotifications && alertPrefs.targetDegrees.isNotEmpty()) {
+                            alertPrefs.targetDegrees.any { t -> deg.contains(t, ignoreCase = true) }
+                        } else true
+
+                        if (shouldNotify) {
+                            MihnatiNotificationHelper.showConcoursAlert(
+                                context = appContext,
+                                concoursId = id,
+                                title = title,
+                                administration = admin,
+                                postsCount = posts,
+                                deadline = deadline
+                            )
+                        }
                     }
 
                     // Save the updated set of known IDs

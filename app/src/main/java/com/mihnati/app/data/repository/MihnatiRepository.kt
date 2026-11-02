@@ -833,8 +833,9 @@ private val _whatsAppConfig = MutableStateFlow(WhatsAppConfig())
         }
     }
 
-    fun updatePreferences(preferences: AlertPreferences) {
+    fun updatePreferences(preferences: AlertPreferences, context: Context? = null) {
         _userProfile.update { it.copy(preferences = preferences) }
+        context?.let { com.mihnati.app.security.MihnatiSecurityVault.saveAlertPreferences(it, preferences) }
     }
 
     // Google & Secure Authentication Methods

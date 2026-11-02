@@ -48,6 +48,13 @@ class MainActivity : ComponentActivity() {
         // 1.1 Load WhatsApp Gateway API Configuration
         com.mihnati.app.security.WhatsAppOtpManager.loadGatewayConfig(this)
 
+        // 1.2 Initialize Bilingual Language System
+        com.mihnati.app.ui.theme.LanguageManager.init(this)
+
+        // 1.3 Load Personalized Alert Filters
+        val savedPrefs = com.mihnati.app.security.MihnatiSecurityVault.loadAlertPreferences(this)
+        MihnatiRepository.updatePreferences(savedPrefs)
+
         // 2. Schedule 24/7 background WorkManager cloud sync
         MihnatiNotificationHelper.schedulePeriodicCloudSync(this)
 
@@ -67,8 +74,12 @@ class MainActivity : ComponentActivity() {
         val initialOppId = intent?.getStringExtra(MihnatiNotificationHelper.EXTRA_OPPORTUNITY_ID)
 
         setContent {
-            MihnatiTheme {
-                MainAppScaffold(initialOpportunityId = initialOppId)
+            val currentLang by com.mihnati.app.ui.theme.LanguageManager.currentLanguage.collectAsState()
+            val layoutDir = if (currentLang.isRtl) androidx.compose.ui.unit.LayoutDirection.Rtl else androidx.compose.ui.unit.LayoutDirection.Ltr
+            androidx.compose.runtime.CompositionLocalProvider(androidx.compose.ui.platform.LocalLayoutDirection provides layoutDir) {
+                MihnatiTheme {
+                    MainAppScaffold(initialOpportunityId = initialOppId)
+                }
             }
         }
     }

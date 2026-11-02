@@ -165,8 +165,48 @@ data class AlertPreferences(
     val publicSectorAlerts: Boolean = true,
     val privateSectorAlerts: Boolean = true,
     val deadlineReminders: Boolean = true,
-    val universityPrograms: Boolean = false
-)
+    val universityPrograms: Boolean = false,
+    val targetDegrees: List<String> = emptyList(),
+    val targetRegions: List<String> = emptyList(),
+    val minEchelle: Int = 0,
+    val onlyFilteredPushNotifications: Boolean = false
+) {
+    fun matches(opportunity: Opportunity): Boolean {
+        // 1. Degree filter
+        if (targetDegrees.isNotEmpty()) {
+            val oppDegree = opportunity.degreeRequired.lowercase()
+            val matchesDegree = targetDegrees.any { target ->
+                when (target) {
+                    "Master" -> oppDegree.contains("master") || oppDegree.contains("bac+5") || oppDegree.contains("bac +5") || oppDegree.contains("ماستر") || oppDegree.contains("دراسات عليا")
+                    "Ingénieur" -> oppDegree.contains("ingénieur") || oppDegree.contains("ingenieur") || oppDegree.contains("مهندس")
+                    "Licence" -> oppDegree.contains("licence") || oppDegree.contains("bac+3") || oppDegree.contains("bac +3") || oppDegree.contains("إجازة") || oppDegree.contains("اجازة")
+                    "Technicien" -> oppDegree.contains("technicien") || oppDegree.contains("dts") || oppDegree.contains("dut") || oppDegree.contains("bts") || oppDegree.contains("تقني")
+                    "Bac" -> oppDegree.contains("baccalauréat") || oppDegree.contains("bac") || oppDegree.contains("باكالوريا")
+                    "Doctorat" -> oppDegree.contains("doctorat") || oppDegree.contains("دكتوراه")
+                    else -> oppDegree.contains(target.lowercase())
+                }
+            }
+            if (!matchesDegree) return false
+        }
+
+        // 2. Region filter
+        if (targetRegions.isNotEmpty()) {
+            val oppLoc = opportunity.location.lowercase()
+            val matchesRegion = targetRegions.any { reg ->
+                oppLoc.contains(reg.lowercase()) || oppLoc.contains("maroc") || oppLoc.contains("national") || oppLoc.contains("rabat") || oppLoc.contains("المغرب")
+            }
+            if (!matchesRegion) return false
+        }
+
+        // 3. Echelle filter
+        if (minEchelle > 0) {
+            val oppEchelleNum = Regex("""\d+""").find(opportunity.salary)?.value?.toIntOrNull() ?: 10
+            if (oppEchelleNum < minEchelle) return false
+        }
+
+        return true
+    }
+}
 
 data class UserProfile(
     val fullName: String = "Invité",

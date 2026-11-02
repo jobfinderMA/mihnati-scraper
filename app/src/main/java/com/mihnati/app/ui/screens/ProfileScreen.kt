@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.horizontalScroll
+import com.mihnati.app.ui.theme.AppStrings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.*
@@ -950,7 +952,132 @@ fun ProfileScreen(
                     subtitle = "Inscriptions doctorales et bourses d'études",
                     checked = userProfile.preferences.universityPrograms,
                     onCheckedChange = {
-                        MihnatiRepository.updatePreferences(userProfile.preferences.copy(universityPrograms = it))
+                        MihnatiRepository.updatePreferences(userProfile.preferences.copy(universityPrograms = it), context)
+                    }
+                )
+
+                HorizontalDivider(color = OutlineVariant.copy(alpha = 0.5f), modifier = Modifier.padding(vertical = 4.dp))
+
+                // Title for Granular Personalized Filters
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text("🎯", fontSize = 16.sp)
+                    Text(
+                        text = AppStrings.alertFiltersTitle,
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold, color = Primary)
+                    )
+                }
+
+                Text(
+                    text = AppStrings.alertFiltersSubtitle,
+                    fontSize = 11.5.sp,
+                    color = OnSurfaceVariant,
+                    lineHeight = 15.sp
+                )
+
+                // 1. Diplômes ciblés
+                Text(
+                    text = AppStrings.targetDegreesLabel,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = OnSurface
+                )
+                val degreeOptions = listOf("Master", "Ingénieur", "Licence", "Technicien", "Bac", "Doctorat")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    degreeOptions.forEach { deg ->
+                        val isSelected = userProfile.preferences.targetDegrees.contains(deg)
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = {
+                                val current = userProfile.preferences.targetDegrees.toMutableList()
+                                if (isSelected) current.remove(deg) else current.add(deg)
+                                val updated = userProfile.preferences.copy(targetDegrees = current)
+                                MihnatiRepository.updatePreferences(updated, context)
+                            },
+                            label = { Text(deg, fontSize = 11.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Primary,
+                                selectedLabelColor = Color.White
+                            )
+                        )
+                    }
+                }
+
+                // 2. Régions ciblées
+                Text(
+                    text = AppStrings.targetRegionsLabel,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = OnSurface
+                )
+                val regionOptions = listOf(
+                    "Rabat-Salé-Kénitra", "Casablanca-Settat", "Tanger-Tétouan",
+                    "Fès-Meknès", "Marrakech-Safi", "Souss-Massa", "Oriental", "Béni Mellal"
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    regionOptions.forEach { reg ->
+                        val isSelected = userProfile.preferences.targetRegions.contains(reg)
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = {
+                                val current = userProfile.preferences.targetRegions.toMutableList()
+                                if (isSelected) current.remove(reg) else current.add(reg)
+                                val updated = userProfile.preferences.copy(targetRegions = current)
+                                MihnatiRepository.updatePreferences(updated, context)
+                            },
+                            label = { Text(reg, fontSize = 11.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Secondary,
+                                selectedLabelColor = Color.White
+                            )
+                        )
+                    }
+                }
+
+                // 3. Minimum Échelle
+                Text(
+                    text = AppStrings.minScaleLabel,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = OnSurface
+                )
+                val scaleOptions = listOf(0 to "Toutes", 8 to "Échelle 8+", 10 to "Échelle 10+", 11 to "Échelle 11")
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    scaleOptions.forEach { (scaleVal, scaleLabel) ->
+                        val isSelected = userProfile.preferences.minEchelle == scaleVal
+                        FilterChip(
+                            selected = isSelected,
+                            onClick = {
+                                val updated = userProfile.preferences.copy(minEchelle = scaleVal)
+                                MihnatiRepository.updatePreferences(updated, context)
+                            },
+                            label = { Text(scaleLabel, fontSize = 10.5.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
+                            modifier = Modifier.weight(1f),
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Primary,
+                                selectedLabelColor = Color.White
+                            )
+                        )
+                    }
+                }
+
+                // 4. Strict alert notifications switch
+                PreferenceRow(
+                    title = AppStrings.strictAlertsSwitch,
+                    subtitle = AppStrings.strictAlertsSubtitle,
+                    checked = userProfile.preferences.onlyFilteredPushNotifications,
+                    onCheckedChange = {
+                        val updated = userProfile.preferences.copy(onlyFilteredPushNotifications = it)
+                        MihnatiRepository.updatePreferences(updated, context)
                     }
                 )
             }

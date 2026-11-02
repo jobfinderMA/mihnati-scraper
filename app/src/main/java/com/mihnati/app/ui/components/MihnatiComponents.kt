@@ -24,8 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import com.mihnati.app.data.model.ApplicationStage
 import com.mihnati.app.ui.theme.*
+import com.mihnati.app.ui.theme.LanguageManager
+import com.mihnati.app.ui.theme.AppLanguage
+import com.mihnati.app.ui.theme.AppStrings
 
 @Composable
 fun MihnatiTopBar(
@@ -153,6 +157,29 @@ fun MihnatiTopBar(
                             contentDescription = "Actualiser",
                             tint = Secondary,
                             modifier = Modifier.size(13.dp)
+                        )
+                    }
+
+                    // Bilingual Language Switcher (🇲🇦 عربي / 🇫🇷 FR)
+                    val context = LocalContext.current
+                    val currentLang by LanguageManager.currentLanguage.collectAsState()
+                    Box(
+                        modifier = Modifier
+                            .height(34.dp)
+                            .clip(RoundedCornerShape(17.dp))
+                            .background(Primary.copy(alpha = 0.12f))
+                            .border(1.dp, Primary.copy(alpha = 0.35f), RoundedCornerShape(17.dp))
+                            .clickable { LanguageManager.toggleLanguage(context) }
+                            .padding(horizontal = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = if (currentLang == AppLanguage.ARABIC) "🇲🇦 ع" else "🇫🇷 FR",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Primary,
+                                fontSize = 11.5.sp
+                            )
                         )
                     }
 
@@ -296,8 +323,15 @@ fun MihnatiBottomBar(
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.height(2.dp))
+                        val tabLocalizedTitle = when (tab) {
+                            NavigationTab.ACCUEIL -> AppStrings.navHome
+                            NavigationTab.OPPORTUNITES -> AppStrings.navOpportunities
+                            NavigationTab.CANDIDATURES -> AppStrings.navApplications
+                            NavigationTab.CALENDRIER -> AppStrings.navCalendar
+                            NavigationTab.PROFIL -> AppStrings.navProfile
+                        }
                         Text(
-                            text = tab.title,
+                            text = tabLocalizedTitle,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = contentColor,
                                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,

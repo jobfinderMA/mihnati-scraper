@@ -34,6 +34,9 @@ import com.mihnati.app.ui.components.OralExamPrepBottomSheet
 import com.mihnati.app.ui.components.SalarySimulatorBottomSheet
 import com.mihnati.app.ui.components.TagBadge
 import com.mihnati.app.ui.theme.*
+import com.mihnati.app.ui.theme.AppStrings
+import com.mihnati.app.ui.theme.LanguageManager
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun HomeScreen(
@@ -47,10 +50,11 @@ fun HomeScreen(
     var selectedCategory by remember { mutableStateOf("Tous") }
     val categories = listOf(
         "Tous" to "✨",
+        "Mes alertes ciblées" to "🎯",
         "Concours Publics" to "🏛️",
         "Tech & Digital" to "💻",
         "Banque & Finance" to "💼",
-        "Masters & Formations" to "🎓",
+        "Masters" to "🎓",
         "Santé" to "🏥"
     )
 
@@ -83,7 +87,11 @@ fun HomeScreen(
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val isGuest = userProfile.account.provider == "guest" || userProfile.fullName == "Invité"
-                    val greetingTitle = if (!isGuest && userProfile.fullName.isNotBlank()) "Bonjour ${userProfile.fullName.split(" ").firstOrNull() ?: ""}" else "Bienvenue sur Mihnati"
+                    val greetingTitle = if (!isGuest && userProfile.fullName.isNotBlank()) {
+                        if (LanguageManager.isArabic) "مرحباً ${userProfile.fullName.split(" ").firstOrNull() ?: ""}" else "Bonjour ${userProfile.fullName.split(" ").firstOrNull() ?: ""}"
+                    } else {
+                        AppStrings.welcomeTitle
+                    }
                     Text(
                         text = greetingTitle,
                         style = MaterialTheme.typography.headlineMedium.copy(
@@ -95,7 +103,7 @@ fun HomeScreen(
                     Text(text = "👋", fontSize = 20.sp)
                 }
                 Text(
-                    text = "Préparez votre avenir professionnel au Maroc",
+                    text = AppStrings.welcomeSubtitle,
                     style = MaterialTheme.typography.bodyMedium.copy(color = OnSurfaceVariant)
                 )
             }
@@ -158,7 +166,7 @@ fun HomeScreen(
                         modifier = Modifier.size(22.dp)
                     )
                     Text(
-                        text = "Rechercher concours, poste, ministère...",
+                        text = AppStrings.searchPlaceholder,
                         style = MaterialTheme.typography.bodyMedium.copy(color = Outline)
                     )
                 }
@@ -795,8 +803,10 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val displayedOpportunities = remember(opportunities, selectedCategory) {
+            val displayedOpportunities = remember(opportunities, selectedCategory, userProfile.preferences) {
                 val list = when (selectedCategory) {
+                    "Mes alertes ciblées", AppStrings.categoryCustomAlerts ->
+                        opportunities.filter { userProfile.preferences.matches(it) }
                     "Concours Publics" -> opportunities.filter { it.sectorType == SectorType.PUBLIC }
                     "Tech & Digital" -> opportunities.filter {
                         it.field.contains("Informatique", ignoreCase = true) ||
@@ -817,6 +827,41 @@ fun HomeScreen(
                     else -> opportunities
                 }
                 list.take(3)
+            }
+
+            if (displayedOpportunities.isEmpty() && selectedCategory == "Mes alertes ciblées") {
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Primary.copy(alpha = 0.08f)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(14.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text("🎯", fontSize = 24.sp)
+                        Text(
+                            text = if (LanguageManager.isArabic) "لا توجد مباريات مطابقة لمعاييرك حالياً" else "Aucun concours ne correspond à vos filtres ciblés",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            color = Primary
+                        )
+                        Text(
+                            text = if (LanguageManager.isArabic) "عدل الشهادات والجهات في صفحة حسابي لعرض النتائج." else "Personnalisez vos diplômes et régions dans l'onglet Profil pour filtrer vos offres.",
+                            fontSize = 11.sp,
+                            color = OnSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                        OutlinedButton(
+                            onClick = { onNavigateToTab("profil") },
+                            modifier = Modifier.padding(top = 4.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text(if (LanguageManager.isArabic) "تعديل الفلاتر ➔" else "Modifier mes filtres ➔", fontSize = 11.sp)
+                        }
+                    }
+                }
             }
 
             displayedOpportunities.forEach { opp ->

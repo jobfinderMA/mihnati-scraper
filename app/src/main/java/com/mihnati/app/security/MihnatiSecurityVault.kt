@@ -20,6 +20,14 @@ object MihnatiSecurityVault {
     private const val KEY_CURRENT_USER_PROVIDER = "auth_current_user_provider"
     private const val KEY_CURRENT_USER_CIN = "auth_current_user_cin"
     private const val KEY_CURRENT_USER_VERIFIED = "auth_current_user_verified"
+    private const val KEY_PREF_PUBLIC_SECTOR = "pref_public_sector"
+    private const val KEY_PREF_PRIVATE_SECTOR = "pref_private_sector"
+    private const val KEY_PREF_DEADLINES = "pref_deadlines"
+    private const val KEY_PREF_UNIVERSITY = "pref_university"
+    private const val KEY_PREF_TARGET_DEGREES = "pref_target_degrees"
+    private const val KEY_PREF_TARGET_REGIONS = "pref_target_regions"
+    private const val KEY_PREF_MIN_ECHELLE = "pref_min_echelle"
+    private const val KEY_PREF_ONLY_FILTERED = "pref_only_filtered"
 
     private const val PBKDF2_ITERATIONS = 10000
     private const val KEY_LENGTH = 256
@@ -328,5 +336,32 @@ object MihnatiSecurityVault {
             .remove(KEY_CURRENT_USER_CIN)
             .remove(KEY_CURRENT_USER_VERIFIED)
             .apply()
+    }
+
+    fun saveAlertPreferences(context: Context, prefs: com.mihnati.app.data.model.AlertPreferences) {
+        getSecurePrefs(context).edit()
+            .putBoolean(KEY_PREF_PUBLIC_SECTOR, prefs.publicSectorAlerts)
+            .putBoolean(KEY_PREF_PRIVATE_SECTOR, prefs.privateSectorAlerts)
+            .putBoolean(KEY_PREF_DEADLINES, prefs.deadlineReminders)
+            .putBoolean(KEY_PREF_UNIVERSITY, prefs.universityPrograms)
+            .putStringSet(KEY_PREF_TARGET_DEGREES, prefs.targetDegrees.toSet())
+            .putStringSet(KEY_PREF_TARGET_REGIONS, prefs.targetRegions.toSet())
+            .putInt(KEY_PREF_MIN_ECHELLE, prefs.minEchelle)
+            .putBoolean(KEY_PREF_ONLY_FILTERED, prefs.onlyFilteredPushNotifications)
+            .apply()
+    }
+
+    fun loadAlertPreferences(context: Context): com.mihnati.app.data.model.AlertPreferences {
+        val sp = getSecurePrefs(context)
+        return com.mihnati.app.data.model.AlertPreferences(
+            publicSectorAlerts = sp.getBoolean(KEY_PREF_PUBLIC_SECTOR, true),
+            privateSectorAlerts = sp.getBoolean(KEY_PREF_PRIVATE_SECTOR, true),
+            deadlineReminders = sp.getBoolean(KEY_PREF_DEADLINES, true),
+            universityPrograms = sp.getBoolean(KEY_PREF_UNIVERSITY, false),
+            targetDegrees = sp.getStringSet(KEY_PREF_TARGET_DEGREES, emptySet())?.toList() ?: emptyList(),
+            targetRegions = sp.getStringSet(KEY_PREF_TARGET_REGIONS, emptySet())?.toList() ?: emptyList(),
+            minEchelle = sp.getInt(KEY_PREF_MIN_ECHELLE, 0),
+            onlyFilteredPushNotifications = sp.getBoolean(KEY_PREF_ONLY_FILTERED, false)
+        )
     }
 }
