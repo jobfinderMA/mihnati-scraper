@@ -370,7 +370,7 @@ fun GoogleSignInDialog(
                     ) {
                         HorizontalDivider(modifier = Modifier.weight(1f), color = OutlineVariant.copy(alpha = 0.5f))
                         Text(
-                            text = "  OU PAR EMAIL  ",
+                            text = "  OU AVEC VOTRE NUMÉRO / EMAIL  ",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = OnSurfaceVariant,
@@ -406,7 +406,7 @@ fun GoogleSignInDialog(
                     // ==========================================
                     // SUB-OPTION 0: WhatsApp Verification (Code & Instant)
                     // ==========================================
-                    if (emailAuthMode == 1) {
+                    if (emailAuthMode == 0) {
                         OutlinedTextField(
                             value = nameInput,
                             onValueChange = { nameInput = it; errorMessage = null },
@@ -473,9 +473,19 @@ fun GoogleSignInDialog(
                                     coroutineScope.launch {
                                         val res = WhatsAppOtpManager.generateAndSendOtp(context, normalized, nameInput.ifBlank { "Candidat Mihnati" })
                                         isProcessing = false
-                                        res.onSuccess {
+                                        res.onSuccess { code ->
                                             waOtpSent = true
-                                            Toast.makeText(context, "Code WhatsApp envoyé au $normalized !", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, "Code WhatsApp : $code", Toast.LENGTH_LONG).show()
+                                            // Launch WhatsApp directly so the user receives it in WhatsApp
+                                            try {
+                                                val waIntent = WhatsAppOtpManager.createWhatsAppDirectIntent(
+                                                    normalized,
+                                                    "🇲🇦 Mihnati (مهنتي)\n\nVotre code secret de vérification est : $code\n\n(Valable 10 minutes pour valider votre compte)."
+                                                )
+                                                context.startActivity(waIntent)
+                                            } catch (e: Exception) {
+                                                // If WhatsApp not installed on emulator, heads-up notification and toast already fired
+                                            }
                                         }.onFailure { err ->
                                             errorMessage = err.localizedMessage
                                         }
@@ -556,12 +566,10 @@ fun GoogleSignInDialog(
                                 }
                             }
                         }
-                    }
-
                     // ==========================================
                     // SUB-OPTION 1: Code & Lien Email (Firebase Passwordless)
                     // ==========================================
-                    if (emailAuthMode == 1) {
+                    } else if (emailAuthMode == 1) {
                         OutlinedTextField(
                             value = nameInput,
                             onValueChange = { nameInput = it; errorMessage = null },
