@@ -1,5 +1,6 @@
 package com.mihnati.app.data.repository
 
+import android.content.Context
 import com.mihnati.app.data.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -662,7 +663,10 @@ object MihnatiRepository {
         }
     }
 
-    private val _whatsAppConfig = MutableStateFlow(WhatsAppConfig())
+        private val _whatsAppSubscriptions = MutableStateFlow<Map<String, List<String>>>(emptyMap())
+    val whatsAppSubscriptions: StateFlow<Map<String, List<String>>> = _whatsAppSubscriptions.asStateFlow()
+
+private val _whatsAppConfig = MutableStateFlow(WhatsAppConfig())
     val whatsAppConfig: StateFlow<WhatsAppConfig> = _whatsAppConfig.asStateFlow()
 
     fun getOpportunityById(id: String): Opportunity? {
@@ -982,7 +986,41 @@ object MihnatiRepository {
     }
 
     // Direct In-App Application
-    fun submitDirectApplication(opportunity: Opportunity, attachedDocIds: List<String>): Application {
+    fun saveUserWhatsAppPhone(context: Context, phone: String) {
+        val normalized = com.mihnati.app.security.WhatsAppOtpManager.normalizeMoroccanPhoneNumber(phone) ?: phone.trim()
+        com.mihnati.app.security.MihnatiSecurityVault.saveUserPhoneNumber(context, normalized)
+        _userProfile.update { profile ->
+            profile.copy(
+                account = profile.account.copy(phoneNumber = normalized)
+            )
+        }
+    }
+
+    fun registerWhatsAppSubscription(opportunityId: String, phone: String) {
+        val normalized = com.mihnati.app.security.WhatsAppOtpManager.normalizeMoroccanPhoneNumber(phone) ?: phone.trim()
+        if (normalized.isEmpty()) return
+        _whatsAppSubscriptions.update { current ->
+            val list = current[opportunityId] ?: emptyList()
+            if (!list.contains(normalized)) {
+                current + (opportunityId to (list + normalized))
+            } else current
+        }
+    }
+
+    fun submitDirectApplication(
+        opportunity: Opportunity,
+        attachedDocIds: List<String>,
+        whatsAppPhone: String? = null,
+        context: Context? = null
+    ): Application {
+        val phoneToUse = whatsAppPhone?.ifBlank { null } ?: _userProfile.value.account.phoneNumber.ifBlank { null }
+        if (!phoneToUse.isNullOrBlank()) {
+            registerWhatsAppSubscription(opportunity.id, phoneToUse)
+            if (context != null) {
+                saveUserWhatsAppPhone(context, phoneToUse)
+            }
+        }
+
         val existing = _applications.value.find { it.opportunityId == opportunity.id }
         if (existing != null) return existing
 
@@ -1035,6 +1073,10 @@ object MihnatiRepository {
 
         return newApp
     }
+    fun submitDirectApplication(opportunity: Opportunity, attachedDocIds: List<String>): Application {
+        return submitDirectApplication(opportunity, attachedDocIds, null, null)
+    }
+
 
     fun updateWhatsAppConfig(config: WhatsAppConfig) {
         _whatsAppConfig.value = config

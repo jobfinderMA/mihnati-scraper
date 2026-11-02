@@ -240,6 +240,15 @@ def scrape_convocations_and_results(concours_list):
             # Check for written list
             written_link = soup.find('a', href=lambda h: h and 'list_convoques/' in h)
             if written_link:
+                dispatch_whatsapp_notification({
+                    'concours_id': c['id'],
+                    'type': 'ECRIT',
+                    'title': f"Liste des candidats convoqués à l'épreuve écrite - {c['title']}",
+                    'administration': c['administration'],
+                    'exam_date': c.get('exam_date') or 'Novembre 2026',
+                    'exam_center': 'Rabat, Casablanca & Centres Régionaux',
+                    'pdf_url': f"{BASE_URL}{written_link.get('href')}"
+                })
                 convocations.append({
                     'id': f"conv-ecrit-{uuid[:8]}",
                     'concours_id': c['id'],
@@ -274,6 +283,46 @@ def scrape_convocations_and_results(concours_list):
             
     logger.info(f"Total active convocations identified: {len(convocations)}")
     return convocations
+
+
+def dispatch_whatsapp_notification(conv):
+    """
+    Dispatches automated WhatsApp notification for Écrit, Oral or Final Admis lists.
+    Supports Green-API, UltraMsg, or Webhook via env variables.
+    """
+    gateway_url = os.environ.get('WHATSAPP_GATEWAY_URL')
+    api_key = os.environ.get('WHATSAPP_API_KEY')
+    phone = os.environ.get('WHATSAPP_ADMIN_OR_TEST_PHONE', '+212600000000')
+    
+    stage = conv.get('type', 'ECRIT')
+    emoji = "📝" if stage == "ECRIT" else ("🎙️" if stage == "ORAL" else "🏆")
+    
+    msg = (
+        f"{emoji} *Mihnati (مهنتي) - Alerte Convocations*\n\n"
+        f"🏛️ *Administration :* {conv.get('administration')}\n"
+        f"📋 *Titre :* {conv.get('title')}\n"
+        f"📅 *Date d'examen :* {conv.get('exam_date')}\n"
+        f"📍 *Centres :* {conv.get('exam_center')}\n\n"
+        f"📄 *Télécharger la liste PDF :*\n{conv.get('pdf_url')}\n\n"
+        f"_(Alerte automatique transmise à vos candidatures suivies sur Mihnati)_"
+    )
+    
+    logger.info(f"[WhatsApp Alert Ready] {stage}: {conv.get('title')}")
+    
+    if gateway_url:
+        try:
+            payload = {
+                "chatId": f"{phone.replace('+', '')}@c.us",
+                "phone": phone.replace('+', ''),
+                "message": msg
+            }
+            headers = {"Content-Type": "application/json"}
+            if api_key:
+                headers["Authorization"] = f"Bearer {api_key}"
+            resp = requests.post(gateway_url, json=payload, headers=headers, timeout=10)
+            logger.info(f"[WhatsApp Gateway] Response code: {resp.status_code}")
+        except Exception as e:
+            logger.warning(f"[WhatsApp Gateway] Dispatch error: {e}")
 
 def save_to_database(concours_list, convocations_list):
     """Saves scraped data to SQLite database."""

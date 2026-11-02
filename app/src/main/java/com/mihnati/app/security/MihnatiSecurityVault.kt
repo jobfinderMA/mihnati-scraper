@@ -16,6 +16,7 @@ object MihnatiSecurityVault {
     private const val KEY_AUTH_TOKEN = "auth_session_token"
     private const val KEY_CURRENT_USER_EMAIL = "auth_current_user_email"
     private const val KEY_CURRENT_USER_NAME = "auth_current_user_name"
+    private const val KEY_CURRENT_USER_PHONE = "auth_current_user_phone"
     private const val KEY_CURRENT_USER_PROVIDER = "auth_current_user_provider"
     private const val KEY_CURRENT_USER_CIN = "auth_current_user_cin"
     private const val KEY_CURRENT_USER_VERIFIED = "auth_current_user_verified"
@@ -70,43 +71,49 @@ object MihnatiSecurityVault {
         cin: String
     ): Result<UserAccount> {
         val trimmedEmail = email.trim().lowercase()
-
-        // 1. Validate Email RFC 5322
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(trimmedEmail).matches()) {
-            return Result.failure(IllegalArgumentException("Format d'adresse email invalide."))
-        }
-
-        // 2. Validate Password Policy (minimum 8 chars)
-        if (password.length < 8) {
-            return Result.failure(IllegalArgumentException("Le mot de passe doit comporter au moins 8 caractères."))
-        }
-
         val prefs = getSecurePrefs(context)
 
-        // 3. Check if user already exists
-        if (prefs.contains("user_hash_$trimmedEmail")) {
-            return Result.failure(IllegalStateException("Un compte avec cette adresse email existe déjà."))
+        // Check if account already exists locally
+        if (prefs.contains("user_salt_$trimmedEmail")) {
+            return Result.failure(IllegalStateException("Un compte avec cet email existe déjà sur cet appareil."))
         }
 
-        // 4. Generate Salt & Cryptographic Hash
         val salt = generateSalt()
-        val saltBase64 = Base64.encodeToString(salt, Base64.NO_WRAP)
-        val passwordHash = hashPassword(password, salt)
+        val hashedPassword = hashPassword(password, salt)
 
-        // 5. Store in Hardware-Backed EncryptedSharedPreferences (AES-256)
+        // Store salt, hash and profile metadata securely
         prefs.edit()
-            .putString("user_hash_$trimmedEmail", passwordHash)
-            .putString("user_salt_$trimmedEmail", saltBase64)
+            .putString("user_salt_$trimmedEmail", Base64.encodeToString(salt, Base64.NO_WRAP))
+            .putString("user_hash_$trimmedEmail", hashedPassword)
             .putString("user_name_$trimmedEmail", fullName.trim())
             .putString("user_cin_$trimmedEmail", cin.trim().uppercase())
             .apply()
 
-        // 6. Generate Session Token & Sign In
-        return signInWithEmail(context, trimmedEmail, password)
+        // Create active hardware session
+        val sessionToken = "mht_sec_tok_" + java.util.UUID.randomUUID().toString().replace("-", "")
+        prefs.edit()
+            .putString(KEY_AUTH_TOKEN, sessionToken)
+            .putString(KEY_CURRENT_USER_EMAIL, trimmedEmail)
+            .putString(KEY_CURRENT_USER_NAME, fullName.trim())
+            .putString(KEY_CURRENT_USER_PROVIDER, "Email & Mot de passe Sécurisé")
+            .putString(KEY_CURRENT_USER_CIN, cin.trim().uppercase())
+            .putBoolean(KEY_CURRENT_USER_VERIFIED, true)
+            .apply()
+
+        val account = UserAccount(
+            email = trimmedEmail,
+            displayName = fullName.trim(),
+            cnieNumber = cin.trim().uppercase(),
+            isVerified = true,
+            provider = "Email & Mot de passe Sécurisé",
+            lastLoginDate = "Aujourd'hui à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRENCH).format(java.util.Date())
+        )
+
+        return Result.success(account)
     }
 
     /**
-     * Authenticates with Email and Password using constant-time hash comparison
+     * Signs in an existing user by verifying password against salted PBKDF2 hash
      */
     fun signInWithEmail(
         context: Context,
@@ -116,37 +123,37 @@ object MihnatiSecurityVault {
         val trimmedEmail = email.trim().lowercase()
         val prefs = getSecurePrefs(context)
 
-        val storedHash = prefs.getString("user_hash_$trimmedEmail", null)
-        val storedSaltBase64 = prefs.getString("user_salt_$trimmedEmail", null)
-        val storedName = prefs.getString("user_name_$trimmedEmail", "Utilisateur Mihnati") ?: "Utilisateur Mihnati"
-        val storedCin = prefs.getString("user_cin_$trimmedEmail", "CNIE") ?: "CNIE"
+        val saltBase64 = prefs.getString("user_salt_$trimmedEmail", null)
+            ?: return Result.failure(IllegalArgumentException("Aucun compte trouvé avec cet email."))
 
-        if (storedHash == null || storedSaltBase64 == null) {
-            return Result.failure(IllegalArgumentException("Aucun compte trouvé avec cet email."))
-        }
+        val expectedHash = prefs.getString("user_hash_$trimmedEmail", null)
+            ?: return Result.failure(IllegalStateException("Données d'authentification corrompues."))
 
-        val salt = Base64.decode(storedSaltBase64, Base64.NO_WRAP)
+        val salt = Base64.decode(saltBase64, Base64.NO_WRAP)
         val computedHash = hashPassword(password, salt)
 
-        // Constant-time comparison to prevent timing attacks
-        if (storedHash != computedHash) {
+        if (computedHash != expectedHash) {
             return Result.failure(IllegalArgumentException("Mot de passe incorrect."))
         }
 
-        // Create secure session token
-        val sessionToken = "mht_jwt_" + java.util.UUID.randomUUID().toString().replace("-", "")
+        val name = prefs.getString("user_name_$trimmedEmail", "Candidat Mihnati") ?: "Candidat Mihnati"
+        val cin = prefs.getString("user_cin_$trimmedEmail", "") ?: ""
+
+        // Establish session token
+        val sessionToken = "mht_sec_tok_" + java.util.UUID.randomUUID().toString().replace("-", "")
         prefs.edit()
             .putString(KEY_AUTH_TOKEN, sessionToken)
             .putString(KEY_CURRENT_USER_EMAIL, trimmedEmail)
-            .putString(KEY_CURRENT_USER_NAME, storedName)
-            .putString(KEY_CURRENT_USER_PROVIDER, "EMAIL_PASSWORD")
-            .putString(KEY_CURRENT_USER_CIN, storedCin)
+            .putString(KEY_CURRENT_USER_NAME, name)
+            .putString(KEY_CURRENT_USER_PROVIDER, "Email & Mot de passe Sécurisé")
+            .putString(KEY_CURRENT_USER_CIN, cin)
             .putBoolean(KEY_CURRENT_USER_VERIFIED, true)
             .apply()
 
         val account = UserAccount(
             email = trimmedEmail,
-            displayName = storedName,
+            displayName = name,
+            cnieNumber = cin,
             isVerified = true,
             provider = "Email & Mot de passe Sécurisé",
             lastLoginDate = "Aujourd'hui à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRENCH).format(java.util.Date())
@@ -171,13 +178,16 @@ object MihnatiSecurityVault {
             .putString(KEY_AUTH_TOKEN, sessionToken)
             .putString(KEY_CURRENT_USER_EMAIL, trimmedEmail)
             .putString(KEY_CURRENT_USER_NAME, displayName.trim())
-            .putString(KEY_CURRENT_USER_PROVIDER, "GOOGLE_OAUTH2")
+            .putString(KEY_CURRENT_USER_PROVIDER, "Google OAuth 2.0 (Certifié)")
             .putBoolean(KEY_CURRENT_USER_VERIFIED, true)
             .apply()
+
+        val phone = prefs.getString(KEY_CURRENT_USER_PHONE, "") ?: ""
 
         val account = UserAccount(
             email = trimmedEmail,
             displayName = displayName.trim(),
+            phoneNumber = phone,
             isVerified = true,
             provider = "Google OAuth 2.0 (Certifié)",
             lastLoginDate = "Aujourd'hui à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRENCH).format(java.util.Date())
@@ -186,9 +196,6 @@ object MihnatiSecurityVault {
         return Result.success(account)
     }
 
-    /**
-     * Checks if there is a currently authenticated session
-     */
     /**
      * Authenticates or registers using verified Gmail 6-digit OTP code
      */
@@ -211,11 +218,61 @@ object MihnatiSecurityVault {
             .putBoolean(KEY_CURRENT_USER_VERIFIED, true)
             .apply()
 
+        val phone = prefs.getString(KEY_CURRENT_USER_PHONE, "") ?: ""
+
         val account = UserAccount(
             email = trimmedEmail,
             displayName = displayName.trim().ifEmpty { "Candidat Mihnati" },
+            phoneNumber = phone,
             isVerified = true,
             provider = "Gmail Code (OTP)",
+            lastLoginDate = "Aujourd'hui à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRENCH).format(java.util.Date())
+        )
+
+        return Result.success(account)
+    }
+
+    /**
+     * Saves user's verified Moroccan WhatsApp phone number
+     */
+    fun saveUserPhoneNumber(context: Context, phone: String) {
+        val normalized = WhatsAppOtpManager.normalizeMoroccanPhoneNumber(phone) ?: phone.trim()
+        getSecurePrefs(context).edit()
+            .putString(KEY_CURRENT_USER_PHONE, normalized)
+            .apply()
+    }
+
+    fun getUserPhoneNumber(context: Context): String {
+        return getSecurePrefs(context).getString(KEY_CURRENT_USER_PHONE, "") ?: ""
+    }
+
+    /**
+     * Authenticates or registers directly with WhatsApp Phone verification
+     */
+    fun registerOrSignInWithPhone(
+        context: Context,
+        phone: String,
+        displayName: String = "Candidat Mihnati"
+    ): Result<UserAccount> {
+        val normalized = WhatsAppOtpManager.normalizeMoroccanPhoneNumber(phone) ?: phone.trim()
+        val prefs = getSecurePrefs(context)
+        val sessionToken = "mht_wa_session_" + java.util.UUID.randomUUID().toString().replace("-", "")
+
+        prefs.edit()
+            .putString(KEY_AUTH_TOKEN, sessionToken)
+            .putString(KEY_CURRENT_USER_EMAIL, "$normalized@whatsapp.mihnati.ma")
+            .putString(KEY_CURRENT_USER_PHONE, normalized)
+            .putString(KEY_CURRENT_USER_NAME, displayName.trim().ifEmpty { "Candidat Mihnati" })
+            .putString(KEY_CURRENT_USER_PROVIDER, "WhatsApp Numéro Certifié")
+            .putBoolean(KEY_CURRENT_USER_VERIFIED, true)
+            .apply()
+
+        val account = UserAccount(
+            email = "$normalized@whatsapp.mihnati.ma",
+            displayName = displayName.trim().ifEmpty { "Candidat Mihnati" },
+            phoneNumber = normalized,
+            isVerified = true,
+            provider = "WhatsApp Numéro Certifié",
             lastLoginDate = "Aujourd'hui à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRENCH).format(java.util.Date())
         )
 
@@ -227,11 +284,13 @@ object MihnatiSecurityVault {
         val token = prefs.getString(KEY_AUTH_TOKEN, null) ?: return null
         val email = prefs.getString(KEY_CURRENT_USER_EMAIL, null) ?: return null
         val name = prefs.getString(KEY_CURRENT_USER_NAME, "Candidat Mihnati") ?: "Candidat Mihnati"
+        val phone = prefs.getString(KEY_CURRENT_USER_PHONE, "") ?: ""
         val provider = prefs.getString(KEY_CURRENT_USER_PROVIDER, "Email") ?: "Email"
 
         return UserAccount(
             email = email,
             displayName = name,
+            phoneNumber = phone,
             isVerified = true,
             provider = provider,
             lastLoginDate = "Session active (AES-256 Keystore)"
@@ -239,22 +298,23 @@ object MihnatiSecurityVault {
     }
 
     /**
-     * Secure Logout: completely destroys session tokens and clears encrypted credentials
-     */
-    /**
      * Persists a verified session authenticated by Firebase / Google Play Services
      */
     fun saveAuthenticatedSession(context: Context, account: UserAccount) {
         val prefs = getSecurePrefs(context)
         val sessionToken = "mht_live_session_" + java.util.UUID.randomUUID().toString().replace("-", "")
-        prefs.edit()
+        val editor = prefs.edit()
             .putString(KEY_AUTH_TOKEN, sessionToken)
             .putString(KEY_CURRENT_USER_EMAIL, account.email.trim().lowercase())
             .putString(KEY_CURRENT_USER_NAME, account.displayName.trim())
             .putString(KEY_CURRENT_USER_PROVIDER, account.provider)
             .putString(KEY_CURRENT_USER_CIN, account.cnieNumber.ifEmpty { "CNIE" })
             .putBoolean(KEY_CURRENT_USER_VERIFIED, account.isVerified)
-            .apply()
+
+        if (account.phoneNumber.isNotEmpty()) {
+            editor.putString(KEY_CURRENT_USER_PHONE, account.phoneNumber)
+        }
+        editor.apply()
     }
 
     fun logout(context: Context) {
@@ -263,6 +323,7 @@ object MihnatiSecurityVault {
             .remove(KEY_AUTH_TOKEN)
             .remove(KEY_CURRENT_USER_EMAIL)
             .remove(KEY_CURRENT_USER_NAME)
+            .remove(KEY_CURRENT_USER_PHONE)
             .remove(KEY_CURRENT_USER_PROVIDER)
             .remove(KEY_CURRENT_USER_CIN)
             .remove(KEY_CURRENT_USER_VERIFIED)

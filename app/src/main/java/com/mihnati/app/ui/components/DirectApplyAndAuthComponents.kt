@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.foundation.text.KeyboardOptions
 import com.mihnati.app.security.EmailOtpManager
+import com.mihnati.app.security.WhatsAppOtpManager
 import com.mihnati.app.security.MihnatiSecurityVault
 import com.mihnati.app.data.cloud.CloudServiceManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -69,7 +70,11 @@ fun GoogleSignInDialog(
     var authStep by remember { mutableStateOf(0) }
 
     // Sub-mode in main screen: 0: Code & Lien Email, 1: Mot de passe
+    // Sub-mode in main screen: 0: WhatsApp 💬, 1: Code Email 📧, 2: Mot de passe 🔑
     var emailAuthMode by remember { mutableStateOf(0) }
+    var phoneInput by remember { mutableStateOf(account.phoneNumber.ifEmpty { "" }) }
+    var waOtpSent by remember { mutableStateOf(false) }
+    var waOtpInput by remember { mutableStateOf("") }
     var isPasswordRegisterMode by remember { mutableStateOf(false) } // Default to Login
 
     var emailInput by remember { mutableStateOf(if (account.isVerified) account.email else "") }
@@ -374,7 +379,7 @@ fun GoogleSignInDialog(
                         HorizontalDivider(modifier = Modifier.weight(1f), color = OutlineVariant.copy(alpha = 0.5f))
                     }
 
-                    // 3. SUB-TABS: Code & Lien Email vs Mot de passe
+                    // 3. SUB-TABS: WhatsApp 💬 vs Code Email 📧 vs Mot de passe 🔑
                     TabRow(
                         selectedTabIndex = emailAuthMode,
                         containerColor = SurfaceContainerLow,
@@ -384,19 +389,179 @@ fun GoogleSignInDialog(
                         Tab(
                             selected = emailAuthMode == 0,
                             onClick = { emailAuthMode = 0; errorMessage = null },
-                            text = { Text("Code & Lien Email", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text("WhatsApp 💬", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
                         )
                         Tab(
                             selected = emailAuthMode == 1,
                             onClick = { emailAuthMode = 1; errorMessage = null },
-                            text = { Text("Mot de passe", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text("Code Email 📧", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
                         )
+                        Tab(
+                            selected = emailAuthMode == 2,
+                            onClick = { emailAuthMode = 2; errorMessage = null },
+                            text = { Text("Mot de passe 🔑", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+                        )
+                    }
+
+                    // ==========================================
+                    // SUB-OPTION 0: WhatsApp Verification (Code & Instant)
+                    // ==========================================
+                    if (emailAuthMode == 1) {
+                        OutlinedTextField(
+                            value = nameInput,
+                            onValueChange = { nameInput = it; errorMessage = null },
+                            label = { Text("Nom et Prénom") },
+                            placeholder = { Text("ex: Bilal Benali") },
+                            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+
+                        OutlinedTextField(
+                            value = phoneInput,
+                            onValueChange = { phoneInput = it; errorMessage = null },
+                            label = { Text("Numéro de Téléphone WhatsApp") },
+                            placeholder = { Text("ex: 06 12 34 56 78") },
+                            leadingIcon = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(start = 10.dp, end = 4.dp)
+                                ) {
+                                    Text("🇲🇦", fontSize = 16.sp)
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("+212", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                }
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF25D366).copy(alpha = 0.08f)),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF25D366).copy(alpha = 0.35f)),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(Icons.Default.Notifications, contentDescription = null, tint = Color(0xFF198754), modifier = Modifier.size(16.dp))
+                                Text(
+                                    text = "Recevez votre code secret sur WhatsApp ainsi que les alertes automatiques pour vos concours (Écrit, Oral, Admis).",
+                                    fontSize = 11.sp,
+                                    color = Color(0xFF0F5132),
+                                    lineHeight = 15.sp
+                                )
+                            }
+                        }
+
+                        if (!waOtpSent) {
+                            Button(
+                                onClick = {
+                                    val normalized = WhatsAppOtpManager.normalizeMoroccanPhoneNumber(phoneInput)
+                                    if (normalized == null) {
+                                        errorMessage = "Veuillez entrer un numéro marocain valide (ex: 06 12 34 56 78 ou 07...)."
+                                        return@Button
+                                    }
+                                    isProcessing = true
+                                    errorMessage = null
+                                    coroutineScope.launch {
+                                        val res = WhatsAppOtpManager.generateAndSendOtp(context, normalized, nameInput.ifBlank { "Candidat Mihnati" })
+                                        isProcessing = false
+                                        res.onSuccess {
+                                            waOtpSent = true
+                                            Toast.makeText(context, "Code WhatsApp envoyé au $normalized !", Toast.LENGTH_SHORT).show()
+                                        }.onFailure { err ->
+                                            errorMessage = err.localizedMessage
+                                        }
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth().height(48.dp),
+                                enabled = !isProcessing,
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366)),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                if (isProcessing) {
+                                    CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White)
+                                } else {
+                                    Icon(Icons.Default.Send, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Envoyer le code sur WhatsApp", fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                OutlinedTextField(
+                                    value = waOtpInput,
+                                    onValueChange = { if (it.length <= 6 && it.all { c -> c.isDigit() }) waOtpInput = it },
+                                    label = { Text("Code secret à 6 chiffres reçu sur WhatsApp") },
+                                    placeholder = { Text("ex: 849201") },
+                                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    singleLine = true,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+
+                                Button(
+                                    onClick = {
+                                        if (waOtpInput.length != 6) {
+                                            errorMessage = "Veuillez entrer le code à 6 chiffres reçu sur WhatsApp."
+                                            return@Button
+                                        }
+                                        val verifyRes = WhatsAppOtpManager.verifyOtp(phoneInput, waOtpInput)
+                                        if (verifyRes.isSuccess) {
+                                            val signRes = MihnatiSecurityVault.registerOrSignInWithPhone(
+                                                context,
+                                                phoneInput,
+                                                nameInput.ifBlank { "Candidat Mihnati" }
+                                            )
+                                            signRes.onSuccess { acc ->
+                                                MihnatiRepository.applyAuthenticatedAccount(acc)
+                                                Toast.makeText(context, "Compte validé avec succès !", Toast.LENGTH_SHORT).show()
+                                                onDismiss()
+                                            }
+                                        } else {
+                                            errorMessage = verifyRes.exceptionOrNull()?.localizedMessage ?: "Code incorrect."
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxWidth().height(48.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A)),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Text("Valider & Se connecter", fontWeight = FontWeight.Bold)
+                                }
+
+                                WhatsAppOtpManager.getLastActiveOtpForDebug()?.let { activePin ->
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .clickable { waOtpInput = activePin }
+                                            .padding(vertical = 4.dp),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            text = "Code test rapide : $activePin (Cliquer pour insérer)",
+                                            fontSize = 11.sp,
+                                            color = Primary,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     // ==========================================
                     // SUB-OPTION 1: Code & Lien Email (Firebase Passwordless)
                     // ==========================================
-                    if (emailAuthMode == 0) {
+                    if (emailAuthMode == 1) {
                         OutlinedTextField(
                             value = nameInput,
                             onValueChange = { nameInput = it; errorMessage = null },
@@ -1484,6 +1649,79 @@ fun DirectApplicationBottomSheet(
                     onUploadClicked = { onOpenUploadDialog(DocumentCategory.DIPLOME) }
                 )
 
+                // WhatsApp Auto-Alert Notification Banner & Input (100% Automatic)
+                var whatsAppPhoneInput by remember {
+                    mutableStateOf(userProfile.account.phoneNumber.ifEmpty { MihnatiSecurityVault.getUserPhoneNumber(context) })
+                }
+
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF25D366).copy(alpha = 0.08f)),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF25D366).copy(alpha = 0.35f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFF25D366)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("💬", fontSize = 12.sp)
+                            }
+                            Column {
+                                Text(
+                                    text = "Alertes Convocations WhatsApp (100% Automatique)",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF0F5132)
+                                    )
+                                )
+                                Text(
+                                    text = "Listes Écrit • Oral • Résultats Admis envoyés dès publication",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontSize = 10.sp,
+                                        color = Color(0xFF198754)
+                                    )
+                                )
+                            }
+                        }
+
+                        OutlinedTextField(
+                            value = whatsAppPhoneInput,
+                            onValueChange = { whatsAppPhoneInput = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Numéro WhatsApp pour les alertes", fontSize = 11.sp) },
+                            placeholder = { Text("ex: 06 12 34 56 78") },
+                            leadingIcon = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(start = 10.dp, end = 4.dp)
+                                ) {
+                                    Text("🇲🇦", fontSize = 14.sp)
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("+212", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                }
+                            },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF25D366),
+                                unfocusedBorderColor = OutlineVariant
+                            )
+                        )
+                    }
+                }
+
                 // User account confirmation row
                 Box(
                     modifier = Modifier
@@ -1536,7 +1774,22 @@ fun DirectApplicationBottomSheet(
                         coroutineScope.launch {
                             delay(700)
                             val attachedIds = userDocs.map { it.id }
-                            val newApp = MihnatiRepository.submitDirectApplication(opportunity, attachedIds)
+                            val newApp = MihnatiRepository.submitDirectApplication(
+                                opportunity = opportunity,
+                                attachedDocIds = attachedIds,
+                                whatsAppPhone = whatsAppPhoneInput,
+                                context = context
+                            )
+                            if (whatsAppPhoneInput.isNotBlank()) {
+                                WhatsAppOtpManager.dispatchConcoursUpdateAlert(
+                                    context = context,
+                                    rawPhone = whatsAppPhoneInput,
+                                    concoursTitle = opportunity.title,
+                                    ministry = opportunity.organization,
+                                    stageType = "DEPOT",
+                                    pdfUrl = "https://www.emploi-public.ma/fr/concours/details/${opportunity.id}"
+                                )
+                            }
                             isSubmitting = false
                             submittedApplication = newApp
                             Toast.makeText(context, "Candidature transmise avec succès ! Réf: ${newApp.referenceNumber}", Toast.LENGTH_LONG).show()

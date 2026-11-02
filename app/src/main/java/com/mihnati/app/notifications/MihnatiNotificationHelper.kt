@@ -160,6 +160,88 @@ object MihnatiNotificationHelper {
         NotificationManagerCompat.from(context).notify(9001, notification)
     }
 
+    /**
+     * Dispatches a high-priority heads-up notification with the 6-digit WhatsApp verification code
+     */
+    fun showWhatsAppAuthOtpNotification(
+        context: Context,
+        phone: String,
+        otpCode: String
+    ) {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            2003,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_AUTH_OTP)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("Code WhatsApp Mihnati : $otpCode 💬")
+            .setContentText("Code secret $otpCode pour valider votre numéro WhatsApp ($phone).")
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("Votre code de vérification WhatsApp Mihnati est :\n\n💬 $otpCode\n\nCe code est valable 10 minutes pour le $phone. Ne le communiquez à personne.")
+            )
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setColor(0xFF25D366.toInt()) // WhatsApp Green
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        NotificationManagerCompat.from(context).notify(9002, notification)
+    }
+
+    /**
+     * Dispatches an automatic notification for published Écrit, Oral or Final Admis lists
+     */
+    fun showWhatsAppConvocationAlert(
+        context: Context,
+        phone: String,
+        concoursTitle: String,
+        ministry: String,
+        stage: String,
+        pdfUrl: String
+    ) {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            2004,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val (stageIcon, stageTitle) = when {
+            stage.contains("oral", ignoreCase = true) -> "🎙️" to "Liste de l'épreuve orale disponible !"
+            stage.contains("admis", ignoreCase = true) || stage.contains("resultat", ignoreCase = true) -> "🏆" to "Résultats définitifs & Liste des admis !"
+            else -> "📝" to "Liste des convoqués à l'épreuve écrite !"
+        }
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_CONVOCATIONS)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("$stageIcon Mihnati WhatsApp : $stageTitle")
+            .setContentText("$ministry • $concoursTitle")
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("$stageIcon Mihnati Alert Convocations\n\nLa liste officielle pour :\n$ministry - $concoursTitle vient d'être publiée sur emploi-public.ma.\n\n📲 Alerte envoyée sur votre WhatsApp : $phone")
+            )
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setColor(0xFF25D366.toInt())
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        NotificationManagerCompat.from(context).notify((1000..9999).random(), notification)
+    }
+
     fun showTestNotification(context: Context) {
         showConcoursAlert(
             context = context,
