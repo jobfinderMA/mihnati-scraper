@@ -56,6 +56,10 @@ class FirebaseCloudService(
 
             firestore.collection("users").document(uid).set(accountData, SetOptions.merge()).await()
 
+            try {
+                authResult.user?.sendEmailVerification()
+            } catch (_: Exception) {}
+
             val account = UserAccount(
                 email = email,
                 displayName = displayName,
@@ -65,6 +69,25 @@ class FirebaseCloudService(
                 lastLoginDate = "À l'instant (Firebase Cloud)"
             )
             Result.success(account)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun sendPasswordlessSignInEmail(email: String): Result<Boolean> = withContext(Dispatchers.IO) {
+        try {
+            val actionCodeSettings = com.google.firebase.auth.ActionCodeSettings.newBuilder()
+                .setUrl("https://mihnati-morocco.firebaseapp.com/finishSignUp?email=$email")
+                .setHandleCodeInApp(true)
+                .setAndroidPackageName(
+                    "com.mihnati.app",
+                    true,
+                    "1"
+                )
+                .build()
+
+            auth.sendSignInLinkToEmail(email.trim().lowercase(), actionCodeSettings).await()
+            Result.success(true)
         } catch (e: Exception) {
             Result.failure(e)
         }

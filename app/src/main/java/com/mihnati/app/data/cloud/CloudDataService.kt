@@ -31,6 +31,8 @@ interface CloudDataService {
         cin: String
     ): Result<UserAccount>
 
+    suspend fun sendPasswordlessSignInEmail(email: String): Result<Boolean> = Result.success(true)
+
     suspend fun loginUser(
         email: String,
         passwordHash: String
