@@ -149,7 +149,7 @@ fun OpportunitiesScreen(
                         onValueChange = { searchQuery = it },
                         placeholder = {
                             Text(
-                                text = "Poste, ministère, ville, Échelle 11...",
+                                text = AppStrings.searchOpportunitiesPlaceholder,
                                 style = MaterialTheme.typography.bodyMedium.copy(color = Outline)
                             )
                         },
@@ -166,7 +166,7 @@ fun OpportunitiesScreen(
                         IconButton(onClick = { searchQuery = "" }) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Effacer",
+                                contentDescription = AppStrings.clearAction,
                                 tint = Outline,
                                 modifier = Modifier.size(18.dp)
                             )
@@ -186,7 +186,7 @@ fun OpportunitiesScreen(
                 item {
                     val isAll = selectedSector == null && !onlyFavorites && !onlyUrgent
                     FilterChipPill(
-                        label = "Tous",
+                        label = AppStrings.tabAll,
                         count = opportunities.size,
                         isSelected = isAll,
                         onClick = {
@@ -200,7 +200,7 @@ fun OpportunitiesScreen(
                 // Tab "Favoris"
                 item {
                     FilterChipPill(
-                        label = "Favoris",
+                        label = AppStrings.tabFavorites,
                         count = bookmarkedCount,
                         isSelected = onlyFavorites,
                         emoji = "❤️",
@@ -220,7 +220,7 @@ fun OpportunitiesScreen(
                     val isSelected = selectedSector == SectorType.PUBLIC && !onlyFavorites && !onlyUrgent
                     val count = opportunities.count { it.sectorType == SectorType.PUBLIC }
                     FilterChipPill(
-                        label = "Concours Publics",
+                        label = AppStrings.tabPublicSector,
                         count = count,
                         isSelected = isSelected,
                         emoji = "🏛️",
@@ -238,7 +238,7 @@ fun OpportunitiesScreen(
                     val isSelected = selectedSector == SectorType.PRIVE && !onlyFavorites && !onlyUrgent
                     val count = opportunities.count { it.sectorType == SectorType.PRIVE }
                     FilterChipPill(
-                        label = "Secteur Privé",
+                        label = AppStrings.tabPrivateSector,
                         count = count,
                         isSelected = isSelected,
                         emoji = "🏢",
@@ -254,7 +254,7 @@ fun OpportunitiesScreen(
                 // Tab "Urgent (<5j)"
                 item {
                     FilterChipPill(
-                        label = "Urgent (<5j)",
+                        label = if (LanguageManager.isArabic) "عاجل (<5 أيام)" else "Urgent (<5j)",
                         count = urgentCount,
                         isSelected = onlyUrgent,
                         emoji = "⏱️",
@@ -274,7 +274,7 @@ fun OpportunitiesScreen(
                     val isSelected = selectedSector == SectorType.FORMATION && !onlyFavorites && !onlyUrgent
                     val count = opportunities.count { it.sectorType == SectorType.FORMATION }
                     FilterChipPill(
-                        label = "Masters & Bourses",
+                        label = AppStrings.tabMastersTrainings,
                         count = count,
                         isSelected = isSelected,
                         emoji = "🎓",
@@ -311,14 +311,14 @@ fun OpportunitiesScreen(
                         Text("💰", fontSize = 16.sp)
                         Column {
                             Text(
-                                text = "Simulateur Salaire",
+                                text = AppStrings.salarySimulator,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSecondaryContainer
                                 )
                             )
                             Text(
-                                text = "Échelles 8 à 11 Maroc",
+                                text = AppStrings.salarySubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSecondaryContainer.copy(alpha = 0.8f)
@@ -344,14 +344,14 @@ fun OpportunitiesScreen(
                         Text("📋", fontSize = 16.sp)
                         Column {
                             Text(
-                                text = "Dossier CNIE",
+                                text = AppStrings.contestFile,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnPrimaryFixed
                                 )
                             )
                             Text(
-                                text = "Pièces requises",
+                                text = AppStrings.contestFileSubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnPrimaryFixed.copy(alpha = 0.8f)
@@ -378,14 +378,14 @@ fun OpportunitiesScreen(
                         Text("🎓", fontSize = 16.sp)
                         Column {
                             Text(
-                                text = "Éligibilité",
+                                text = AppStrings.diplomaChecker,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = "Échelle & Corps",
+                                text = AppStrings.diplomaCheckerSubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSurfaceVariant
@@ -421,8 +421,20 @@ fun OpportunitiesScreen(
                         tint = Primary,
                         modifier = Modifier.size(16.dp)
                     )
+                    val displayLevel = if (LanguageManager.isArabic) {
+                        when (selectedLevel) {
+                            "Tous niveaux" -> AppStrings.levelAll
+                            "Bac+2 / DUT / BTS" -> AppStrings.levelBac2
+                            "Bac+3 / Licence" -> AppStrings.levelBac3
+                            "Bac+5 / Master / Ingénieur" -> AppStrings.levelBac5
+                            "Doctorat / Ph.D" -> AppStrings.levelDoctorate
+                            else -> selectedLevel
+                        }
+                    } else {
+                        selectedLevel
+                    }
                     Text(
-                        text = selectedLevel,
+                        text = displayLevel,
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = OnSurface,
                             fontWeight = FontWeight.Bold
@@ -455,8 +467,13 @@ fun OpportunitiesScreen(
                         tint = Primary,
                         modifier = Modifier.size(16.dp)
                     )
+                    val displaySort = if (LanguageManager.isArabic) {
+                        if (selectedSort == "Échéance proche") AppStrings.sortDeadlineNear else AppStrings.sortProfileMatch
+                    } else {
+                        selectedSort
+                    }
                     Text(
-                        text = selectedSort,
+                        text = displaySort,
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = OnSurface,
                             fontWeight = FontWeight.SemiBold
@@ -478,7 +495,7 @@ fun OpportunitiesScreen(
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
-                            text = "FILTRER PAR DIPLÔME REQUIS",
+                            text = if (LanguageManager.isArabic) "تصفية حسب الدبلوم المطلوب" else "FILTRER PAR DIPLÔME REQUIS",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Outline,
                                 fontWeight = FontWeight.Bold,
@@ -532,7 +549,7 @@ fun OpportunitiesScreen(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "${filteredOpportunities.size} opportunités disponibles",
+                        text = "${filteredOpportunities.size} ${AppStrings.opportunitiesFound}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurfaceVariant,
                             fontWeight = FontWeight.SemiBold
@@ -542,7 +559,7 @@ fun OpportunitiesScreen(
 
                 if (selectedSector != null || selectedLevel != "Tous niveaux" || onlyFavorites || onlyUrgent || searchQuery.isNotEmpty()) {
                     Text(
-                        text = "Réinitialiser",
+                        text = if (LanguageManager.isArabic) "إعادة ضبط" else "Réinitialiser",
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold
@@ -574,11 +591,11 @@ fun OpportunitiesScreen(
                     ) {
                         Text("🔍", fontSize = 36.sp)
                         Text(
-                            text = "Aucune opportunité trouvée",
+                            text = AppStrings.noOffersFound,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Essayez de modifier vos filtres ou de réinitialiser la recherche.",
+                            text = AppStrings.modifySearchCriteria,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                         Button(
@@ -592,7 +609,7 @@ fun OpportunitiesScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = Primary),
                             shape = RoundedCornerShape(10.dp)
                         ) {
-                            Text("Voir toutes les opportunités")
+                            Text(if (LanguageManager.isArabic) "عرض جميع المباريات" else "Voir toutes les opportunités")
                         }
                     }
                 }
@@ -879,18 +896,18 @@ fun CleanOpportunityCard(
                         text = if (opportunity.sectorType == SectorType.PUBLIC) {
                             when {
                                 opportunity.title.contains("11") || opportunity.degreeRequired.contains("Échelle 11") || opportunity.degreeRequired.contains("Ingénieur") ->
-                                    "Grille Fonction Publique • Échelle 11"
+                                    AppStrings.publicSectorScale11
                                 opportunity.title.contains("10") || opportunity.degreeRequired.contains("Échelle 10") ->
-                                    "Grille Fonction Publique • Échelle 10"
+                                    AppStrings.publicSectorScale10
                                 opportunity.title.contains("9") || opportunity.degreeRequired.contains("Échelle 9") || opportunity.degreeRequired.contains("Technicien") ->
-                                    "Grille Fonction Publique • Échelle 9"
-                                else -> "Statut Fonction Publique (Selon arrêté)"
+                                    AppStrings.publicSectorScale9
+                                else -> AppStrings.publicSectorStatus
                             }
                         } else {
                             if (opportunity.salary.isNotBlank() && !opportunity.salary.contains("Grille", ignoreCase = true)) {
                                 opportunity.salary
                             } else {
-                                "Rémunération selon profil"
+                                AppStrings.salaryAccordingProfile
                             }
                         },
                         style = MaterialTheme.typography.labelSmall.copy(
@@ -902,7 +919,7 @@ fun CleanOpportunityCard(
 
                 if (opportunity.sectorType == SectorType.PUBLIC) {
                     Text(
-                        text = "Estimer ➔",
+                        text = AppStrings.estimateSalaryAction,
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold,
@@ -927,7 +944,7 @@ fun CleanOpportunityCard(
 
                 // Match Percentage
                 TagBadge(
-                    text = "${opportunity.matchPercentage}% match",
+                    text = "${opportunity.matchPercentage}% ${AppStrings.matchWord}",
                     backgroundColor = SecondaryContainer.copy(alpha = 0.6f),
                     textColor = OnSecondaryContainer
                 )
@@ -935,7 +952,11 @@ fun CleanOpportunityCard(
                 // Deadline Badge
                 val isUrgent = opportunity.deadlineDaysRemaining <= 4
                 TagBadge(
-                    text = if (isUrgent) "J-${opportunity.deadlineDaysRemaining}" else "${opportunity.deadlineDaysRemaining}j restants",
+                    text = if (isUrgent) {
+                        if (LanguageManager.isArabic) "باقي ${opportunity.deadlineDaysRemaining} أيام" else "J-${opportunity.deadlineDaysRemaining}"
+                    } else {
+                        if (LanguageManager.isArabic) "باقي ${opportunity.deadlineDaysRemaining} أيام" else "${opportunity.deadlineDaysRemaining}j restants"
+                    },
                     backgroundColor = if (isUrgent) ErrorContainer else TertiaryFixed,
                     textColor = if (isUrgent) OnErrorContainer else OnTertiaryFixed
                 )

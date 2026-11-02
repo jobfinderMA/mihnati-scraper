@@ -97,7 +97,7 @@ fun OpportunityDetailScreen(
                         )
                     }
                     Text(
-                        text = "Détail Opportunité",
+                        text = if (LanguageManager.isArabic) "تفاصيل المباراة" else "Détail Opportunité",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -167,7 +167,7 @@ fun OpportunityDetailScreen(
                                     .background(Secondary)
                             )
                             Text(
-                                text = "Recrutement actif 2026",
+                                text = if (LanguageManager.isArabic) "توظيف مفتوح 2026" else "Recrutement actif 2026",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = OnSurface,
                                     fontWeight = FontWeight.Bold
@@ -349,7 +349,7 @@ fun OpportunityDetailScreen(
                             }
                             Column {
                                 Text(
-                                    text = "Délai limite de candidature",
+                                    text = if (LanguageManager.isArabic) "آخر أجل لإيداع الترشيحات" else "Délai limite de candidature",
                                     style = MaterialTheme.typography.labelSmall.copy(
                                         color = Primary,
                                         fontWeight = FontWeight.Bold
@@ -432,7 +432,7 @@ fun OpportunityDetailScreen(
                                     )
                                 }
                                 Text(
-                                    text = "Compatibilité avec votre profil",
+                                    text = if (LanguageManager.isArabic) "نسبة التطابق مع ملفك" else "Compatibilité avec votre profil",
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         fontWeight = FontWeight.Bold,
                                         color = OnSurface
@@ -487,7 +487,7 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = "DIPLÔME REQUIS",
+                                text = if (LanguageManager.isArabic) "الشهادة المطلوبة" else "DIPLÔME REQUIS",
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
@@ -607,7 +607,7 @@ fun OpportunityDetailScreen(
                     ) {
                         Text("💰", fontSize = 14.sp)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Simulateur Salaire", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(AppStrings.salarySimulator, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                     }
 
                     Button(
@@ -619,7 +619,7 @@ fun OpportunityDetailScreen(
                     ) {
                         Text("📄", fontSize = 14.sp)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Lettre Motivation", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(AppStrings.coverLetter, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                     }
                 }
             }
@@ -637,7 +637,7 @@ fun OpportunityDetailScreen(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        text = "Description du poste",
+                        text = if (LanguageManager.isArabic) "الوصف العام للمنصب" else "Description du poste",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -653,7 +653,7 @@ fun OpportunityDetailScreen(
 
                     if (opportunity.missions.isNotEmpty()) {
                         Text(
-                            text = "Missions principales :",
+                            text = if (LanguageManager.isArabic) "المهام والمسؤوليات الرئيسية :" else "Missions principales :",
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -723,7 +723,7 @@ fun OpportunityDetailScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Pièces à fournir pour le dossier",
+                                text = if (LanguageManager.isArabic) "الوثائق المطلوبة لملف الترشيح" else "Pièces à fournir pour le dossier",
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
@@ -850,7 +850,11 @@ fun OpportunityDetailScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (isAlreadyApplied) "Candidature déposée (Voir récépissé)" else "Postuler directement",
+                        text = if (isAlreadyApplied) {
+                            if (LanguageManager.isArabic) "تم إيداع الترشيح (عرض الوصل)" else "Candidature déposée (Voir récépissé)"
+                        } else {
+                            if (LanguageManager.isArabic) "الترشح مباشرة للمباراة" else "Postuler directement"
+                        },
                         style = MaterialTheme.typography.labelLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color.White

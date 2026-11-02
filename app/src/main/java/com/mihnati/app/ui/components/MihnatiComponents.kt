@@ -477,8 +477,19 @@ fun ApplicationStepper(
                     }
                 }
                 Spacer(modifier = Modifier.height(4.dp))
+                val stageText = if (LanguageManager.isArabic) {
+                    when (stage) {
+                        ApplicationStage.DEPOSE -> "تم الإيداع"
+                        ApplicationStage.REVUE -> "الانتقاء"
+                        ApplicationStage.ECRIT -> "الكتابي"
+                        ApplicationStage.ENTRETIEN -> "الشفوي"
+                        ApplicationStage.RESULTAT -> "النتائج"
+                    }
+                } else {
+                    stage.label
+                }
                 Text(
-                    text = stage.label,
+                    text = stageText,
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontSize = 10.sp,
                         fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal,

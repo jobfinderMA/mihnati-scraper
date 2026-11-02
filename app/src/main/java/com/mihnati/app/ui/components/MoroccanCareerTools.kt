@@ -82,14 +82,14 @@ fun SalarySimulatorBottomSheet(
                     }
                     Column {
                         Text(
-                            text = "Simulateur de Salaire Public",
+                            text = AppStrings.salarySimulatorTitle,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
                             )
                         )
                         Text(
-                            text = "Grille indiciaire officielle du Royaume du Maroc",
+                            text = AppStrings.salarySimulatorOfficialGrid,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -101,7 +101,7 @@ fun SalarySimulatorBottomSheet(
 
             // Grade Selector Chips
             Text(
-                text = "CHOIX DE L'ÉCHELLE ADMINISTRATIVE",
+                text = AppStrings.chooseScaleLabel,
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = Outline,
@@ -168,11 +168,11 @@ fun SalarySimulatorBottomSheet(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Primes spécifiques de ministère",
+                        text = AppStrings.ministryBonusLabel,
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(
-                        text = "Ex: Finances (MEF), Impôts (DGI), Douanes",
+                        text = AppStrings.ministryBonusSub,
                         style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.sp)
                     )
                 }
@@ -220,7 +220,7 @@ fun SalarySimulatorBottomSheet(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        text = "SALAIRE NET MENSUEL ESTIMÉ",
+                        text = AppStrings.netSalaryEstimated,
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = OnSecondaryContainer,
                             fontWeight = FontWeight.Bold,
@@ -241,14 +241,14 @@ fun SalarySimulatorBottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Traitement brut indiciaire :", style = MaterialTheme.typography.bodySmall)
+                        Text(AppStrings.brutTreatment, style = MaterialTheme.typography.bodySmall)
                         Text(brut, style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Retenues sociales (CMR & AMO) :", style = MaterialTheme.typography.bodySmall)
+                        Text(AppStrings.socialDeductions, style = MaterialTheme.typography.bodySmall)
                         Text(cmrAmo, style = MaterialTheme.typography.bodySmall.copy(color = Error))
                     }
                     if (hasMinistryBonus) {
@@ -256,7 +256,7 @@ fun SalarySimulatorBottomSheet(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Indemnité de rendement / primes :", style = MaterialTheme.typography.bodySmall)
+                            Text(AppStrings.ministryBonusAmount, style = MaterialTheme.typography.bodySmall)
                             Text("+ ~2 150 DH", style = MaterialTheme.typography.bodySmall.copy(color = Secondary, fontWeight = FontWeight.Bold))
                         }
                     }
@@ -264,7 +264,7 @@ fun SalarySimulatorBottomSheet(
             }
 
             Text(
-                text = "ℹ️ Estimation indicative basée sur le décret n° 2-04-403 fixant le statut des administrateurs et techniciens de l'État et l'accord de revalorisation salariale 2024-2026.",
+                text = AppStrings.salaryDisclaimer,
                 style = MaterialTheme.typography.bodySmall.copy(color = Outline, fontSize = 11.sp, lineHeight = 16.sp)
             )
         }
@@ -280,15 +280,16 @@ private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third:
 fun ConcoursChecklistDialog(
     onDismiss: () -> Unit
 ) {
-    val items = remember {
+    val isAr = LanguageManager.isArabic
+    val items = remember(isAr) {
         mutableStateListOf(
-            ChecklistItem("Copie certifiée conforme du diplôme national ou attestation de réussite", true),
-            ChecklistItem("Arrêté d'équivalence publié au Bulletin Officiel (pour diplômes privés ou étrangers)", true),
-            ChecklistItem("Copie de la Carte Nationale d'Identité Électronique (CNIE recto-verso)", true),
-            ChecklistItem("Curriculum Vitae (CV) actualisé avec photo d'identité récente", true),
-            ChecklistItem("Récépissé ou fiche d'inscription générée sur emploi-public.ma", false),
-            ChecklistItem("Extrait du casier judiciaire (Fiche anthropométrique)", false),
-            ChecklistItem("Certificat médical d'aptitude physique (pour certains ministères)", false)
+            ChecklistItem(if (isAr) "نسخة مطابقة للأصل من الدبلوم الوطني أو شهادة النجاح" else "Copie certifiée conforme du diplôme national ou attestation de réussite", true),
+            ChecklistItem(if (isAr) "قرار المعادلة المنشور بالجريدة الرسمية (للشواهد الخاصة أو الأجنبية)" else "Arrêté d'équivalence publié au Bulletin Officiel (pour diplômes privés ou étrangers)", true),
+            ChecklistItem(if (isAr) "نسخة من البطاقة الوطنية للتعريف الإلكترونية (CNIE من الجهتين)" else "Copie de la Carte Nationale d'Identité Électronique (CNIE recto-verso)", true),
+            ChecklistItem(if (isAr) "سيرة ذاتية محينة (CV) مع صورة فوتوغرافية حديثة" else "Curriculum Vitae (CV) actualisé avec photo d'identité récente", true),
+            ChecklistItem(if (isAr) "وصل إلكتروني للتسجيل عبر بوابة emploi-public.ma" else "Récépissé ou fiche d'inscription générée sur emploi-public.ma", false),
+            ChecklistItem(if (isAr) "مستخرج من السجل العدلي (بطاقة السوابق أو بطاقة السجل العدلي)" else "Extrait du casier judiciaire (Fiche anthropométrique)", false),
+            ChecklistItem(if (isAr) "شهادة طبية تثبت القدرة البدنية لممارسة المهام" else "Certificat médical d'aptitude physique (pour certains ministères)", false)
         )
     }
 
@@ -302,7 +303,7 @@ fun ConcoursChecklistDialog(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(imageVector = Icons.Default.Checklist, contentDescription = null, tint = Primary)
-                Text("Dossier de Candidature", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                Text(AppStrings.checklistTitle, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
             }
         },
         text = {
@@ -318,7 +319,7 @@ fun ConcoursChecklistDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Pièces prêtes : $completedCount / ${items.size}", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold))
+                    Text("${AppStrings.readyDocsCount} $completedCount / ${items.size}", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold))
                     Text("${(completedCount * 100) / items.size}%", color = if (completedCount == items.size) Secondary else Primary, fontWeight = FontWeight.Bold)
                 }
 
@@ -366,7 +367,7 @@ fun ConcoursChecklistDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = Primary),
                 shape = RoundedCornerShape(10.dp)
             ) {
-                Text("Fermer")
+                Text(AppStrings.closeAction)
             }
         }
     )
@@ -390,7 +391,32 @@ fun MotivationLetterBottomSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
 
-    val letterContent = """
+    val isAr = LanguageManager.isArabic
+    val letterContent = if (isAr) {
+        """
+إلى السيد(ة) مدير الموارد البشرية
+$organization
+المملكة المغربية
+
+الموضوع: طلب خطي لاجتياز مباراة توظيف $opportunityTitle
+رقم مرجع المباراة: $reference
+
+سلام تام بوجود مولانا الإمام،
+
+وبعد، يشرفني أن أتقدم إلى سيادتكم بطلبي هذا قصد تسجيل ترشيحي لاجتياز مباراة توظيف $opportunityTitle المعلن عنها من طرف $organization.
+
+وأحيطكم علماً أنني حاصل على دبلوم $degreeName، وأتوفر على كافة الشروط والمؤهلات العلمية والعملية المطلوبة للقيام بالمهام المسندة على أكمل وجه وبكل تفان ونزاهة خدمة للمصلحة العامة ولتطور الإدارة المغربية.
+
+وتجدون رفقة هذا الطلب كافة الوثائق والشهادات المطلوبة المكونة لملف الترشيح.
+
+وفي انتظار تفضلكم بقبول ترشيحي، تقبلوا فائق عبارات التقدير والاحترام.
+
+والسلام.
+$candidateName
+الدار البيضاء، المملكة المغربية
+        """.trimIndent()
+    } else {
+        """
 À l'attention de Monsieur / Madame le Responsable du Recrutement
 $organization
 Royaume du Maroc
@@ -410,7 +436,8 @@ Dans l'attente de votre réponse, je vous prie d'agréer, Madame, Monsieur, l'ex
 
 $candidateName
 Casablanca, Royaume du Maroc
-    """.trimIndent()
+        """.trimIndent()
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -445,11 +472,11 @@ Casablanca, Royaume du Maroc
                     }
                     Column {
                         Text(
-                            text = "Lettre de Motivation Pré-remplie",
+                            text = AppStrings.motivationLetterTitle,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Adaptée à votre profil et au concours officiel",
+                            text = AppStrings.motivationLetterSubtitle,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -481,7 +508,7 @@ Casablanca, Royaume du Maroc
                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("Lettre de Motivation Mihnati", letterContent)
                     clipboard.setPrimaryClip(clip)
-                    Toast.makeText(context, "Lettre copiée dans le presse-papiers !", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, AppStrings.letterCopiedToast, Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary),
@@ -489,7 +516,7 @@ Casablanca, Royaume du Maroc
             ) {
                 Icon(imageVector = Icons.Default.ContentCopy, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Copier la lettre de motivation", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold))
+                Text(AppStrings.copyLetterAction, style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold))
             }
         }
     }
@@ -506,13 +533,24 @@ fun DiplomaEligibilityBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    val diplomas = listOf(
-        "Ingénieur d'État (ENSIAS, EMI, INPT, ENSA...)" to ("Échelle 11" to "Ingénieur 1er grade • Administrateur 2ème grade"),
-        "Master / Master Spécialisé / DESA (Bac+5)" to ("Échelle 11" to "Administrateur 2ème grade • Concours MEF & Ministères"),
-        "Licence Fondamentale ou Professionnelle (Bac+3)" to ("Échelle 10" to "Administrateur 3ème grade • Enseignement / Santé"),
-        "DUT / BTS / DTS / Technicien Spécialisé (Bac+2)" to ("Échelle 9" to "Technicien 3ème grade • Douanes (ADII) / DGI"),
-        "Baccalauréat National ou Équivalent" to ("Échelle 8" to "Adjoint technique / Agent administratif")
-    )
+    val isAr = LanguageManager.isArabic
+    val diplomas = if (isAr) {
+        listOf(
+            "مهندس دولة (ENSIAS, EMI, INPT, ENSA...)" to ("السلم 11" to "مهندس دولة من الدرجة الأولى • متصرف من الدرجة الثانية"),
+            "ماستر / ماستر متخصص / DESA (باك+5)" to ("السلم 11" to "متصرف من الدرجة الثانية • مباريات وزارة المالية والوزارات"),
+            "إجازة أساسية أو مهنية (باك+3)" to ("السلم 10" to "متصرف من الدرجة الثالثة • قطاع التعليم والصحة"),
+            "تقني متخصص / DUT / BTS / DTS (باك+2)" to ("السلم 9" to "تقني من الدرجة الثالثة • إدارة الجمارك والضرائب"),
+            "شهادة البكالوريا الوطنية أو ما يعادلها" to ("السلم 8" to "مساعد تقني / عون إداري")
+        )
+    } else {
+        listOf(
+            "Ingénieur d'État (ENSIAS, EMI, INPT, ENSA...)" to ("Échelle 11" to "Ingénieur 1er grade • Administrateur 2ème grade"),
+            "Master / Master Spécialisé / DESA (Bac+5)" to ("Échelle 11" to "Administrateur 2ème grade • Concours MEF & Ministères"),
+            "Licence Fondamentale ou Professionnelle (Bac+3)" to ("Échelle 10" to "Administrateur 3ème grade • Enseignement / Santé"),
+            "DUT / BTS / DTS / Technicien Spécialisé (Bac+2)" to ("Échelle 9" to "Technicien 3ème grade • Douanes (ADII) / DGI"),
+            "Baccalauréat National ou Équivalent" to ("Échelle 8" to "Adjoint technique / Agent administratif")
+        )
+    }
 
     var selectedIndex by remember { mutableStateOf(0) }
     val (echelle, gradesDesc) = diplomas[selectedIndex].second
@@ -550,11 +588,11 @@ fun DiplomaEligibilityBottomSheet(
                     }
                     Column {
                         Text(
-                            text = "Vérificateur d'Éligibilité",
+                            text = AppStrings.eligibilityCheckerTitle,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Correspondance officielle Diplôme ➔ Échelle de l'État",
+                            text = AppStrings.eligibilityCheckerSubtitle,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -565,7 +603,7 @@ fun DiplomaEligibilityBottomSheet(
             }
 
             Text(
-                text = "CHOISISSEZ VOTRE DIPLÔME ACTUEL :",
+                text = AppStrings.chooseDiplomaLabel,
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = Outline,
@@ -625,7 +663,7 @@ fun DiplomaEligibilityBottomSheet(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "GRADE D'ACCÈS DE LA FONCTION PUBLIQUE",
+                            text = AppStrings.publicAccessGrade,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = OnSecondaryContainer,
                                 fontWeight = FontWeight.Bold,
@@ -677,28 +715,54 @@ fun OralExamPrepBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    val questions = listOf(
-        OralQuestion(
-            q = "1. « Présentez-vous en 3 minutes devant la commission »",
-            tip = "Structurez en 3 temps : Parcours académique, projets réalisés, et pourquoi vous avez choisi de servir l'intérêt général au sein de ce ministère.",
-            keywords = listOf("Rigueur", "Service public", "Sens du devoir", "Esprit d'équipe")
-        ),
-        OralQuestion(
-            q = "2. « Que savez-vous de la déconcentration et de la régionalisation avancée ? »",
-            tip = "Mentionnez la Charte nationale de la déconcentration administrative (Décret n° 2-17-618) et le transfert des compétences des ministères centraux vers les délégations régionales.",
-            keywords = listOf("Décret 2-17-618", "Services déconcentrés", "Délégation régionale")
-        ),
-        OralQuestion(
-            q = "3. « Qu'apporte la loi 55-19 aux usagers des administrations marocaines ? »",
-            tip = "Elle interdit d'exiger plus d'un exemplaire d'un document, supprime la légalisation de signature pour certaines démarches et fixe un délai maximum de réponse de l'administration.",
-            keywords = listOf("Loi 55-19", "Idarati.ma", "Simplification des procédures", "Digitalisation")
-        ),
-        OralQuestion(
-            q = "4. « Comment réagiriez-vous face à une instruction d'un supérieur qui vous semble discutable ? »",
-            tip = "Rappelez le respect du principe hiérarchique du statut général de la fonction publique (Dahir n° 1-58-008) tout en privilégiant le dialogue et la conformité aux textes légaux.",
-            keywords = listOf("Dahir 1-58-008", "Devoir de réserve", "Loyauté", "Respect hiérarchique")
+    val isAr = LanguageManager.isArabic
+    val questions = if (isAr) {
+        listOf(
+            OralQuestion(
+                q = "1. « قدّم نفسك في 3 دقائق أمام لجنة المباراة »",
+                tip = "قسّم العرض إلى 3 محاور: المسار الأكاديمي، الخبرات والمشاريع المنجزة، ودوافع رغبتك في خدمة الصالح العام بهذه الإدارة.",
+                keywords = listOf("الانضباط", "المرفق العام", "روح المسؤولية", "العمل الجماعي")
+            ),
+            OralQuestion(
+                q = "2. « ماذا تعرف عن ميثاق اللاتمركز الإداري والجهوية المتقدمة ؟ »",
+                tip = "اذكر الميثاق الوطني للاتمركز الإداري (المرسوم رقم 2-17-618) ونقل الاختصاصات من المصالح المركزية بالرباط إلى المصالح اللاممركزة بالجهات.",
+                keywords = listOf("المرسوم 2-17-618", "المصالح اللاممركزة", "الجهوية المتقدمة")
+            ),
+            OralQuestion(
+                q = "3. « ما هي أهم مستجدات القانون 55-19 المتعلق بتبسيط المساطر الإدارية ؟ »",
+                tip = "إلغاء تصحيح الإمضاء لعدة وثائق، منع مطالبة المواطن بأكثر من نسخة، وبوابة Idarati.ma وتحديد آجال ملزمة لرد الإدارة.",
+                keywords = listOf("القانون 55-19", "إدارتي", "تبسيط المساطر", "الرقمنة")
+            ),
+            OralQuestion(
+                q = "4. « كيف تتصرف إذا وجه إليك رئيسك الإداري تعليمات تثير لديك تحفظاً ؟ »",
+                tip = "ذكّر بواجب الطاعة والتسلسل الإداري المنصوص عليه في النظام الأساسي للوظيفة العمومية (ظهير 1-58-008) مع الحوار والالتزام بالقوانين الجاري بها العمل.",
+                keywords = listOf("ظهير 1-58-008", "واجب التحفظ", "التسلسل الإداري", "النزاهة")
+            )
         )
-    )
+    } else {
+        listOf(
+            OralQuestion(
+                q = "1. « Présentez-vous en 3 minutes devant la commission »",
+                tip = "Structurez en 3 temps : Parcours académique, projets réalisés, et pourquoi vous avez choisi de servir l'intérêt général au sein de ce ministère.",
+                keywords = listOf("Rigueur", "Service public", "Sens du devoir", "Esprit d'équipe")
+            ),
+            OralQuestion(
+                q = "2. « Que savez-vous de la déconcentration et de la régionalisation avancée ? »",
+                tip = "Mentionnez la Charte nationale de la déconcentration administrative (Décret n° 2-17-618) et le transfert des compétences des ministères centraux vers les délégations régionales.",
+                keywords = listOf("Décret 2-17-618", "Services déconcentrés", "Délégation régionale")
+            ),
+            OralQuestion(
+                q = "3. « Qu'apporte la loi 55-19 aux usagers des administrations marocaines ? »",
+                tip = "Elle interdit d'exiger plus d'un exemplaire d'un document, supprime la légalisation de signature pour certaines démarches et fixe un délai maximum de réponse de l'administration.",
+                keywords = listOf("Loi 55-19", "Idarati.ma", "Simplification des procédures", "Digitalisation")
+            ),
+            OralQuestion(
+                q = "4. « Comment réagiriez-vous face à une instruction d'un supérieur qui vous semble discutable ? »",
+                tip = "Rappelez le respect du principe hiérarchique du statut général de la fonction publique (Dahir n° 1-58-008) tout en privilégiant le dialogue et la conformité aux textes légaux.",
+                keywords = listOf("Dahir 1-58-008", "Devoir de réserve", "Loyauté", "Respect hiérarchique")
+            )
+        )
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -733,11 +797,11 @@ fun OralExamPrepBottomSheet(
                     }
                     Column {
                         Text(
-                            text = "Préparation à l'Oral du Concours",
+                            text = AppStrings.oralExamTitle,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Questions récurrentes posées par les jurys ministériels",
+                            text = AppStrings.oralExamSubtitle,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }

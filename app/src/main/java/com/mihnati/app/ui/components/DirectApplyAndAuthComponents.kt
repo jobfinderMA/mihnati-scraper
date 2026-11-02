@@ -182,17 +182,26 @@ fun GoogleSignInDialog(
                     )
                 }
                 Column {
+                    val isAr = LanguageManager.isArabic
                     Text(
-                        text = if (isAlreadySignedIn) "Mon Compte Mihnati"
-                        else if (authStep == 1) "Vérification de l'email"
-                        else "Connexion & Inscription",
+                        text = if (isAlreadySignedIn) {
+                            if (isAr) "حسابي في مهنتي" else "Mon Compte Mihnati"
+                        } else if (authStep == 1) {
+                            if (isAr) "التحقق من البريد الإلكتروني" else "Vérification de l'email"
+                        } else {
+                            if (isAr) "تسجيل الدخول وإنشاء حساب" else "Connexion & Inscription"
+                        },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = if (isAlreadySignedIn) "Session vérifiée et synchronisée"
-                        else if (authStep == 1) "Code secret & Lien officiel Firebase"
-                        else "Google 1-Tap • Code Gmail • Mot de passe",
+                        text = if (isAlreadySignedIn) {
+                            if (isAr) "جلسة موثقة ومتزامنة بأمان" else "Session vérifiée et synchronisée"
+                        } else if (authStep == 1) {
+                            if (isAr) "رمز التحقق السري ورابط التفعيل" else "Code secret & Lien officiel Firebase"
+                        } else {
+                            if (isAr) "دخول عبر Google • واتساب • بريد إلكتروني" else "Google 1-Tap • Code Gmail • Mot de passe"
+                        },
                         style = MaterialTheme.typography.labelSmall,
                         color = OnSurfaceVariant
                     )
@@ -321,7 +330,7 @@ fun GoogleSignInDialog(
                             onClick = { isPasswordRegisterMode = false; errorMessage = null },
                             label = {
                                 Text(
-                                    text = "🔑 Se connecter",
+                                    text = if (LanguageManager.isArabic) "🔑 تسجيل الدخول" else "🔑 Se connecter",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp,
                                     modifier = Modifier.fillMaxWidth(),
@@ -339,7 +348,7 @@ fun GoogleSignInDialog(
                             onClick = { isPasswordRegisterMode = true; errorMessage = null },
                             label = {
                                 Text(
-                                    text = "📝 Créer un compte",
+                                    text = if (LanguageManager.isArabic) "📝 إنشاء حساب" else "📝 Créer un compte",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp,
                                     modifier = Modifier.fillMaxWidth(),
@@ -385,13 +394,17 @@ fun GoogleSignInDialog(
                             Spacer(modifier = Modifier.width(14.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = if (isPasswordRegisterMode) "S'inscrire avec Google" else "Continuer avec Google",
+                                    text = if (isPasswordRegisterMode) {
+                                        if (LanguageManager.isArabic) "التسجيل السريع عبر Google" else "S'inscrire avec Google"
+                                    } else {
+                                        if (LanguageManager.isArabic) "المتابعة عبر Google" else "Continuer avec Google"
+                                    },
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Authentification officielle Google Play",
+                                    text = if (LanguageManager.isArabic) "مصادقة رسمية عبر خدمات Google Play" else "Authentification officielle Google Play",
                                     fontSize = 11.sp,
                                     color = OnSurfaceVariant
                                 )
@@ -433,12 +446,12 @@ fun GoogleSignInDialog(
                         Tab(
                             selected = emailAuthMode == 0,
                             onClick = { emailAuthMode = 0; errorMessage = null },
-                            text = { Text("WhatsApp 💬", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text(if (LanguageManager.isArabic) "واتساب 💬" else "WhatsApp 💬", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                         )
                         Tab(
                             selected = emailAuthMode == 1,
                             onClick = { emailAuthMode = 1; errorMessage = null },
-                            text = { Text("Email & Mot de passe 📧", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text(if (LanguageManager.isArabic) "البريد الإلكتروني 📧" else "Email & Mot de passe 📧", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                         )
                     }
 

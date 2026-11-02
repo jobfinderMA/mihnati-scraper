@@ -136,7 +136,7 @@ fun ProfileScreen(
                                     .background(Secondary)
                             )
                             Text(
-                                text = if (isGuest) "Mode Invité • Non connecté" else if (userProfile.isActivelySearching) "En recherche active" else "En veille d'opportunités",
+                                text = if (isGuest) AppStrings.guestMode else if (userProfile.isActivelySearching) AppStrings.activelySearching else AppStrings.passiveSearching,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = if (isGuest) OnSurfaceVariant else OnSecondaryContainer,
                                     fontWeight = FontWeight.Bold
@@ -212,7 +212,7 @@ fun ProfileScreen(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Modifier mon profil",
+                            text = AppStrings.editProfile,
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                         )
                     }
@@ -275,7 +275,7 @@ fun ProfileScreen(
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = if (isGuest) "Compte Mihnati" else if (userProfile.account.isSignedInWithGoogle) "Compte Google" else "Compte Candidat",
+                                text = if (isGuest) AppStrings.accountMihnati else if (userProfile.account.isSignedInWithGoogle) AppStrings.accountGoogle else AppStrings.myAccount,
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = OnSurface)
                             )
                             Box(
@@ -285,7 +285,7 @@ fun ProfileScreen(
                                     .padding(horizontal = 5.dp, vertical = 1.dp)
                             ) {
                                 Text(
-                                    text = if (isGuest) "Non connecté" else "Connecté",
+                                    text = if (isGuest) AppStrings.notConnected else AppStrings.connected,
                                     style = MaterialTheme.typography.labelSmall.copy(
                                         color = if (isGuest) OnSurfaceVariant else OnSecondaryContainer,
                                         fontWeight = FontWeight.Bold,
@@ -295,7 +295,7 @@ fun ProfileScreen(
                             }
                         }
                         Text(
-                            text = if (isGuest) "Créez votre compte pour postuler et synchroniser vos candidatures" else userProfile.account.email,
+                            text = if (isGuest) AppStrings.syncAccountHelp else userProfile.account.email,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.5.sp),
                             maxLines = 1
                         )
@@ -313,7 +313,7 @@ fun ProfileScreen(
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = "Connexion",
+                                text = AppStrings.loginButton,
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -327,7 +327,7 @@ fun ProfileScreen(
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = "Créer compte",
+                                text = AppStrings.registerButton,
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -346,7 +346,7 @@ fun ProfileScreen(
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = "Gérer",
+                            text = AppStrings.manageAccount,
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                         )
                     }
@@ -380,7 +380,7 @@ fun ProfileScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Dossier de candidature",
+                            text = AppStrings.myDossier,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -428,14 +428,14 @@ fun ProfileScreen(
                         )
                         Column {
                             Text(
-                                text = "Optimisez vos chances auprès des recruteurs",
+                                text = if (LanguageManager.isArabic) "عزّز فرصك لدى لجان التوظيف والمشغلين" else "Optimisez vos chances auprès des recruteurs",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = "Ajoutez votre attestation de stage PFE pour 100% de visibilité.",
+                                text = if (LanguageManager.isArabic) "أضف شواهد التدريب أو مشاريع التخرج لاكتمال ملفك بنسبة 100%." else "Ajoutez votre attestation de stage PFE pour 100% de visibilité.",
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     color = OnSurfaceVariant,
                                     fontSize = 11.sp
@@ -452,7 +452,7 @@ fun ProfileScreen(
                             .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = "Ajouter",
+                            text = if (LanguageManager.isArabic) "إضافة" else "Ajouter",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Primary,
                                 fontWeight = FontWeight.Bold
@@ -489,7 +489,7 @@ fun ProfileScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Diplômes & Formations",
+                            text = AppStrings.degreesHeader,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -497,7 +497,11 @@ fun ProfileScreen(
                         )
                     }
                     TagBadge(
-                        text = if (userProfile.degrees.isNotEmpty()) "${userProfile.degrees.size} Diplôme(s)" else "0 Diplôme",
+                        text = if (LanguageManager.isArabic) {
+                            if (userProfile.degrees.isNotEmpty()) "${userProfile.degrees.size} شواهد" else "0 شواهد"
+                        } else {
+                            if (userProfile.degrees.isNotEmpty()) "${userProfile.degrees.size} Diplôme(s)" else "0 Diplôme"
+                        },
                         backgroundColor = if (userProfile.degrees.isNotEmpty()) PrimaryFixed else SurfaceContainer,
                         textColor = if (userProfile.degrees.isNotEmpty()) OnPrimaryFixed else OnSurfaceVariant
                     )
@@ -612,7 +616,7 @@ fun ProfileScreen(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Ajouter un diplôme ou certificat",
+                        text = AppStrings.addDegree,
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -645,7 +649,7 @@ fun ProfileScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Spécialités & Compétences",
+                            text = AppStrings.skillsHeader,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -1050,7 +1054,13 @@ fun ProfileScreen(
                     fontWeight = FontWeight.Bold,
                     color = OnSurface
                 )
-                val scaleOptions = listOf(0 to "Toutes", 8 to "Échelle 8+", 10 to "Échelle 10+", 11 to "Échelle 11")
+                val isArabic = LanguageManager.isArabic
+                val scaleOptions = listOf(
+                    0 to (if (isArabic) "الكل" else "Toutes"),
+                    8 to (if (isArabic) "السلم 8+" else "Échelle 8+"),
+                    10 to (if (isArabic) "السلم 10+" else "Échelle 10+"),
+                    11 to (if (isArabic) "السلم 11" else "Échelle 11")
+                )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     scaleOptions.forEach { (scaleVal, scaleLabel) ->
                         val isSelected = userProfile.preferences.minEchelle == scaleVal
@@ -1105,14 +1115,14 @@ fun ProfileScreen(
                         Text("💬", fontSize = 20.sp)
                         Column {
                             Text(
-                                text = "Passerelle WhatsApp & Convocations",
+                                text = AppStrings.waGatewayHeader,
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = "Envoi instantané des listes Écrit/Oral & Admis avec PDF",
+                                text = AppStrings.waGatewaySubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 11.sp,
                                     color = OnSurfaceVariant
@@ -1130,7 +1140,7 @@ fun ProfileScreen(
                             .padding(horizontal = 7.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = if (WhatsAppOtpManager.isGatewayConfigured()) "✓ Connectée" else "Passerelle par défaut",
+                            text = if (WhatsAppOtpManager.isGatewayConfigured()) AppStrings.waConnectedBadge else AppStrings.waDefaultBadge,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = if (WhatsAppOtpManager.isGatewayConfigured()) Color(0xFF16A34A) else OnSurfaceVariant,
                                 fontWeight = FontWeight.Bold,
@@ -1148,7 +1158,7 @@ fun ProfileScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Numéro WhatsApp lié :",
+                            text = AppStrings.waLinkedNumber,
                             fontSize = 12.sp,
                             color = OnSurfaceVariant
                         )
@@ -1170,7 +1180,7 @@ fun ProfileScreen(
                     Icon(Icons.Default.Settings, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (WhatsAppOtpManager.isGatewayConfigured()) "Modifier la configuration Green-API" else "Configurer la passerelle Green-API",
+                        text = AppStrings.waConfigureButton,
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp
                     )
@@ -1195,7 +1205,7 @@ fun ProfileScreen(
                 ) {
                     Text(text = if (isDarkModeActive) "🌙" else "☀️", fontSize = 18.sp)
                     Text(
-                        text = "Apparence & Mode Sombre",
+                        text = AppStrings.darkModeHeader,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -1204,8 +1214,8 @@ fun ProfileScreen(
                 }
 
                 PreferenceRow(
-                    title = "Mode Sombre Royal 🌙",
-                    subtitle = "Thème noir profond émeraude pour le confort visuel et l'autonomie",
+                    title = AppStrings.darkModeTitle,
+                    subtitle = AppStrings.darkModeSubtitle,
                     checked = isDarkModeActive,
                     onCheckedChange = {
                         com.mihnati.app.ui.theme.ThemeManager.setDarkMode(it)
@@ -1244,7 +1254,7 @@ fun ProfileScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Guide des concours marocains",
+                            text = AppStrings.guidesHeader,
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 color = OnSurface,
                                 fontWeight = FontWeight.SemiBold
@@ -1286,7 +1296,7 @@ fun ProfileScreen(
                         ) {
                             Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Se Déconnecter", fontWeight = FontWeight.Bold)
+                            Text(AppStrings.logoutButton, fontWeight = FontWeight.Bold)
                         }
                     }
 
@@ -1332,11 +1342,12 @@ fun ProfileScreen(
 
     // Edit Profile Modal
     if (showEditProfileDialog) {
+        val isAr = LanguageManager.isArabic
         AlertDialog(
             onDismissRequest = { showEditProfileDialog = false },
             title = {
                 Text(
-                    text = "Modifier mon profil",
+                    text = if (isAr) "تعديل بيانات الحساب" else "Modifier mon profil",
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -1348,35 +1359,35 @@ fun ProfileScreen(
                     OutlinedTextField(
                         value = editName,
                         onValueChange = { editName = it },
-                        label = { Text("Nom complet") },
+                        label = { Text(if (isAr) "الاسم الكامل" else "Nom complet") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editHeadline,
                         onValueChange = { editHeadline = it },
-                        label = { Text("Titre / Fonction actuelle") },
+                        label = { Text(if (isAr) "المسمى المهني / الصفة الحالية" else "Titre / Fonction actuelle") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editBio,
                         onValueChange = { editBio = it },
-                        label = { Text("Courte bio professionnelle") },
+                        label = { Text(if (isAr) "نبذة مهنية موجزة" else "Courte bio professionnelle") },
                         maxLines = 3,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editLocation,
                         onValueChange = { editLocation = it },
-                        label = { Text("Ville / Région") },
+                        label = { Text(if (isAr) "المدينة / الجهة" else "Ville / Région") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editField,
                         onValueChange = { editField = it },
-                        label = { Text("Spécialité cible") },
+                        label = { Text(if (isAr) "التخصص المستهدف" else "Spécialité cible") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -1385,7 +1396,7 @@ fun ProfileScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("En recherche active")
+                        Text(if (isAr) "في بحث نشط عن وظيفة" else "En recherche active")
                         Switch(
                             checked = editActiveSearch,
                             onCheckedChange = { editActiveSearch = it }
@@ -1404,17 +1415,17 @@ fun ProfileScreen(
                             targetField = editField,
                             isActivelySearching = editActiveSearch
                         )
-                        Toast.makeText(context, "Profil mis à jour !", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, if (isAr) "تم تحديث الملف بنجاح !" else "Profil mis à jour !", Toast.LENGTH_SHORT).show()
                         showEditProfileDialog = false
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text("Sauvegarder")
+                    Text(if (isAr) "حفظ التعديلات" else "Sauvegarder")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showEditProfileDialog = false }) {
-                    Text("Annuler")
+                    Text(if (isAr) "إلغاء" else "Annuler")
                 }
             }
         )
@@ -1422,11 +1433,12 @@ fun ProfileScreen(
 
     // Add Diploma Dialog
     if (showAddDegreeDialog) {
+        val isAr = LanguageManager.isArabic
         AlertDialog(
             onDismissRequest = { showAddDegreeDialog = false },
             title = {
                 Text(
-                    text = "Ajouter un diplôme",
+                    text = if (isAr) "إضافة دبلوم أو شهادة" else "Ajouter un diplôme",
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -1435,32 +1447,32 @@ fun ProfileScreen(
                     OutlinedTextField(
                         value = newDegreeTitle,
                         onValueChange = { newDegreeTitle = it },
-                        label = { Text("Intitulé du diplôme") },
-                        placeholder = { Text("Ex: Master Data Science") },
+                        label = { Text(if (isAr) "عنوان الدبلوم أو الشهادة" else "Intitulé du diplôme") },
+                        placeholder = { Text(if (isAr) "مثال: ماستر في المعلوميات" else "Ex: Master Data Science") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newDegreeInstitution,
                         onValueChange = { newDegreeInstitution = it },
-                        label = { Text("Établissement / Université") },
-                        placeholder = { Text("Ex: Université Hassan II") },
+                        label = { Text(if (isAr) "المؤسسة أو الجامعة" else "Établissement / Université") },
+                        placeholder = { Text(if (isAr) "مثال: جامعة محمد الخامس بالرباط" else "Ex: Université Hassan II") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newDegreePeriod,
                         onValueChange = { newDegreePeriod = it },
-                        label = { Text("Années") },
-                        placeholder = { Text("Ex: 2024 - 2026") },
+                        label = { Text(if (isAr) "سنة التخرج أو الفترة" else "Années") },
+                        placeholder = { Text(if (isAr) "مثال: 2024 - 2026" else "Ex: 2024 - 2026") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newDegreeMention,
                         onValueChange = { newDegreeMention = it },
-                        label = { Text("Mention") },
-                        placeholder = { Text("Ex: Mention Bien") },
+                        label = { Text(if (isAr) "الميزة" else "Mention") },
+                        placeholder = { Text(if (isAr) "مثال: حسن جداً" else "Ex: Mention Bien") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -1479,24 +1491,24 @@ fun ProfileScreen(
                                 isVerified = true
                             )
                             MihnatiRepository.addDegree(newDeg)
-                            Toast.makeText(context, "Nouveau diplôme ajouté avec succès !", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, if (isAr) "تمت إضافة الدبلوم بنجاح !" else "Nouveau diplôme ajouté avec succès !", Toast.LENGTH_SHORT).show()
                             showAddDegreeDialog = false
                             newDegreeTitle = ""
                             newDegreeInstitution = ""
                             newDegreePeriod = ""
                             newDegreeMention = ""
                         } else {
-                            Toast.makeText(context, "Veuillez saisir l'intitulé et l'établissement", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, if (isAr) "يرجى إدخال عنوان الدبلوم والجامعة" else "Veuillez saisir l'intitulé et l'établissement", Toast.LENGTH_SHORT).show()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text("Enregistrer")
+                    Text(if (isAr) "إضافة الدبلوم" else "Enregistrer")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDegreeDialog = false }) {
-                    Text("Annuler")
+                    Text(if (isAr) "إلغاء" else "Annuler")
                 }
             }
         )

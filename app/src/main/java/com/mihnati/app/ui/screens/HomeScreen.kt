@@ -47,16 +47,19 @@ fun HomeScreen(
     val opportunities by MihnatiRepository.opportunities.collectAsState()
     val userProfile by MihnatiRepository.userProfile.collectAsState()
 
-    var selectedCategory by remember { mutableStateOf("Tous") }
-    val categories = listOf(
-        "Tous" to "✨",
-        "Mes alertes ciblées" to "🎯",
-        "Concours Publics" to "🏛️",
-        "Tech & Digital" to "💻",
-        "Banque & Finance" to "💼",
-        "Masters" to "🎓",
-        "Santé" to "🏥"
-    )
+    val isArabic = LanguageManager.isArabic
+    var selectedCategory by remember(isArabic) { mutableStateOf(AppStrings.categoryAll) }
+    val categories = remember(isArabic) {
+        listOf(
+            AppStrings.categoryAll to "✨",
+            AppStrings.categoryCustomAlerts to "🎯",
+            AppStrings.categoryPublic to "🏛️",
+            AppStrings.categoryTech to "💻",
+            AppStrings.categoryFinance to "💼",
+            AppStrings.categoryMasters to "🎓",
+            AppStrings.categoryHealth to "🏥"
+        )
+    }
 
     var showSalarySimulator by remember { mutableStateOf(false) }
     var showChecklistDialog by remember { mutableStateOf(false) }
@@ -125,9 +128,9 @@ fun HomeScreen(
                         .background(Secondary)
                 )
                 val pillText = if (userProfile.account.provider != "guest" && userProfile.fullName != "Invité") {
-                    if (userProfile.targetLevel.isNotBlank()) "${userProfile.targetLevel} Vérifié" else "Profil Vérifié"
+                    if (userProfile.targetLevel.isNotBlank()) "${userProfile.targetLevel} ${if (LanguageManager.isArabic) "موثق" else "Vérifié"}" else AppStrings.verifiedProfileBadge
                 } else {
-                    "Créer un profil"
+                    AppStrings.createProfileBadge
                 }
                 Text(
                     text = pillText,
@@ -197,7 +200,7 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "BOÎTE À OUTILS CONCOURS 2026",
+                    text = AppStrings.toolsHeader,
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         color = Outline,
@@ -205,7 +208,7 @@ fun HomeScreen(
                     )
                 )
                 Text(
-                    text = "5 outils",
+                    text = AppStrings.toolsCount,
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Primary,
                         fontWeight = FontWeight.Bold
@@ -232,14 +235,14 @@ fun HomeScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("💰", fontSize = 18.sp)
                             Text(
-                                text = "Simulateur Salaire",
+                                text = AppStrings.salarySimulator,
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSecondaryContainer
                                 )
                             )
                             Text(
-                                text = "Échelles 8 à 11",
+                                text = AppStrings.salarySubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSecondaryContainer.copy(alpha = 0.8f)
@@ -263,14 +266,14 @@ fun HomeScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("📋", fontSize = 18.sp)
                             Text(
-                                text = "Dossier Concours",
+                                text = AppStrings.contestFile,
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnPrimaryFixed
                                 )
                             )
                             Text(
-                                text = "Pièces & CNIE",
+                                text = AppStrings.contestFileSubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnPrimaryFixed.copy(alpha = 0.8f)
@@ -294,14 +297,14 @@ fun HomeScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("📄", fontSize = 18.sp)
                             Text(
-                                text = "Lettre Motivation",
+                                text = AppStrings.coverLetter,
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = "Modèle officiel",
+                                text = AppStrings.coverLetterSubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSurfaceVariant
@@ -325,14 +328,14 @@ fun HomeScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("🎓", fontSize = 18.sp)
                             Text(
-                                text = "Vérif. Diplôme",
+                                text = AppStrings.diplomaChecker,
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = "Échelle & Corps",
+                                text = AppStrings.diplomaCheckerSubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSurfaceVariant
@@ -356,14 +359,14 @@ fun HomeScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("🎙️", fontSize = 18.sp)
                             Text(
-                                text = "Prépa Entretien",
+                                text = AppStrings.oralPrep,
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = "Questions commissions",
+                                text = AppStrings.oralPrepSubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSurfaceVariant
@@ -399,7 +402,7 @@ fun HomeScreen(
                     ) {
                         Text("🇲🇦", fontSize = 15.sp)
                         Text(
-                            text = "OBSERVATOIRE DE L'EMPLOI PUBLIC 2026",
+                            text = AppStrings.observatoryTitle,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface,
@@ -414,7 +417,7 @@ fun HomeScreen(
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = "● En direct",
+                            text = AppStrings.liveStatus,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = OnSecondaryContainer,
                                 fontWeight = FontWeight.Bold,
@@ -438,7 +441,7 @@ fun HomeScreen(
                             )
                         )
                         Text(
-                            text = "Concours",
+                            text = AppStrings.statConcours,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp, color = OnSurfaceVariant)
                         )
                     }
@@ -452,7 +455,7 @@ fun HomeScreen(
                             )
                         )
                         Text(
-                            text = "Postes État",
+                            text = AppStrings.statPositions,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp, color = OnSurfaceVariant)
                         )
                     }
@@ -466,7 +469,7 @@ fun HomeScreen(
                             )
                         )
                         Text(
-                            text = "Régions",
+                            text = AppStrings.statRegions,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp, color = OnSurfaceVariant)
                         )
                     }
@@ -480,7 +483,7 @@ fun HomeScreen(
                             )
                         )
                         Text(
-                            text = "Vérifié",
+                            text = AppStrings.statVerified,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp, color = OnSurfaceVariant)
                         )
                     }
@@ -563,7 +566,7 @@ fun HomeScreen(
                                 modifier = Modifier.size(13.dp)
                             )
                             Text(
-                                text = "Expire dans ${urgentOpportunity.deadlineDaysRemaining}j",
+                                text = "${AppStrings.expiresPrefix} ${urgentOpportunity.deadlineDaysRemaining}${if (LanguageManager.isArabic) " أيام" else "j"}",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = OnTertiaryFixed,
                                     fontWeight = FontWeight.Bold
@@ -589,7 +592,7 @@ fun HomeScreen(
                     )
 
                     Text(
-                        text = "${urgentOpportunity.organization} • 120 postes",
+                        text = "${urgentOpportunity.organization} • 120 ${if (LanguageManager.isArabic) "منصب مالي" else "postes"}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = PrimaryFixed
                         )
@@ -601,7 +604,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "🏛️ Échelle 11 • Grille indiciaire",
+                            text = "🏛️ ${if (LanguageManager.isArabic) "السلم 11 • جدول الأجور الرسمي" else "Échelle 11 • Grille indiciaire"}",
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = SecondaryFixed,
                                 fontWeight = FontWeight.Bold
@@ -618,7 +621,7 @@ fun HomeScreen(
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Text(
-                                text = "Voir l'offre",
+                                text = AppStrings.viewOffer,
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
@@ -651,7 +654,7 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Délais imminents",
+                        text = AppStrings.imminentDeadlines,
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = OnSurface,
                             fontWeight = FontWeight.Bold
@@ -659,7 +662,7 @@ fun HomeScreen(
                     )
                 }
                 Text(
-                    text = "Calendrier ➔",
+                    text = AppStrings.viewCalendar,
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Primary,
                         fontWeight = FontWeight.Bold
@@ -686,7 +689,7 @@ fun HomeScreen(
                 ) {
                     Column {
                         TagBadge(
-                            text = "2j restants",
+                            text = if (LanguageManager.isArabic) "باقي يومين" else "2j restants",
                             backgroundColor = ErrorContainer,
                             textColor = OnErrorContainer
                         )
@@ -728,7 +731,7 @@ fun HomeScreen(
                 ) {
                     Column {
                         TagBadge(
-                            text = "5j restants",
+                            text = if (LanguageManager.isArabic) "باقي 5 أيام" else "5j restants",
                             backgroundColor = TertiaryFixed,
                             textColor = OnTertiaryFixed
                         )
@@ -749,7 +752,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Dépôt en ligne",
+                            text = AppStrings.onlineSubmission,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Primary,
                                 fontWeight = FontWeight.Bold
@@ -772,7 +775,7 @@ fun HomeScreen(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Opportunités pour vous",
+                            text = AppStrings.recommendedForYou,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = OnSurface,
                                 fontWeight = FontWeight.Bold
@@ -787,12 +790,12 @@ fun HomeScreen(
                         )
                     }
                     Text(
-                        text = "Sélectionnées selon votre profil Bac+5",
+                        text = AppStrings.recommendedSubtitle,
                         style = MaterialTheme.typography.labelSmall.copy(color = OnSurfaceVariant)
                     )
                 }
                 Text(
-                    text = "Voir tout (${opportunities.size}) ➔",
+                    text = "${AppStrings.viewAll} (${opportunities.size}) ➔",
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Primary,
                         fontWeight = FontWeight.Bold
@@ -803,24 +806,24 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val displayedOpportunities = remember(opportunities, selectedCategory, userProfile.preferences) {
+            val displayedOpportunities = remember(opportunities, selectedCategory, userProfile.preferences, LanguageManager.isArabic) {
                 val list = when (selectedCategory) {
                     "Mes alertes ciblées", AppStrings.categoryCustomAlerts ->
                         opportunities.filter { userProfile.preferences.matches(it) }
-                    "Concours Publics" -> opportunities.filter { it.sectorType == SectorType.PUBLIC }
-                    "Tech & Digital" -> opportunities.filter {
+                    "Concours Publics", AppStrings.categoryPublic -> opportunities.filter { it.sectorType == SectorType.PUBLIC }
+                    "Tech & Digital", AppStrings.categoryTech -> opportunities.filter {
                         it.field.contains("Informatique", ignoreCase = true) ||
                         it.field.contains("SI", ignoreCase = true) ||
                         it.title.contains("Java", ignoreCase = true) ||
                         it.title.contains("Cloud", ignoreCase = true)
                     }
-                    "Banque & Finance" -> opportunities.filter {
+                    "Banque & Finance", AppStrings.categoryFinance -> opportunities.filter {
                         it.organization.contains("Banque", ignoreCase = true) ||
                         it.field.contains("Économie", ignoreCase = true) ||
                         it.field.contains("Audit", ignoreCase = true)
                     }
-                    "Masters & Formations" -> opportunities.filter { it.sectorType == SectorType.FORMATION }
-                    "Santé" -> opportunities.filter {
+                    "Masters", "Masters & Formations", AppStrings.categoryMasters -> opportunities.filter { it.sectorType == SectorType.FORMATION }
+                    "Santé", AppStrings.categoryHealth -> opportunities.filter {
                         it.organization.contains("Santé", ignoreCase = true) ||
                         it.field.contains("Santé", ignoreCase = true)
                     }

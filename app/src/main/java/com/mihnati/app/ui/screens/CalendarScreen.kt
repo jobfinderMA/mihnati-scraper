@@ -51,14 +51,19 @@ fun CalendarScreen(
     var newEventLocation by remember { mutableStateOf("Casablanca") }
     var newEventType by remember { mutableStateOf(CalendarEventType.RAPPEL_PERSO) }
 
-    val months = listOf("Novembre 2026", "Décembre 2026", "Janvier 2027")
+    val isAr = LanguageManager.isArabic
+    val months = listOf(
+        if (isAr) AppStrings.monthNov2026 else "Novembre 2026",
+        if (isAr) AppStrings.monthDec2026 else "Décembre 2026",
+        if (isAr) AppStrings.monthJan2027 else "Janvier 2027"
+    )
 
     val filteredEvents = remember(events, selectedFilter, selectedMonth) {
         events.filter { event ->
             val monthMatches = when (selectedMonth) {
-                "Novembre 2026" -> event.date.contains("Nov", ignoreCase = true)
-                "Décembre 2026" -> event.date.contains("Déc", ignoreCase = true) || event.date.contains("Dec", ignoreCase = true)
-                "Janvier 2027" -> event.date.contains("Jan", ignoreCase = true)
+                "Novembre 2026", AppStrings.monthNov2026 -> event.date.contains("Nov", ignoreCase = true) || event.date.contains("نونبر", ignoreCase = true)
+                "Décembre 2026", AppStrings.monthDec2026 -> event.date.contains("Déc", ignoreCase = true) || event.date.contains("Dec", ignoreCase = true) || event.date.contains("دجنبر", ignoreCase = true)
+                "Janvier 2027", AppStrings.monthJan2027 -> event.date.contains("Jan", ignoreCase = true) || event.date.contains("يناير", ignoreCase = true)
                 else -> true
             }
 
@@ -93,7 +98,7 @@ fun CalendarScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Mon Calendrier",
+                            text = AppStrings.calendarTitle,
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -129,14 +134,14 @@ fun CalendarScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Nouveau rappel",
+                            text = AppStrings.newReminderBtn,
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                         )
                     }
                 }
 
                 Text(
-                    text = "Suivez les clôtures de concours, épreuves écrites et entretiens RH.",
+                    text = AppStrings.calendarSubtitle,
                     style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                 )
             }
@@ -178,10 +183,10 @@ fun CalendarScreen(
         // 3. Filter Category Chips
         item {
             val filterChips = listOf(
-                "ALL" to "Tous (${events.size})",
-                "DEADLINES" to "⏳ Délais Concours",
-                "INTERVIEWS" to "🎙️ Écrits & Oraux",
-                "REMINDERS" to "⏰ Mes Rappels"
+                "ALL" to "${AppStrings.calAll} (${events.size})",
+                "DEADLINES" to AppStrings.calDeadlines,
+                "INTERVIEWS" to AppStrings.calExams,
+                "REMINDERS" to AppStrings.calReminders
             )
 
             LazyRow(
@@ -528,7 +533,7 @@ fun CalendarEventCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = "Ajouter à l'agenda",
+                        text = if (LanguageManager.isArabic) "إضافة إلى تقويم الهاتف" else "Ajouter à l'agenda",
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold
@@ -539,7 +544,7 @@ fun CalendarEventCard(
                 if (event.opportunityId != null) {
                     TextButton(onClick = onOpenDetails) {
                         Text(
-                            text = "Voir l'avis officiel",
+                            text = if (LanguageManager.isArabic) "عرض الإعلان الرسمي" else "Voir l'avis officiel",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Primary,
                                 fontWeight = FontWeight.Bold

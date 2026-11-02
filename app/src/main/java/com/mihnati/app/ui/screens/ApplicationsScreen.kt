@@ -51,11 +51,11 @@ fun ApplicationsScreen(
     var currentNoteText by remember { mutableStateOf("") }
 
     val filterOptions = listOf(
-        "all" to "Toutes",
-        "pending" to "En attente",
-        "exam" to "Écrit / Concours",
-        "interview" to "Entretien",
-        "result" to "Résultat"
+        "all" to AppStrings.filterAll,
+        "pending" to AppStrings.filterPending,
+        "exam" to AppStrings.filterExam,
+        "interview" to AppStrings.filterInterview,
+        "result" to AppStrings.filterResult
     )
 
     val filteredApps = remember(applications, selectedFilter) {
@@ -88,7 +88,7 @@ fun ApplicationsScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Mes Candidatures",
+                            text = AppStrings.myApplicationsTitle,
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -132,7 +132,7 @@ fun ApplicationsScreen(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = "Actualiser",
+                            text = AppStrings.refreshAction,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = PrimaryContainer,
                                 fontWeight = FontWeight.Bold
@@ -154,13 +154,13 @@ fun ApplicationsScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${applications.count { !it.isAdmitted }} dossiers actifs",
+                            text = "${applications.count { !it.isAdmitted }} ${AppStrings.activeFilesCount}",
                             style = MaterialTheme.typography.labelSmall.copy(color = Secondary)
                         )
                     }
                     Text(text = "•", color = OutlineVariant)
                     Text(
-                        text = "${applications.count { it.isAdmitted }} finalisé avec succès",
+                        text = "${applications.count { it.isAdmitted }} ${AppStrings.finalizedSuccess}",
                         style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                     )
                 }
@@ -188,7 +188,7 @@ fun ApplicationsScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "📂 Mes Dossiers (${applications.size})",
+                        text = "${AppStrings.tabMyFiles} (${applications.size})",
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = if (activeSection == "dossiers") FontWeight.Bold else FontWeight.Medium,
                             color = if (activeSection == "dossiers") PrimaryContainer else OnSurfaceVariant
@@ -207,7 +207,7 @@ fun ApplicationsScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "📋 Listes Écrit & Oral (${examLists.size})",
+                        text = "${AppStrings.tabConvocations} (${examLists.size})",
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = if (activeSection == "convocations") FontWeight.Bold else FontWeight.Medium,
                             color = if (activeSection == "convocations") PrimaryContainer else OnSurfaceVariant
@@ -341,7 +341,7 @@ fun ApplicationsScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
-                            text = "Préparez vos épreuves & entretiens",
+                            text = if (LanguageManager.isArabic) "استعد للاختبارات والمقابلات الرسمية" else "Préparez vos épreuves & entretiens",
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
@@ -349,7 +349,7 @@ fun ApplicationsScreen(
                             )
                         )
                         Text(
-                            text = "Accédez gratuitement aux annales corrigées des concours publics et aux conseils de simulation d'entretien RH Mihnati.",
+                            text = if (LanguageManager.isArabic) "اطلع مجاناً على نماذج امتحانات المباريات السابقة مع التصحيح ونصائح المقابلات الشفوية." else "Accédez gratuitement aux annales corrigées des concours publics et aux conseils de simulation d'entretien RH Mihnati.",
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = OnSurfaceVariant,
                                 lineHeight = 18.sp
@@ -363,7 +363,7 @@ fun ApplicationsScreen(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "Télécharger les guides",
+                                text = if (LanguageManager.isArabic) "تحميل الدلائل والنماذج" else "Télécharger les guides",
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = PrimaryContainer,
                                     fontWeight = FontWeight.Bold
@@ -721,7 +721,7 @@ fun ApplicationItemCard(
                         )
                     )
                     Text(
-                        text = "Déposé le ${application.submittedDate}",
+                        text = if (LanguageManager.isArabic) "أودع في ${application.submittedDate}" else "Déposé le ${application.submittedDate}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurface,
                             fontWeight = FontWeight.SemiBold
@@ -738,7 +738,7 @@ fun ApplicationItemCard(
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = "Étape +",
+                                text = if (LanguageManager.isArabic) "+ المرحلة" else "Étape +",
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -761,14 +761,18 @@ fun ApplicationItemCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = if (application.currentStage == ApplicationStage.ECRIT) "Convocation PDF" else "Voir convocation",
+                                text = if (LanguageManager.isArabic) {
+                                    if (application.currentStage == ApplicationStage.ECRIT) "استدعاء PDF" else "عرض الاستدعاء"
+                                } else {
+                                    if (application.currentStage == ApplicationStage.ECRIT) "Convocation PDF" else "Voir convocation"
+                                },
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         }
                     } else {
                         TextButton(onClick = onDetailsClick) {
                             Text(
-                                text = "Détails",
+                                text = if (LanguageManager.isArabic) "التفاصيل" else "Détails",
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = PrimaryContainer,
                                     fontWeight = FontWeight.Bold
@@ -874,7 +878,7 @@ private fun NativeExamListCard(
                     )
                 }
                 Text(
-                    text = "📋 ${exam.candidatesCount} convoqués",
+                    text = "📋 ${exam.candidatesCount} ${if (LanguageManager.isArabic) "مرشح مدعو" else "convoqués"}",
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Secondary,
                         fontWeight = FontWeight.Bold
@@ -894,7 +898,7 @@ private fun NativeExamListCard(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "📅 Date d'épreuve : ", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(text = if (LanguageManager.isArabic) "📅 تاريخ الإجراء : " else "📅 Date d'épreuve : ", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                         Text(text = exam.examDate, style = MaterialTheme.typography.bodySmall)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
