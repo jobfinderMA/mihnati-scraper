@@ -134,6 +134,11 @@ object EmailOtpManager {
     /**
      * Returns the remaining seconds before the candidate can request a new code
      */
+    /**
+     * Exposes the active code for debug / on-screen fallback when external mail server is not configured
+     */
+    fun getLastActiveOtpForDebug(): String? = lastGeneratedOtp
+
     fun secondsUntilResend(): Int {
         val elapsedSec = ((System.currentTimeMillis() - lastSentEpochMs) / 1000).toInt()
         val cooldownSec = 45

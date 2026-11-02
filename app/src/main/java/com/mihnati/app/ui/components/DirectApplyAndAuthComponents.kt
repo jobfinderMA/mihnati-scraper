@@ -439,6 +439,31 @@ fun GoogleSignInDialog(
                                 fontSize = 11.sp,
                                 color = OnSurfaceVariant
                             )
+
+                            val activeDebugCode = EmailOtpManager.getLastActiveOtpForDebug()
+                            if (activeDebugCode != null) {
+                                Surface(
+                                    color = SecondaryContainer.copy(alpha = 0.7f),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.clickable {
+                                        otpInput = activeDebugCode
+                                    }
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Text("🔐", fontSize = 12.sp)
+                                        Text(
+                                            text = "Code : $activeDebugCode (Appuyez pour remplir)",
+                                            fontSize = 11.5.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = OnSecondaryContainer
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
 
