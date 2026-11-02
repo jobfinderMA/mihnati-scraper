@@ -189,6 +189,39 @@ object MihnatiSecurityVault {
     /**
      * Checks if there is a currently authenticated session
      */
+    /**
+     * Authenticates or registers using verified Gmail 6-digit OTP code
+     */
+    fun registerOrSignInWithEmailOtp(
+        context: Context,
+        email: String,
+        displayName: String,
+        cin: String = ""
+    ): Result<UserAccount> {
+        val trimmedEmail = email.trim().lowercase()
+        val prefs = getSecurePrefs(context)
+
+        val sessionToken = "mht_otp_session_" + java.util.UUID.randomUUID().toString().replace("-", "")
+        prefs.edit()
+            .putString(KEY_AUTH_TOKEN, sessionToken)
+            .putString(KEY_CURRENT_USER_EMAIL, trimmedEmail)
+            .putString(KEY_CURRENT_USER_NAME, displayName.trim().ifEmpty { "Candidat Mihnati" })
+            .putString(KEY_CURRENT_USER_PROVIDER, "Gmail Code (OTP)")
+            .putString(KEY_CURRENT_USER_CIN, cin.trim().ifEmpty { "CNIE" })
+            .putBoolean(KEY_CURRENT_USER_VERIFIED, true)
+            .apply()
+
+        val account = UserAccount(
+            email = trimmedEmail,
+            displayName = displayName.trim().ifEmpty { "Candidat Mihnati" },
+            isVerified = true,
+            provider = "Gmail Code (OTP)",
+            lastLoginDate = "Aujourd'hui à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.FRENCH).format(java.util.Date())
+        )
+
+        return Result.success(account)
+    }
+
     fun getCurrentUser(context: Context): UserAccount? {
         val prefs = getSecurePrefs(context)
         val token = prefs.getString(KEY_AUTH_TOKEN, null) ?: return null

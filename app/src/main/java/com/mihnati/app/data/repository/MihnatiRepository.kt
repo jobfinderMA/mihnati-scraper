@@ -838,11 +838,14 @@ object MihnatiRepository {
         _userProfile.update { profile ->
             profile.copy(
                 fullName = account.displayName,
+                headline = "Candidat Vérifié 🇲🇦",
                 account = profile.account.copy(
                     email = account.email,
                     displayName = account.displayName,
-                    isSignedInWithGoogle = true,
-                    lastLoginDate = account.lastLoginDate
+                    isSignedInWithGoogle = account.provider.contains("Google", ignoreCase = true),
+                    lastLoginDate = account.lastLoginDate,
+                    provider = account.provider,
+                    isVerified = true
                 )
             )
         }

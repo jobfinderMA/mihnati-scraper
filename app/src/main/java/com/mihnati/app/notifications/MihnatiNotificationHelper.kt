@@ -20,6 +20,7 @@ object MihnatiNotificationHelper {
     const val CHANNEL_CONCOURS_NEW = "channel_mihnati_concours"
     const val CHANNEL_DEADLINES = "channel_mihnati_deadlines"
     const val CHANNEL_CONVOCATIONS = "channel_mihnati_convocations"
+    const val CHANNEL_AUTH_OTP = "channel_mihnati_auth_otp"
 
     const val EXTRA_OPPORTUNITY_ID = "extra_opportunity_id"
     const val EXTRA_TARGET_TAB = "extra_target_tab"
@@ -121,6 +122,42 @@ object MihnatiNotificationHelper {
             .addAction(0, "Voir l'offre & Postuler", pendingIntent)
 
         NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+    }
+
+    /**
+     * Dispatches a high-priority heads-up notification with the 6-digit Gmail verification code
+     */
+    fun showAuthOtpNotification(
+        context: Context,
+        email: String,
+        otpCode: String
+    ) {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            2002,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_AUTH_OTP)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("Code de vérification Gmail : $otpCode")
+            .setContentText("Utilisez le code $otpCode pour valider votre compte Mihnati ($email).")
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("Votre code secret de confirmation Mihnati est :\n\n🔐 $otpCode\n\nCe code est valable 10 minutes pour l'adresse $email. Ne le partagez avec personne.")
+            )
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        NotificationManagerCompat.from(context).notify(9001, notification)
     }
 
     fun showTestNotification(context: Context) {

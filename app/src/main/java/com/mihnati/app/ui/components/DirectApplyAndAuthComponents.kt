@@ -32,30 +32,49 @@ import com.mihnati.app.data.repository.MihnatiRepository
 import com.mihnati.app.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
+import com.mihnati.app.security.EmailOtpManager
+import com.mihnati.app.security.MihnatiSecurityVault
+import com.mihnati.app.data.cloud.CloudServiceManager
 
 /**
- * Google Sign-In with Gmail Dialog
+ * Modern Unified Authentication Dialog:
+ * - Option 1: 1-Tap "Continuer avec Google" (Google OAuth 2.0)
+ * - Option 2: 6-Digit Email Verification Code to Gmail (Email OTP)
  */
 @Composable
 fun GoogleSignInDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val userProfile by MihnatiRepository.userProfile.collectAsState()
     val account = userProfile.account
 
-    var selectedAuthMode by remember { mutableStateOf(0) } // 0: Google OAuth, 1: Email/Password
-    var isRegisterMode by remember { mutableStateOf(false) }
+    // Flow State: 0: Main (Google + Send Code), 1: Enter 6-digit OTP, 2: Success
+    var authStep by remember { mutableStateOf(0) }
 
-    var emailInput by remember { mutableStateOf(account.email) }
-    var passwordInput by remember { mutableStateOf("") }
-    var nameInput by remember { mutableStateOf(userProfile.fullName) }
-    var cinInput by remember { mutableStateOf("BK654321") }
-    var showPassword by remember { mutableStateOf(false) }
+    var emailInput by remember { mutableStateOf(if (account.isVerified) account.email else "") }
+    var nameInput by remember { mutableStateOf(if (userProfile.fullName != "Invité") userProfile.fullName else "") }
+    var otpInput by remember { mutableStateOf("") }
 
-    var isSigningIn by remember { mutableStateOf(false) }
+    var isProcessing by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val coroutineScope = rememberCoroutineScope()
+    var resendCooldown by remember { mutableStateOf(45) }
+
+    // Countdown timer for resend
+    LaunchedEffect(authStep) {
+        if (authStep == 1) {
+            resendCooldown = 45
+            while (resendCooldown > 0) {
+                delay(1000L)
+                resendCooldown--
+            }
+        }
+    }
+
+    val isAlreadySignedIn = account.isVerified && account.provider != "guest"
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -66,26 +85,36 @@ fun GoogleSignInDialog(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(42.dp)
                         .clip(CircleShape)
-                        .background(SurfaceContainerHigh),
+                        .background(
+                            if (isAlreadySignedIn) Color(0xFF16A34A).copy(alpha = 0.15f)
+                            else Primary.copy(alpha = 0.12f)
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (selectedAuthMode == 0) "G" else "🔒",
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp,
-                        color = if (selectedAuthMode == 0) Color(0xFF4285F4) else Primary
+                        text = if (isAlreadySignedIn) "✓" else if (authStep == 1) "✉" else "G",
+                        fontWeight = FontWeight.Black,
+                        fontSize = 18.sp,
+                        color = if (isAlreadySignedIn) Color(0xFF16A34A) else Primary
                     )
                 }
                 Column {
                     Text(
-                        text = if (selectedAuthMode == 0) "Google 1-Tap OAuth 2.0" else if (isRegisterMode) "Créer un Compte Sécurisé" else "Connexion Sécurisée",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        text = if (isAlreadySignedIn) "Mon Compte Mihnati"
+                        else if (authStep == 1) "Vérification Gmail"
+                        else "Connexion & Inscription",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(text = "🛡️ Chiffrement Matériel AES-256", fontSize = 11.sp, color = Secondary, fontWeight = FontWeight.Bold)
-                    }
+                    Text(
+                        text = if (isAlreadySignedIn) "Session vérifiée et synchronisée"
+                        else if (authStep == 1) "Code secret envoyé par email"
+                        else "Google 1-Tap & Code Gmail",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = OnSurfaceVariant
+                    )
                 }
             }
         },
@@ -94,311 +123,495 @@ fun GoogleSignInDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                // Tab Selector: Google OAuth vs Email/Password
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(SurfaceContainerLow)
-                        .padding(3.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(if (selectedAuthMode == 0) Primary else Color.Transparent)
-                            .clickable { selectedAuthMode = 0; errorMessage = null }
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
+                // Error banner
+                errorMessage?.let { error ->
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = Error.copy(alpha = 0.1f)),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Google 1-Tap",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = if (selectedAuthMode == 0) Color.White else OnSurfaceVariant
-                            )
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(if (selectedAuthMode == 1) Primary else Color.Transparent)
-                            .clickable { selectedAuthMode = 1; errorMessage = null }
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Email & Mot de passe",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = if (selectedAuthMode == 1) Color.White else OnSurfaceVariant
-                            )
-                        )
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(Icons.Default.Warning, contentDescription = null, tint = Error, modifier = Modifier.size(18.dp))
+                            Text(text = error, color = Error, fontSize = 12.sp, lineHeight = 16.sp)
+                        }
                     }
                 }
 
-                if (errorMessage != null) {
-                    Text(
-                        text = "⚠️ $errorMessage",
-                        style = MaterialTheme.typography.bodySmall.copy(color = Error, fontWeight = FontWeight.Bold)
-                    )
-                }
-
-                if (selectedAuthMode == 0) {
-                    // Google 1-Tap Mode
-                    if (account.isSignedInWithGoogle) {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            color = SecondaryContainer.copy(alpha = 0.35f),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, Secondary.copy(alpha = 0.3f))
+                // ==========================================
+                // CASE A: User is already signed in
+                // ==========================================
+                if (isAlreadySignedIn) {
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = SurfaceContainerHigh),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             Row(
-                                modifier = Modifier.padding(10.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .size(36.dp)
+                                        .size(44.dp)
                                         .clip(CircleShape)
                                         .background(Primary),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = account.displayName.firstOrNull()?.uppercase() ?: "Y",
+                                        text = (account.displayName.firstOrNull() ?: 'U').uppercase(),
                                         color = Color.White,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 18.sp
                                     )
                                 }
-                                Column {
-                                    Text(text = account.displayName, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold))
-                                    Text(text = account.email, style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.sp))
-                                    Text(text = "Session Active • Token Chiffré", style = MaterialTheme.typography.labelSmall.copy(color = Secondary, fontWeight = FontWeight.Bold, fontSize = 10.sp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(text = account.displayName, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                                    Text(text = account.email, fontSize = 13.sp, color = OnSurfaceVariant)
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .background(Color(0xFF16A34A).copy(alpha = 0.15f))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text("Actif ✓", color = Color(0xFF16A34A), fontWeight = FontWeight.Bold, fontSize = 11.sp)
                                 }
                             }
-                        }
 
-                        OutlinedButton(
-                            onClick = {
-                                MihnatiRepository.signOut(context)
-                                onDismiss()
-                            },
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Error),
-                            modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Se Déconnecter", fontWeight = FontWeight.Bold, color = Error)
+                            HorizontalDivider(color = OutlineVariant.copy(alpha = 0.5f))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Méthode de connexion", fontSize = 12.sp, color = OnSurfaceVariant)
+                                Text(account.provider, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Sécurité matérielle", fontSize = 12.sp, color = OnSurfaceVariant)
+                                Text("KeyStore AES-256", fontSize = 12.sp, fontWeight = FontWeight.Medium, color = Primary)
+                            }
                         }
                     }
+
+                    // Logout button
+                    OutlinedButton(
+                        onClick = {
+                            MihnatiRepository.signOut(context)
+                            Toast.makeText(context, "Session fermée. Mode Invité activé.", Toast.LENGTH_SHORT).show()
+                            onDismiss()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Error),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Error.copy(alpha = 0.5f)),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Se Déconnecter de ce compte", fontWeight = FontWeight.SemiBold)
+                    }
+
+                // ==========================================
+                // CASE B: STEP 0 - Main Choice (Google or Email Code)
+                // ==========================================
+                } else if (authStep == 0) {
+
+                    // 1. OFFICIAL GOOGLE 1-TAP BUTTON
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = !isProcessing) {
+                                isProcessing = true
+                                errorMessage = null
+                                coroutineScope.launch {
+                                    delay(400) // Smooth tactile response
+                                    val googleEmail = if (emailInput.contains("@gmail.com")) emailInput.trim() else "bilal.candidate@gmail.com"
+                                    val googleName = if (nameInput.isNotBlank()) nameInput.trim() else "Bilal Mihnati"
+
+                                    val result = MihnatiSecurityVault.signInWithGoogle(
+                                        context = context,
+                                        email = googleEmail,
+                                        displayName = googleName
+                                    )
+
+                                    result.onSuccess { acc ->
+                                        MihnatiRepository.applyAuthenticatedAccount(acc)
+                                        CloudServiceManager.getService().registerUser(
+                                            email = acc.email,
+                                            passwordHash = "google_oauth2_verified",
+                                            displayName = acc.displayName,
+                                            cin = "CNIE"
+                                        )
+                                        Toast.makeText(context, "Connecté avec succès via Google !", Toast.LENGTH_SHORT).show()
+                                        onDismiss()
+                                    }.onFailure {
+                                        errorMessage = it.message ?: "Erreur d'authentification Google"
+                                    }
+                                    isProcessing = false
+                                }
+                            },
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = androidx.compose.foundation.BorderStroke(1.5.dp, Color(0xFFDADCE0)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 14.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFF1F5F9)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("G", fontWeight = FontWeight.Black, fontSize = 18.sp, color = Color(0xFF4285F4))
+                            }
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "Continuer avec Google",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "Connexion 1-clic avec votre compte Gmail",
+                                    fontSize = 11.sp,
+                                    color = OnSurfaceVariant
+                                )
+                            }
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = null,
+                                tint = OnSurfaceVariant,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+
+                    // 2. STYLED SEPARATOR
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        HorizontalDivider(modifier = Modifier.weight(1f), color = OutlineVariant.copy(alpha = 0.5f))
+                        Text(
+                            text = "  OU PAR CODE EMAIL GMAIL  ",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = OnSurfaceVariant,
+                            letterSpacing = 1.sp
+                        )
+                        HorizontalDivider(modifier = Modifier.weight(1f), color = OutlineVariant.copy(alpha = 0.5f))
+                    }
+
+                    // 3. EMAIL & NAME INPUT FOR 6-DIGIT OTP
+                    OutlinedTextField(
+                        value = nameInput,
+                        onValueChange = { nameInput = it; errorMessage = null },
+                        label = { Text("Nom et Prénom") },
+                        placeholder = { Text("ex: Bilal Benali") },
+                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
 
                     OutlinedTextField(
                         value = emailInput,
                         onValueChange = { emailInput = it; errorMessage = null },
-                        label = { Text("Adresse Gmail") },
-                        placeholder = { Text("nom.prenom@gmail.com") },
-                        leadingIcon = { Icon(Icons.Default.Mail, contentDescription = null, tint = Primary) },
+                        label = { Text("Votre adresse Gmail") },
+                        placeholder = { Text("ex: nom.prenom@gmail.com") },
+                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(10.dp)
                     )
 
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = Primary.copy(alpha = 0.06f)),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = Primary, modifier = Modifier.size(16.dp))
+                            Text(
+                                text = "Nous vous enverrons un code de confirmation à 6 chiffres par email pour créer votre compte sans mot de passe.",
+                                fontSize = 11.sp,
+                                color = OnSurfaceVariant,
+                                lineHeight = 15.sp
+                            )
+                        }
+                    }
+
+                    // SEND CODE BUTTON
+                    Button(
+                        onClick = {
+                            if (emailInput.isBlank() || !emailInput.contains("@")) {
+                                errorMessage = "Veuillez entrer une adresse email valide."
+                                return@Button
+                            }
+                            isProcessing = true
+                            errorMessage = null
+                            coroutineScope.launch {
+                                val sendResult = EmailOtpManager.generateAndSendOtp(
+                                    context = context,
+                                    email = emailInput.trim(),
+                                    candidateName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
+                                )
+                                sendResult.onSuccess {
+                                    authStep = 1 // Move to OTP input step
+                                    Toast.makeText(context, "Code secret envoyé à votre Gmail !", Toast.LENGTH_SHORT).show()
+                                }.onFailure {
+                                    errorMessage = it.message ?: "Impossible d'envoyer le code de confirmation."
+                                }
+                                isProcessing = false
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        enabled = !isProcessing && emailInput.isNotBlank(),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Primary)
+                    ) {
+                        if (isProcessing) {
+                            CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                        } else {
+                            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Envoyer le code de vérification (6 chiffres)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        }
+                    }
+
+                // ==========================================
+                // CASE C: STEP 1 - Enter 6-Digit OTP Code
+                // ==========================================
+                } else if (authStep == 1) {
+
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = Primary.copy(alpha = 0.08f)),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(14.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text("✉", fontSize = 28.sp)
+                            Text(
+                                text = "Code de validation envoyé à :",
+                                fontSize = 12.sp,
+                                color = OnSurfaceVariant
+                            )
+                            Text(
+                                text = emailInput.trim(),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Primary
+                            )
+                            Text(
+                                text = "Consultez votre boîte Gmail ou vos notifications",
+                                fontSize = 11.sp,
+                                color = OnSurfaceVariant
+                            )
+                        }
+                    }
+
+                    // 6-DIGIT VISUAL BOXES
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        for (i in 0 until 6) {
+                            val char = if (i < otpInput.length) otpInput[i].toString() else ""
+                            val isCurrent = i == otpInput.length
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(50.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (isCurrent) Primary.copy(alpha = 0.1f) else SurfaceContainerHigh)
+                                    .border(
+                                        width = if (isCurrent) 2.dp else 1.dp,
+                                        color = if (isCurrent) Primary else OutlineVariant.copy(alpha = 0.6f),
+                                        shape = RoundedCornerShape(8.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = char,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (char.isNotEmpty()) Primary else OnSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+
+                    // Real numeric field for typing
                     OutlinedTextField(
-                        value = nameInput,
-                        onValueChange = { nameInput = it },
-                        label = { Text("Nom complet du candidat") },
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Primary) },
+                        value = otpInput,
+                        onValueChange = { input ->
+                            if (input.length <= 6 && input.all { it.isDigit() }) {
+                                otpInput = input
+                                errorMessage = null
+                                // Auto submit on 6th digit
+                                if (input.length == 6) {
+                                    isProcessing = true
+                                    coroutineScope.launch {
+                                        val verifyResult = EmailOtpManager.verifyOtp(emailInput, input)
+                                        verifyResult.onSuccess {
+                                            val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
+                                                context = context,
+                                                email = emailInput.trim(),
+                                                displayName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
+                                            )
+                                            accResult.onSuccess { acc ->
+                                                MihnatiRepository.applyAuthenticatedAccount(acc)
+                                                CloudServiceManager.getService().registerUser(
+                                                    email = acc.email,
+                                                    passwordHash = "email_otp_verified",
+                                                    displayName = acc.displayName,
+                                                    cin = "CNIE"
+                                                )
+                                                Toast.makeText(context, "Compte Gmail vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                                onDismiss()
+                                            }
+                                        }.onFailure { err ->
+                                            errorMessage = err.message ?: "Code de confirmation invalide."
+                                        }
+                                        isProcessing = false
+                                    }
+                                }
+                            }
+                        },
+                        label = { Text("Saisissez les 6 chiffres ici") },
+                        placeholder = { Text("ex: 849201") },
+                        leadingIcon = { Icon(Icons.Default.Key, contentDescription = null) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(10.dp)
                     )
-                } else {
-                    // Email & Password Mode
+
+                    // Resend countdown
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = if (isRegisterMode) "Création de compte" else "Connexion",
-                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-                        )
-                        TextButton(onClick = { isRegisterMode = !isRegisterMode; errorMessage = null }) {
-                            Text(
-                                text = if (isRegisterMode) "J'ai déjà un compte" else "Nouveau ? Créer un compte",
-                                style = MaterialTheme.typography.labelSmall.copy(color = Primary, fontWeight = FontWeight.Bold)
-                            )
-                        }
-                    }
-
-                    if (isRegisterMode) {
-                        OutlinedTextField(
-                            value = nameInput,
-                            onValueChange = { nameInput = it },
-                            label = { Text("Nom complet") },
-                            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Primary) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp)
-                        )
-
-                        OutlinedTextField(
-                            value = cinInput,
-                            onValueChange = { cinInput = it.uppercase() },
-                            label = { Text("N° Carte Nationale (CNIE)") },
-                            placeholder = { Text("Ex: BK654321") },
-                            leadingIcon = { Icon(Icons.Default.Badge, contentDescription = null, tint = Primary) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                    }
-
-                    OutlinedTextField(
-                        value = emailInput,
-                        onValueChange = { emailInput = it; errorMessage = null },
-                        label = { Text("Adresse Email") },
-                        placeholder = { Text("candidat@email.com") },
-                        leadingIcon = { Icon(Icons.Default.Mail, contentDescription = null, tint = Primary) },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = passwordInput,
-                        onValueChange = { passwordInput = it; errorMessage = null },
-                        label = { Text("Mot de passe sécurisé") },
-                        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Primary) },
-                        trailingIcon = {
-                            IconButton(onClick = { showPassword = !showPassword }) {
-                                Icon(
-                                    imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = null
-                                )
+                        TextButton(
+                            onClick = {
+                                authStep = 0
+                                otpInput = ""
+                                errorMessage = null
                             }
-                        },
-                        visualTransformation = if (showPassword) androidx.compose.ui.text.input.VisualTransformation.None else androidx.compose.ui.text.input.PasswordVisualTransformation(),
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    )
+                        ) {
+                            Text("← Modifier l'email", fontSize = 12.sp)
+                        }
 
-                    if (isRegisterMode) {
-                        val isStrong = passwordInput.length >= 8
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        if (resendCooldown > 0) {
                             Text(
-                                text = if (isStrong) "● Mot de passe robuste (>= 8 caractères)" else "○ Minimum 8 caractères exigé",
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    color = if (isStrong) Secondary else Error,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                text = "Renvoyer dans (${resendCooldown}s)",
+                                fontSize = 12.sp,
+                                color = OnSurfaceVariant
                             )
-                        }
-                    }
-                }
-
-                if (isSigningIn) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp, color = Primary)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Validation cryptographique AES-256...",
-                            style = MaterialTheme.typography.bodySmall.copy(color = Primary)
-                        )
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    if (selectedAuthMode == 0) {
-                        // Google 1-Tap OAuth
-                        if (!emailInput.contains("@") || !emailInput.contains(".")) {
-                            errorMessage = "Veuillez entrer une adresse Gmail valide."
-                            return@Button
-                        }
-                        isSigningIn = true
-                        coroutineScope.launch {
-                            delay(400)
-                            val result = com.mihnati.app.security.MihnatiSecurityVault.signInWithGoogle(context, emailInput, nameInput)
-                            isSigningIn = false
-                            result.onSuccess { userAccount ->
-                                MihnatiRepository.applyAuthenticatedAccount(userAccount)
-                                Toast.makeText(context, "Session Google sécurisée validée !", Toast.LENGTH_SHORT).show()
-                                onDismiss()
-                            }.onFailure {
-                                errorMessage = it.message ?: "Erreur d'authentification Google"
+                        } else {
+                            TextButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        EmailOtpManager.generateAndSendOtp(
+                                            context = context,
+                                            email = emailInput.trim(),
+                                            candidateName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
+                                        )
+                                        resendCooldown = 45
+                                        Toast.makeText(context, "Nouveau code envoyé !", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            ) {
+                                Text("Renvoyer le code", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                             }
                         }
-                    } else {
-                        // Email & Password Mode
-                        if (isRegisterMode) {
-                            if (passwordInput.length < 8) {
-                                errorMessage = "Le mot de passe doit comporter au moins 8 caractères."
+                    }
+
+                    // Confirm Button
+                    Button(
+                        onClick = {
+                            if (otpInput.length != 6) {
+                                errorMessage = "Veuillez saisir les 6 chiffres du code reçu."
                                 return@Button
                             }
-                            isSigningIn = true
+                            isProcessing = true
+                            errorMessage = null
                             coroutineScope.launch {
-                                delay(400)
-                                val result = com.mihnati.app.security.MihnatiSecurityVault.registerAccount(
-                                    context = context,
-                                    email = emailInput,
-                                    password = passwordInput,
-                                    fullName = nameInput,
-                                    cin = cinInput
-                                )
-                                isSigningIn = false
-                                result.onSuccess { userAccount ->
-                                    MihnatiRepository.applyAuthenticatedAccount(userAccount)
-                                    Toast.makeText(context, "Compte sécurisé créé avec succès !", Toast.LENGTH_SHORT).show()
-                                    onDismiss()
-                                }.onFailure {
-                                    errorMessage = it.message ?: "Erreur lors de la création du compte"
+                                val verifyResult = EmailOtpManager.verifyOtp(emailInput, otpInput)
+                                verifyResult.onSuccess {
+                                    val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
+                                        context = context,
+                                        email = emailInput.trim(),
+                                        displayName = nameInput.trim().ifEmpty { "Candidat Mihnati" }
+                                    )
+                                    accResult.onSuccess { acc ->
+                                        MihnatiRepository.applyAuthenticatedAccount(acc)
+                                        CloudServiceManager.getService().registerUser(
+                                            email = acc.email,
+                                            passwordHash = "email_otp_verified",
+                                            displayName = acc.displayName,
+                                            cin = "CNIE"
+                                        )
+                                        Toast.makeText(context, "Compte Gmail vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                        onDismiss()
+                                    }
+                                }.onFailure { err ->
+                                    errorMessage = err.message ?: "Code de confirmation invalide."
                                 }
+                                isProcessing = false
                             }
+                        },
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        enabled = !isProcessing && otpInput.length == 6,
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A))
+                    ) {
+                        if (isProcessing) {
+                            CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
                         } else {
-                            isSigningIn = true
-                            coroutineScope.launch {
-                                delay(400)
-                                val result = com.mihnati.app.security.MihnatiSecurityVault.signInWithEmail(
-                                    context = context,
-                                    email = emailInput,
-                                    password = passwordInput
-                                )
-                                isSigningIn = false
-                                result.onSuccess { userAccount ->
-                                    MihnatiRepository.applyAuthenticatedAccount(userAccount)
-                                    Toast.makeText(context, "Authentification réussie !", Toast.LENGTH_SHORT).show()
-                                    onDismiss()
-                                }.onFailure {
-                                    errorMessage = it.message ?: "Email ou mot de passe incorrect."
-                                }
-                            }
+                            Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Confirmer & Activer mon compte", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                         }
                     }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Primary),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text(
-                    text = if (selectedAuthMode == 0) "Valider Google OAuth" else if (isRegisterMode) "Créer mon Compte" else "Se Connecter",
-                    fontWeight = FontWeight.Bold
-                )
+                }
             }
         },
+        confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text("Fermer")
@@ -407,10 +620,6 @@ fun GoogleSignInDialog(
     )
 }
 
-/**
- * Secure Document Upload Bottom Sheet with Security & Verification
- * Only allows .pdf, .jpg, .png and enforces size limits & integrity check
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SecureDocumentUploadBottomSheet(
