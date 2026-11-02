@@ -574,7 +574,7 @@ fun ApplicationItemCard(
 
                     Column {
                         Text(
-                            text = application.title,
+                            text = MoroccanLocalization.localizedTitle(application.title),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -586,13 +586,13 @@ fun ApplicationItemCard(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = application.organization,
+                                text = MoroccanLocalization.localizedOrg(application.organization),
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                                 maxLines = 1
                             )
                             Text(text = "•", color = OutlineVariant)
                             Text(
-                                text = application.location,
+                                text = MoroccanLocalization.localizedCity(application.location),
                                 style = MaterialTheme.typography.bodySmall.copy(color = Outline)
                             )
                         }

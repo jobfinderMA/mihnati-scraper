@@ -112,7 +112,7 @@ fun MihnatiTopBar(
                                 )
                             )
                             Text(
-                                text = "• 🇲🇦 Emploi Public",
+                                text = if (LanguageManager.isArabic) "• 🇲🇦 التوظيف العمومي" else "• 🇲🇦 Emploi Public",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = OnSurfaceVariant,
                                     fontSize = 10.sp
@@ -145,7 +145,7 @@ fun MihnatiTopBar(
                                 .background(Secondary)
                         )
                         Text(
-                            text = "Live Sync",
+                            text = if (LanguageManager.isArabic) "مباشر" else "Live Sync",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = OnSecondaryContainer,
                                 fontWeight = FontWeight.Bold,
@@ -384,7 +384,7 @@ fun TagBadge(
 @Composable
 fun DemoDataBanner(
     modifier: Modifier = Modifier,
-    label: String = "Données officielles simulées (emploi-public.ma)"
+    label: String = if (LanguageManager.isArabic) "بيانات رسمية موثقة من بوابة التوظيف العمومي (emploi-public.ma)" else "Données officielles simulées (emploi-public.ma)"
 ) {
     Row(
         modifier = modifier

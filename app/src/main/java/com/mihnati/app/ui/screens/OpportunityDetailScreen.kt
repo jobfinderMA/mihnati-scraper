@@ -205,7 +205,7 @@ fun OpportunityDetailScreen(
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                text = opportunity.location,
+                                text = MoroccanLocalization.localizedCity(opportunity.location),
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Color.White,
                                     fontWeight = FontWeight.SemiBold
@@ -220,7 +220,7 @@ fun OpportunityDetailScreen(
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
                             Text(
-                                text = "Officiel emploi-public.ma",
+                                text = if (LanguageManager.isArabic) "رسمي emploi-public.ma" else "Officiel emploi-public.ma",
                                 style = MaterialTheme.typography.labelSmall.copy(color = Color.White)
                             )
                         }
@@ -260,7 +260,7 @@ fun OpportunityDetailScreen(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 Text(
-                                    text = opportunity.organization,
+                                    text = MoroccanLocalization.localizedOrg(opportunity.organization),
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         color = Secondary,
                                         fontWeight = FontWeight.Bold
@@ -274,14 +274,14 @@ fun OpportunityDetailScreen(
                                 )
                             }
                             Text(
-                                text = "Direction & Encadrement",
+                                text = if (LanguageManager.isArabic) "الإدارة والتوظيف العمومي" else "Direction & Encadrement",
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                             )
                         }
                     }
 
                     Text(
-                        text = opportunity.title,
+                        text = MoroccanLocalization.localizedTitle(opportunity.title),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface,
@@ -389,7 +389,7 @@ fun OpportunityDetailScreen(
                                 modifier = Modifier.size(14.dp)
                             )
                             Text(
-                                text = "J-${opportunity.deadlineDaysRemaining}",
+                                text = if (LanguageManager.isArabic) "باقي ${opportunity.deadlineDaysRemaining} أيام" else "J-${opportunity.deadlineDaysRemaining}",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = Tertiary,
                                     fontWeight = FontWeight.Bold
@@ -459,7 +459,7 @@ fun OpportunityDetailScreen(
                         )
 
                         Text(
-                            text = "✓ Parfait match : Diplôme Bac+5 & spécialité informatique enregistrés sur votre CV Mihnati.",
+                            text = if (LanguageManager.isArabic) "✓ تطابق ممتاز : شهادة باك+5 والتخصص مسجلان في ملفك الشخصي بمهنتي." else "✓ Parfait match : Diplôme Bac+5 & spécialité informatique enregistrés sur votre CV Mihnati.",
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -491,7 +491,7 @@ fun OpportunityDetailScreen(
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
-                                text = opportunity.degreeRequired,
+                                text = MoroccanLocalization.localizedDegree(opportunity.degreeRequired),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface,
@@ -511,7 +511,7 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = "SPÉCIALITÉ",
+                                text = if (LanguageManager.isArabic) "التخصص المطلوب" else "SPÉCIALITÉ",
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
@@ -540,7 +540,7 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = "EXPÉRIENCE",
+                                text = if (LanguageManager.isArabic) "الخبرة المطلوبة" else "EXPÉRIENCE",
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
@@ -564,24 +564,24 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = if (opportunity.sectorType == SectorType.PUBLIC) "GRILLE ADMINISTRATIVE" else "RÉMUNÉRATION",
+                                text = if (opportunity.sectorType == SectorType.PUBLIC) (if (LanguageManager.isArabic) "السلم الإداري الرسمي" else "GRILLE ADMINISTRATIVE") else (if (LanguageManager.isArabic) "الأجر والتعويضات" else "RÉMUNÉRATION"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
                                 text = if (opportunity.sectorType == SectorType.PUBLIC) {
                                     if (opportunity.title.contains("11") || opportunity.degreeRequired.contains("11") || opportunity.degreeRequired.contains("Ingénieur"))
-                                        "Échelle 11 (Grille État)"
+                                        if (LanguageManager.isArabic) "السلم 11 (شبكة الدولة)" else "Échelle 11 (Grille État)"
                                     else if (opportunity.title.contains("10") || opportunity.degreeRequired.contains("10"))
-                                        "Échelle 10 (Grille État)"
+                                        if (LanguageManager.isArabic) "السلم 10 (شبكة الدولة)" else "Échelle 10 (Grille État)"
                                     else if (opportunity.title.contains("9") || opportunity.degreeRequired.contains("9"))
-                                        "Échelle 9 (Grille État)"
+                                        if (LanguageManager.isArabic) "السلم 9 (شبكة الدولة)" else "Échelle 9 (Grille État)"
                                     else
-                                        "Statut fonctionnaire"
+                                        if (LanguageManager.isArabic) "نظام الوظيفة العمومية" else "Statut fonctionnaire"
                                 } else {
                                     if (opportunity.salary.isNotBlank() && !opportunity.salary.contains("Grille", ignoreCase = true))
                                         opportunity.salary
                                     else
-                                        "Selon profil & barème"
+                                        if (LanguageManager.isArabic) "حسب المؤهلات والخبرة" else "Selon profil & barème"
                                 },
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,

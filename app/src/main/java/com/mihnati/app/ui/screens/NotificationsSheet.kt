@@ -59,7 +59,7 @@ fun NotificationsSheet(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Notifications",
+                        text = if (LanguageManager.isArabic) "الإشعارات" else "Notifications",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -73,7 +73,7 @@ fun NotificationsSheet(
                                 .padding(horizontal = 8.dp, vertical = 2.dp)
                         ) {
                             Text(
-                                text = "$unreadCount non lues",
+                                text = if (LanguageManager.isArabic) "$unreadCount غير مقروءة" else "$unreadCount non lues",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
@@ -86,7 +86,7 @@ fun NotificationsSheet(
 
                 if (unreadCount > 0) {
                     Text(
-                        text = "Tout marquer lu",
+                        text = if (LanguageManager.isArabic) "تحديد الكل كمقروء" else "Tout marquer lu",
                         style = MaterialTheme.typography.labelMedium.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold
@@ -99,7 +99,7 @@ fun NotificationsSheet(
             }
 
             DemoDataBanner(
-                label = "Alertes synchronisées avec emploi-public.ma et vos candidatures",
+                label = if (LanguageManager.isArabic) "تنبيهات فورية متزامنة مع بوابة التشغيل العمومي والترشيحات" else "Alertes synchronisées avec emploi-public.ma et vos candidatures",
                 modifier = Modifier.padding(bottom = 4.dp)
             )
 
@@ -124,12 +124,12 @@ fun NotificationsSheet(
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text(text = "🔔", fontSize = 14.sp)
                             Text(
-                                text = "Alertes Système Android",
+                                text = if (LanguageManager.isArabic) "تنبيهات نظام أندرويد الفورية" else "Alertes Système Android",
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = OnSecondaryContainer)
                             )
                         }
                         Text(
-                            text = "Actives 24/7 en arrière-plan (WorkManager Cloud)",
+                            text = if (LanguageManager.isArabic) "مفعلة 24/7 في الخلفية عبر الحوسبة السحابية (WorkManager)" else "Actives 24/7 en arrière-plan (WorkManager Cloud)",
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, color = OnSurfaceVariant)
                         )
                     }
@@ -141,7 +141,7 @@ fun NotificationsSheet(
                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text(text = "Tester 📲", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                        Text(text = if (LanguageManager.isArabic) "تجربة 📲" else "Tester 📲", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = Color.White))
                     }
                 }
             }
@@ -236,7 +236,7 @@ fun NotificationCardItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = notification.title,
+                        text = if (LanguageManager.isArabic) MoroccanLocalization.localizedTitle(notification.title) else notification.title,
                         style = MaterialTheme.typography.labelLarge.copy(
                             fontWeight = if (!notification.isRead) FontWeight.Bold else FontWeight.SemiBold,
                             color = OnSurface
@@ -261,7 +261,7 @@ fun NotificationCardItem(
                 )
 
                 Text(
-                    text = notification.timeAgo,
+                    text = MoroccanLocalization.localizedTimeAgo(notification.timeAgo),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Outline,
                         fontSize = 11.sp

@@ -583,7 +583,7 @@ fun HomeScreen(
                     }
 
                     Text(
-                        text = urgentOpportunity.title,
+                        text = MoroccanLocalization.localizedTitle(urgentOpportunity.title),
                         style = MaterialTheme.typography.titleLarge.copy(
                             color = OnPrimary,
                             fontWeight = FontWeight.Bold,
@@ -592,7 +592,7 @@ fun HomeScreen(
                     )
 
                     Text(
-                        text = "${urgentOpportunity.organization} • 120 ${if (LanguageManager.isArabic) "منصب مالي" else "postes"}",
+                        text = "${MoroccanLocalization.localizedOrg(urgentOpportunity.organization)} • 120 ${if (LanguageManager.isArabic) "منصب مالي" else "postes"}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = PrimaryFixed
                         )
@@ -695,7 +695,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Douanes & Impôts",
+                            text = if (LanguageManager.isArabic) "إدارة الجمارك والضرائب" else "Douanes & Impôts",
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -703,14 +703,14 @@ fun HomeScreen(
                             maxLines = 1
                         )
                         Text(
-                            text = "Inspecteur 3ème grade",
+                            text = if (LanguageManager.isArabic) "مفتش من الدرجة الثالثة" else "Inspecteur 3ème grade",
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                             modifier = Modifier.padding(top = 2.dp),
                             maxLines = 1
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Clôture: 04 Nov 2026",
+                            text = if (LanguageManager.isArabic) "آخر أجل: 04 نونبر 2026" else "Clôture: 04 Nov 2026",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Tertiary,
                                 fontWeight = FontWeight.Bold
@@ -737,7 +737,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Bourse Khawarizmi",
+                            text = if (LanguageManager.isArabic) "منحة الخوارزمي" else "Bourse Khawarizmi",
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -745,7 +745,7 @@ fun HomeScreen(
                             maxLines = 1
                         )
                         Text(
-                            text = "Doctorat & IA CNRST",
+                            text = if (LanguageManager.isArabic) "دكتوراه والذكاء الاصطناعي CNRST" else "Doctorat & IA CNRST",
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                             modifier = Modifier.padding(top = 2.dp),
                             maxLines = 1

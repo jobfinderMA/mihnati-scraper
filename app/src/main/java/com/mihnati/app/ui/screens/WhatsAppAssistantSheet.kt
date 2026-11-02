@@ -87,7 +87,7 @@ fun WhatsAppAssistantSheet(
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text(
-                                text = "Assistant IA Mihnati",
+                                text = if (LanguageManager.isArabic) "المساعد الذكي مهنتي" else "Assistant IA Mihnati",
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
@@ -101,7 +101,11 @@ fun WhatsAppAssistantSheet(
                             )
                         }
                         Text(
-                            text = if (whatsAppConfig.isConfigured) "Connecté : ${whatsAppConfig.provider.displayName}" else "Mode WhatsApp Direct & Conseils Concours",
+                            text = if (LanguageManager.isArabic) {
+                                if (whatsAppConfig.isConfigured) "متصل : ${whatsAppConfig.provider.displayName}" else "وضع استشارات ومباريات الوظيفة العمومية"
+                            } else {
+                                if (whatsAppConfig.isConfigured) "Connecté : ${whatsAppConfig.provider.displayName}" else "Mode WhatsApp Direct & Conseils Concours"
+                            },
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -161,7 +165,7 @@ fun WhatsAppAssistantSheet(
             }
 
             DemoDataBanner(
-                label = "Réponses entraînées sur la réglementation de la Fonction Publique marocaine"
+                label = if (LanguageManager.isArabic) "إجابات فورية مدربة وموثقة وفق الأنظمة والمراسيم الوزارية المغربية" else "Réponses entraînées sur la réglementation de la Fonction Publique marocaine"
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -214,7 +218,7 @@ fun WhatsAppAssistantSheet(
                         onValueChange = { inputText = it },
                         placeholder = {
                             Text(
-                                text = "Posez votre question (concours, éligibilité, pièces...)",
+                                text = if (LanguageManager.isArabic) "اطرح سؤالك (المباريات، الشواهد، السلالم والوثائق المطلوبة...)" else "Posez votre question (concours, éligibilité, pièces...)",
                                 style = MaterialTheme.typography.bodyMedium.copy(color = Outline)
                             )
                         },
@@ -269,7 +273,7 @@ fun WhatsAppAssistantSheet(
                         tint = Primary
                     )
                     Text(
-                        text = "Configuration Passerelle WhatsApp",
+                        text = if (LanguageManager.isArabic) "إعدادات بوابة واتساب الرسمية" else "Configuration Passerelle WhatsApp",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -277,13 +281,13 @@ fun WhatsAppAssistantSheet(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        text = "Configurez vos identifiants pour connecter l'assistant IA directement à un numéro WhatsApp Business dédié.",
+                        text = if (LanguageManager.isArabic) "اضبط إعدادات الربط لتوصيل المساعد الذكي برقم واتساب للأعمال أو بوابة الإرسال المخصصة." else "Configurez vos identifiants pour connecter l'assistant IA directement à un numéro WhatsApp Business dédié.",
                         style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                     )
 
                     // Provider Options
                     Text(
-                        text = "Fournisseur de service :",
+                        text = if (LanguageManager.isArabic) "مزود الخدمة :" else "Fournisseur de service :",
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                     )
                     WhatsAppApiProvider.values().forEach { provider ->
@@ -313,7 +317,7 @@ fun WhatsAppAssistantSheet(
                     OutlinedTextField(
                         value = inputPhone,
                         onValueChange = { inputPhone = it },
-                        label = { Text("Numéro WhatsApp (+212...)") },
+                        label = { Text(if (LanguageManager.isArabic) "رقم واتساب (+212...)" else "Numéro WhatsApp (+212...)") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -322,7 +326,7 @@ fun WhatsAppAssistantSheet(
                         OutlinedTextField(
                             value = inputApiKey,
                             onValueChange = { inputApiKey = it },
-                            label = { Text("Clé API / Token d'accès") },
+                            label = { Text(if (LanguageManager.isArabic) "مفتاح الربط API / الرمز" else "Clé API / Token d'accès") },
                             visualTransformation = if (isApiKeyHidden) PasswordVisualTransformation() else VisualTransformation.None,
                             trailingIcon = {
                                 IconButton(onClick = { isApiKeyHidden = !isApiKeyHidden }) {
@@ -362,12 +366,12 @@ fun WhatsAppAssistantSheet(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text("Sauvegarder")
+                    Text(if (LanguageManager.isArabic) "حفظ الإعدادات" else "Sauvegarder")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showConfigDialog = false }) {
-                    Text("Annuler")
+                    Text(if (LanguageManager.isArabic) "إلغاء" else "Annuler")
                 }
             }
         )
@@ -399,8 +403,15 @@ fun ChatMessageBubble(
                 .background(if (isUser) PrimaryContainer else SurfaceContainerLowest)
                 .padding(14.dp)
         ) {
+            val localizedBubbleText = if (LanguageManager.isArabic && !isUser) {
+                when {
+                    message.text.contains("Je suis l'Assistant IA Mihnati", ignoreCase = true) ->
+                        "مرحباً بك! أنا المساعد الذكي لتطبيق مهنتي. يمكنني مساعدتك في التحضير لمباريات الوظيفة العمومية بالمغرب (وزارة المالية، إدارة الجمارك، الأمن الوطني)، تحليل شواهدك وتحديد السلم المناسب، أو ضبط تذكيرات مواعيد إيداع الترشيحات على تقويمك."
+                    else -> message.text
+                }
+            } else message.text
             Text(
-                text = message.text,
+                text = localizedBubbleText,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = if (isUser) Color.White else OnSurface,
                     lineHeight = 20.sp
@@ -416,6 +427,14 @@ fun ChatMessageBubble(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 message.suggestedActions.forEach { action ->
+                    val localizedAction = if (LanguageManager.isArabic) {
+                        when {
+                            action.contains("Comment postuler au concours MEF", ignoreCase = true) -> "كيفية الترشح لمباراة وزارة المالية ؟"
+                            action.contains("Quelles pièces pour l'ADII", ignoreCase = true) -> "وثائق مباراة إدارة الجمارك ؟"
+                            action.contains("Équivalence", ignoreCase = true) -> "معادلة الشواهد والسلالم"
+                            else -> action
+                        }
+                    } else action
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(14.dp))
@@ -426,7 +445,7 @@ fun ChatMessageBubble(
                             .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = action,
+                            text = localizedAction,
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = if (action.contains("WhatsApp", ignoreCase = true)) Color(0xFF075E54) else Primary,
                                 fontWeight = FontWeight.Bold

@@ -34,6 +34,7 @@ import com.mihnati.app.ui.components.MihnatiTopBar
 import com.mihnati.app.ui.components.NavigationTab
 import com.mihnati.app.ui.screens.*
 import com.mihnati.app.ui.theme.MihnatiTheme
+import com.mihnati.app.ui.theme.AppStrings
 import com.mihnati.app.ui.theme.PrimaryContainer
 import com.mihnati.app.ui.theme.Surface
 
@@ -164,7 +165,7 @@ fun MainAppScaffold(initialOpportunityId: String? = null) {
                     containerColor = Color(0xFF25D366),
                     contentColor = Color.White,
                     shape = CircleShape,
-                    modifier = Modifier.padding(bottom = 60.dp)
+                    modifier = Modifier.padding(bottom = 76.dp, end = 4.dp)
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 14.dp),
@@ -173,7 +174,7 @@ fun MainAppScaffold(initialOpportunityId: String? = null) {
                     ) {
                         Text(text = "💬", fontSize = 18.sp)
                         Text(
-                            text = "Assistant IA",
+                            text = AppStrings.assistantIa,
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                                 color = Color.White

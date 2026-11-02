@@ -662,14 +662,14 @@ fun OpportunitiesScreen(
                         }
                         Column {
                             Text(
-                                text = "Assistant IA Mihnati",
+                                text = if (LanguageManager.isArabic) "المساعد الذكي مهنتي" else "Assistant IA Mihnati",
                                 style = MaterialTheme.typography.labelLarge.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = "Questions sur les oraux & barèmes",
+                                text = if (LanguageManager.isArabic) "استفسارات حول الامتحانات الشفوية والسلالم" else "Questions sur les oraux & barèmes",
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                             )
                         }
@@ -682,7 +682,7 @@ fun OpportunitiesScreen(
                         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = "Poser une question",
+                            text = if (LanguageManager.isArabic) "طرح سؤال" else "Poser une question",
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                         )
                     }
@@ -818,7 +818,7 @@ fun CleanOpportunityCard(
 
                     Column {
                         Text(
-                            text = opportunity.organization,
+                            text = MoroccanLocalization.localizedOrg(opportunity.organization),
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = OnSurface,
                                 fontWeight = FontWeight.Bold
@@ -836,7 +836,7 @@ fun CleanOpportunityCard(
                                 modifier = Modifier.size(13.dp)
                             )
                             Text(
-                                text = opportunity.location,
+                                text = MoroccanLocalization.localizedCity(opportunity.location),
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                                 maxLines = 1
                             )
@@ -860,7 +860,7 @@ fun CleanOpportunityCard(
 
             // Title
             Text(
-                text = opportunity.title,
+                text = MoroccanLocalization.localizedTitle(opportunity.title),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = OnSurface,
@@ -937,7 +937,7 @@ fun CleanOpportunityCard(
             ) {
                 // Degree Badge
                 TagBadge(
-                    text = opportunity.degreeRequired.split("(").firstOrNull()?.trim() ?: opportunity.degreeRequired,
+                    text = MoroccanLocalization.localizedDegree(opportunity.degreeRequired.split("(").firstOrNull()?.trim() ?: opportunity.degreeRequired),
                     backgroundColor = SurfaceContainer,
                     textColor = OnSurface
                 )

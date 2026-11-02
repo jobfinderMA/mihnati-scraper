@@ -236,7 +236,7 @@ fun CalendarScreen(
                             modifier = Modifier.size(40.dp)
                         )
                         Text(
-                            text = "Aucun événement prévu pour cette sélection",
+                            text = if (LanguageManager.isArabic) "لا توجد مواعيد أو مباريات مبرمجة لهذه الفترة" else "Aucun événement prévu pour cette sélection",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = OnSurfaceVariant,
                                 fontWeight = FontWeight.SemiBold
@@ -282,7 +282,7 @@ fun CalendarScreen(
             onDismissRequest = { showAddEventDialog = false },
             title = {
                 Text(
-                    text = "Ajouter un événement / rappel",
+                    text = if (LanguageManager.isArabic) "إضافة موعد أو تذكير خاص" else "Ajouter un événement / rappel",
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -291,7 +291,7 @@ fun CalendarScreen(
                     OutlinedTextField(
                         value = newEventTitle,
                         onValueChange = { newEventTitle = it },
-                        label = { Text("Titre de l'échéance") },
+                        label = { Text(if (LanguageManager.isArabic) "عنوان الموعد" else "Titre de l'échéance") },
                         placeholder = { Text("Ex: Dépôt légalisation diplôme") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -400,13 +400,24 @@ fun CalendarEventCard(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     TagBadge(
-                        text = if (event.daysRemaining <= 3) "J-${event.daysRemaining} URGENT" else "J-${event.daysRemaining} restants",
+                        text = if (event.daysRemaining <= 3) {
+                            if (LanguageManager.isArabic) "عاجل • باقي ${event.daysRemaining} أيام" else "J-${event.daysRemaining} URGENT"
+                        } else {
+                            if (LanguageManager.isArabic) "باقي ${event.daysRemaining} أيام" else "J-${event.daysRemaining} restants"
+                        },
                         backgroundColor = if (event.daysRemaining <= 3) ErrorContainer else TertiaryFixed,
                         textColor = if (event.daysRemaining <= 3) OnErrorContainer else OnTertiaryFixed,
                         icon = Icons.Default.Timer
                     )
                     TagBadge(
-                        text = event.eventType.label,
+                        text = if (LanguageManager.isArabic) {
+                            when (event.eventType) {
+                                CalendarEventType.CLOTURE_CONCOURS -> "آجال الترشيح"
+                                CalendarEventType.EXAMEN_ECRIT -> "الاختبار الكتابي"
+                                CalendarEventType.ENTRETIEN -> "المقابلة الشفوية"
+                                CalendarEventType.RAPPEL_PERSO -> "تذكير خاص"
+                            }
+                        } else event.eventType.label,
                         backgroundColor = SurfaceContainer,
                         textColor = OnSurfaceVariant
                     )
@@ -444,7 +455,7 @@ fun CalendarEventCard(
             // Title & Organization
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
-                    text = event.title,
+                    text = MoroccanLocalization.localizedTitle(event.title),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = OnSurface,
@@ -452,7 +463,7 @@ fun CalendarEventCard(
                     )
                 )
                 Text(
-                    text = event.organization,
+                    text = MoroccanLocalization.localizedOrg(event.organization),
                     style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                 )
             }
@@ -500,7 +511,7 @@ fun CalendarEventCard(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = event.location,
+                            text = MoroccanLocalization.localizedCity(event.location),
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = OnSurfaceVariant,
                                 fontSize = 11.sp

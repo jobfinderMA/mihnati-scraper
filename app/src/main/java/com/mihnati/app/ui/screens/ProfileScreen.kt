@@ -145,7 +145,7 @@ fun ProfileScreen(
                         }
 
                         Text(
-                            text = userProfile.fullName,
+                            text = if (isGuest && LanguageManager.isArabic) AppStrings.guestName else userProfile.fullName,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -153,7 +153,7 @@ fun ProfileScreen(
                         )
 
                         Text(
-                            text = userProfile.headline,
+                            text = if (isGuest && LanguageManager.isArabic) "حساب غير متصل" else userProfile.headline,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                             maxLines = 2
                         )
@@ -169,7 +169,7 @@ fun ProfileScreen(
                                 modifier = Modifier.size(14.dp)
                             )
                             Text(
-                                text = userProfile.location,
+                                text = if (LanguageManager.isArabic && (userProfile.location == "Maroc" || userProfile.location == "Rabat, Maroc")) "المغرب 🇲🇦" else userProfile.location,
                                 style = MaterialTheme.typography.labelSmall.copy(color = OnSurfaceVariant)
                             )
                         }
@@ -179,7 +179,7 @@ fun ProfileScreen(
                 // Bio
                 if (userProfile.bio.isNotBlank()) {
                     Text(
-                        text = userProfile.bio,
+                        text = if (isGuest && LanguageManager.isArabic) AppStrings.guestBio else userProfile.bio,
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurfaceVariant,
                             lineHeight = 18.sp
@@ -657,7 +657,7 @@ fun ProfileScreen(
                         )
                     }
                     Text(
-                        text = "Modifier",
+                        text = if (LanguageManager.isArabic) "تعديل" else "Modifier",
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold
@@ -669,7 +669,7 @@ fun ProfileScreen(
                 }
 
                 Text(
-                    text = "Compétences techniques & Domaines",
+                    text = if (LanguageManager.isArabic) "الكفاءات والمهارات التقنية" else "Compétences techniques & Domaines",
                     style = MaterialTheme.typography.labelMedium.copy(color = OnSurfaceVariant)
                 )
 
@@ -700,7 +700,7 @@ fun ProfileScreen(
                 }
 
                 Text(
-                    text = "Maîtrise linguistique",
+                    text = if (LanguageManager.isArabic) "اللغات المتقنة" else "Maîtrise linguistique",
                     style = MaterialTheme.typography.labelMedium.copy(color = OnSurfaceVariant),
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -746,7 +746,7 @@ fun ProfileScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Porte-documents Sécurisé",
+                            text = if (LanguageManager.isArabic) "المحفظة الرقمية الآمنة" else "Porte-documents Sécurisé",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -754,14 +754,14 @@ fun ProfileScreen(
                         )
                     }
                     TagBadge(
-                        text = "${userProfile.documents.size} Pièce(s)",
+                        text = if (LanguageManager.isArabic) "${userProfile.documents.size} وثائق رسمية" else "${userProfile.documents.size} Pièce(s)",
                         backgroundColor = SecondaryFixed,
                         textColor = OnSecondaryFixed
                     )
                 }
 
                 Text(
-                    text = "Vos pièces officielles sont certifiées (AES-256) et prêtes pour la candidature directe aux concours de l'État.",
+                    text = if (LanguageManager.isArabic) "وثائقك الرسمية مشفرة ومؤمنة (AES-256) وجاهزة للترشح المباشر في مباريات الدولة." else "Vos pièces officielles sont certifiées (AES-256) et prêtes pour la candidature directe aux concours de l'État.",
                     style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.5.sp)
                 )
 
@@ -884,7 +884,7 @@ fun ProfileScreen(
                     Icon(imageVector = Icons.Default.CloudUpload, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "+ Téléverser une pièce officielle (Sécurisé & Vérifié)",
+                        text = if (LanguageManager.isArabic) "+ إضافة وثيقة رسمية مشفرة وموثقة" else "+ Téléverser une pièce officielle (Sécurisé & Vérifié)",
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -912,7 +912,7 @@ fun ProfileScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Préférences de veille automatique",
+                        text = if (LanguageManager.isArabic) "خيارات التنبيهات التلقائية" else "Préférences de veille automatique",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -922,8 +922,8 @@ fun ProfileScreen(
 
                 // Switch 1: Public Sector
                 PreferenceRow(
-                    title = "Alertes Concours Fonction Publique",
-                    subtitle = "Ministères, offices nationaux et collectivités",
+                    title = if (LanguageManager.isArabic) "إشعارات مباريات الوظيفة العمومية" else "Alertes Concours Fonction Publique",
+                    subtitle = if (LanguageManager.isArabic) "الوزارات، المكاتب والمؤسسات الوطنية والجماعات" else "Ministères, offices nationaux et collectivités",
                     checked = userProfile.preferences.publicSectorAlerts,
                     onCheckedChange = {
                         MihnatiRepository.updatePreferences(userProfile.preferences.copy(publicSectorAlerts = it))
@@ -932,8 +932,8 @@ fun ProfileScreen(
 
                 // Switch 2: Private Sector
                 PreferenceRow(
-                    title = "Offres Secteur Privé ciblées Bac+5",
-                    subtitle = "Grandes entreprises, multinationales et startups",
+                    title = if (LanguageManager.isArabic) "عروض القطاع الخاص لحاملي الشهادات" else "Offres Secteur Privé ciblées Bac+5",
+                    subtitle = if (LanguageManager.isArabic) "الشركات الكبرى، المقاولات والشركات الناشئة" else "Grandes entreprises, multinationales et startups",
                     checked = userProfile.preferences.privateSectorAlerts,
                     onCheckedChange = {
                         MihnatiRepository.updatePreferences(userProfile.preferences.copy(privateSectorAlerts = it))
@@ -942,8 +942,8 @@ fun ProfileScreen(
 
                 // Switch 3: Deadlines
                 PreferenceRow(
-                    title = "Rappels des dates limites",
-                    subtitle = "Alerte SMS & Push 48h avant la clôture",
+                    title = if (LanguageManager.isArabic) "تذكيرات آجال الترشيح" else "Rappels des dates limites",
+                    subtitle = if (LanguageManager.isArabic) "تنبيه قبل 48 ساعة من إغلاق باب الترشيح" else "Alerte SMS & Push 48h avant la clôture",
                     checked = userProfile.preferences.deadlineReminders,
                     onCheckedChange = {
                         MihnatiRepository.updatePreferences(userProfile.preferences.copy(deadlineReminders = it))
