@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
 
         // 1.2 Initialize Bilingual Language System
         com.mihnati.app.ui.theme.LanguageManager.init(this)
+        com.mihnati.app.translation.AutoTranslationService.initialize(this)
 
         // 1.3 Load Personalized Alert Filters
         val savedPrefs = com.mihnati.app.security.MihnatiSecurityVault.loadAlertPreferences(this)

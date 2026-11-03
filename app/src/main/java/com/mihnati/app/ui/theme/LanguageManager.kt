@@ -12,7 +12,7 @@ enum class AppLanguage(
     val isRtl: Boolean
 ) {
     FRENCH("fr", "Français", "🇫🇷", false),
-    ARABIC("ar", "العربية", "🇲🇦", true)
+    ARABIC("ar", "Arabe", "🇲🇦", true)
 }
 
 object LanguageManager {

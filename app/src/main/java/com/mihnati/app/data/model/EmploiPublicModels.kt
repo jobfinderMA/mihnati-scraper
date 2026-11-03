@@ -1,16 +1,16 @@
 package com.mihnati.app.data.model
 
 enum class ExamListType(val labelFr: String, val labelAr: String, val badgeColorHex: Long) {
-    ECRIT("Épreuve Écrite", "الاختبار الكتابي", 0xFF0D53FC),
-    ORAL("Épreuve Orale", "الاختبار الشفوي", 0xFF793F00),
-    RESULTAT_FINAL("Résultats Définitifs", "النتائج النهائية", 0xFF006C4A),
-    LISTE_ATTENTE("Liste d'Attente", "لائحة الانتظار", 0xFF5B6070)
+    ECRIT("Épreuve Écrite", "Épreuve Écrite", 0xFF0D53FC),
+    ORAL("Épreuve Orale", "Épreuve Orale", 0xFF793F00),
+    RESULTAT_FINAL("Résultats Définitifs", "Résultats Définitifs", 0xFF006C4A),
+    LISTE_ATTENTE("Liste d'Attente", "Liste d'Attente", 0xFF5B6070)
 }
 
 enum class AdministrationCategory(val labelFr: String, val labelAr: String) {
-    MINISTERE("Ministères", "الوزارات"),
-    ETABLISSEMENT_PUBLIC("Établissements & Entreprises Publics", "المؤسسات والمقاولات العمومية"),
-    COLLECTIVITE("Collectivités Territoriales", "الجماعات الترابية")
+    MINISTERE("Ministères", "Ministères"),
+    ETABLISSEMENT_PUBLIC("Établissements & Entreprises Publics", "Établissements & Entreprises Publics"),
+    COLLECTIVITE("Collectivités Territoriales", "Collectivités Territoriales")
 }
 
 data class EmploiPublicConcours(

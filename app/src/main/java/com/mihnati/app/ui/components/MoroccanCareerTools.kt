@@ -1,5 +1,7 @@
 package com.mihnati.app.ui.components
 
+import com.mihnati.app.translation.autoTranslate
+
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -281,15 +283,23 @@ fun ConcoursChecklistDialog(
     onDismiss: () -> Unit
 ) {
     val isAr = LanguageManager.isArabic
-    val items = remember(isAr) {
+    val doc1 = autoTranslate("Copie certifiée conforme du diplôme national ou attestation de réussite")
+    val doc2 = autoTranslate("Arrêté d'équivalence publié au Bulletin Officiel (pour diplômes privés ou étrangers)")
+    val doc3 = autoTranslate("Copie de la Carte Nationale d'Identité Électronique (CNIE recto-verso)")
+    val doc4 = autoTranslate("Curriculum Vitae (CV) actualisé avec photo d'identité récente")
+    val doc5 = autoTranslate("Récépissé ou fiche d'inscription générée sur emploi-public.ma")
+    val doc6 = autoTranslate("Extrait du casier judiciaire (Fiche anthropométrique)")
+    val doc7 = autoTranslate("Certificat médical d'aptitude physique (pour certains ministères)")
+
+    val items = remember(doc1, doc2, doc3, doc4, doc5, doc6, doc7) {
         mutableStateListOf(
-            ChecklistItem(if (isAr) "نسخة مطابقة للأصل من الدبلوم الوطني أو شهادة النجاح" else "Copie certifiée conforme du diplôme national ou attestation de réussite", true),
-            ChecklistItem(if (isAr) "قرار المعادلة المنشور بالجريدة الرسمية (للشواهد الخاصة أو الأجنبية)" else "Arrêté d'équivalence publié au Bulletin Officiel (pour diplômes privés ou étrangers)", true),
-            ChecklistItem(if (isAr) "نسخة من البطاقة الوطنية للتعريف الإلكترونية (CNIE من الجهتين)" else "Copie de la Carte Nationale d'Identité Électronique (CNIE recto-verso)", true),
-            ChecklistItem(if (isAr) "سيرة ذاتية محينة (CV) مع صورة فوتوغرافية حديثة" else "Curriculum Vitae (CV) actualisé avec photo d'identité récente", true),
-            ChecklistItem(if (isAr) "وصل إلكتروني للتسجيل عبر بوابة emploi-public.ma" else "Récépissé ou fiche d'inscription générée sur emploi-public.ma", false),
-            ChecklistItem(if (isAr) "مستخرج من السجل العدلي (بطاقة السوابق أو بطاقة السجل العدلي)" else "Extrait du casier judiciaire (Fiche anthropométrique)", false),
-            ChecklistItem(if (isAr) "شهادة طبية تثبت القدرة البدنية لممارسة المهام" else "Certificat médical d'aptitude physique (pour certains ministères)", false)
+            ChecklistItem(doc1, isChecked = false),
+            ChecklistItem(doc2, isChecked = false),
+            ChecklistItem(doc3, isChecked = false),
+            ChecklistItem(doc4, isChecked = false),
+            ChecklistItem(doc5, isChecked = false),
+            ChecklistItem(doc6, isChecked = false),
+            ChecklistItem(doc7, isChecked = false)
         )
     }
 
@@ -392,31 +402,7 @@ fun MotivationLetterBottomSheet(
     val context = LocalContext.current
 
     val isAr = LanguageManager.isArabic
-    val letterContent = if (isAr) {
-        """
-إلى السيد(ة) مدير الموارد البشرية
-$organization
-المملكة المغربية
-
-الموضوع: طلب خطي لاجتياز مباراة توظيف $opportunityTitle
-رقم مرجع المباراة: $reference
-
-سلام تام بوجود مولانا الإمام،
-
-وبعد، يشرفني أن أتقدم إلى سيادتكم بطلبي هذا قصد تسجيل ترشيحي لاجتياز مباراة توظيف $opportunityTitle المعلن عنها من طرف $organization.
-
-وأحيطكم علماً أنني حاصل على دبلوم $degreeName، وأتوفر على كافة الشروط والمؤهلات العلمية والعملية المطلوبة للقيام بالمهام المسندة على أكمل وجه وبكل تفان ونزاهة خدمة للمصلحة العامة ولتطور الإدارة المغربية.
-
-وتجدون رفقة هذا الطلب كافة الوثائق والشهادات المطلوبة المكونة لملف الترشيح.
-
-وفي انتظار تفضلكم بقبول ترشيحي، تقبلوا فائق عبارات التقدير والاحترام.
-
-والسلام.
-$candidateName
-الدار البيضاء، المملكة المغربية
-        """.trimIndent()
-    } else {
-        """
+    val letterContent = """
 À l'attention de Monsieur / Madame le Responsable du Recrutement
 $organization
 Royaume du Maroc
@@ -437,7 +423,6 @@ Dans l'attente de votre réponse, je vous prie d'agréer, Madame, Monsieur, l'ex
 $candidateName
 Casablanca, Royaume du Maroc
         """.trimIndent()
-    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -503,12 +488,13 @@ Casablanca, Royaume du Maroc
                 )
             }
 
+            val letterToastMsg = AppStrings.letterCopiedToast
             Button(
                 onClick = {
                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("Lettre de Motivation Mihnati", letterContent)
                     clipboard.setPrimaryClip(clip)
-                    Toast.makeText(context, AppStrings.letterCopiedToast, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, letterToastMsg, Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Primary),
@@ -534,23 +520,13 @@ fun DiplomaEligibilityBottomSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val isAr = LanguageManager.isArabic
-    val diplomas = if (isAr) {
-        listOf(
-            "مهندس دولة (ENSIAS, EMI, INPT, ENSA...)" to ("السلم 11" to "مهندس دولة من الدرجة الأولى • متصرف من الدرجة الثانية"),
-            "ماستر / ماستر متخصص / DESA (باك+5)" to ("السلم 11" to "متصرف من الدرجة الثانية • مباريات وزارة المالية والوزارات"),
-            "إجازة أساسية أو مهنية (باك+3)" to ("السلم 10" to "متصرف من الدرجة الثالثة • قطاع التعليم والصحة"),
-            "تقني متخصص / DUT / BTS / DTS (باك+2)" to ("السلم 9" to "تقني من الدرجة الثالثة • إدارة الجمارك والضرائب"),
-            "شهادة البكالوريا الوطنية أو ما يعادلها" to ("السلم 8" to "مساعد تقني / عون إداري")
-        )
-    } else {
-        listOf(
+    val diplomas = listOf(
             "Ingénieur d'État (ENSIAS, EMI, INPT, ENSA...)" to ("Échelle 11" to "Ingénieur 1er grade • Administrateur 2ème grade"),
             "Master / Master Spécialisé / DESA (Bac+5)" to ("Échelle 11" to "Administrateur 2ème grade • Concours MEF & Ministères"),
             "Licence Fondamentale ou Professionnelle (Bac+3)" to ("Échelle 10" to "Administrateur 3ème grade • Enseignement / Santé"),
             "DUT / BTS / DTS / Technicien Spécialisé (Bac+2)" to ("Échelle 9" to "Technicien 3ème grade • Douanes (ADII) / DGI"),
             "Baccalauréat National ou Équivalent" to ("Échelle 8" to "Adjoint technique / Agent administratif")
         )
-    }
 
     var selectedIndex by remember { mutableStateOf(0) }
     val (echelle, gradesDesc) = diplomas[selectedIndex].second
@@ -716,53 +692,28 @@ fun OralExamPrepBottomSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val isAr = LanguageManager.isArabic
-    val questions = if (isAr) {
-        listOf(
+        val questions = listOf(
             OralQuestion(
-                q = "1. « قدّم نفسك في 3 دقائق أمام لجنة المباراة »",
-                tip = "قسّم العرض إلى 3 محاور: المسار الأكاديمي، الخبرات والمشاريع المنجزة، ودوافع رغبتك في خدمة الصالح العام بهذه الإدارة.",
-                keywords = listOf("الانضباط", "المرفق العام", "روح المسؤولية", "العمل الجماعي")
+                q = autoTranslate("1. « Présentez-vous en 3 minutes devant le jury »"),
+                tip = autoTranslate("Structurez en 3 axes : Parcours académique, projets réalisés et motivation à servir l'intérêt général."),
+                keywords = listOf(autoTranslate("Rigueur"), autoTranslate("Service public"), autoTranslate("Sens des responsabilités"), autoTranslate("Travail d'équipe"))
             ),
             OralQuestion(
-                q = "2. « ماذا تعرف عن ميثاق اللاتمركز الإداري والجهوية المتقدمة ؟ »",
-                tip = "اذكر الميثاق الوطني للاتمركز الإداري (المرسوم رقم 2-17-618) ونقل الاختصاصات من المصالح المركزية بالرباط إلى المصالح اللاممركزة بالجهات.",
-                keywords = listOf("المرسوم 2-17-618", "المصالح اللاممركزة", "الجهوية المتقدمة")
+                q = autoTranslate("2. « Que savez-vous de la Charte de la Déconcentration et de la Régionalisation Avancée ? »"),
+                tip = autoTranslate("Citez le Décret n° 2-17-618 fixant la Charte Nationale de la Déconcentration Administrative et le transfert des compétences aux services déconcentrés."),
+                keywords = listOf(autoTranslate("Décret 2-17-618"), autoTranslate("Services Déconcentrés"), autoTranslate("Régionalisation Avancée"))
             ),
             OralQuestion(
-                q = "3. « ما هي أهم مستجدات القانون 55-19 المتعلق بتبسيط المساطر الإدارية ؟ »",
-                tip = "إلغاء تصحيح الإمضاء لعدة وثائق، منع مطالبة المواطن بأكثر من نسخة، وبوابة Idarati.ma وتحديد آجال ملزمة لرد الإدارة.",
-                keywords = listOf("القانون 55-19", "إدارتي", "تبسيط المساطر", "الرقمنة")
+                q = autoTranslate("3. « Quelles sont les avancées majeures de la Loi 55-19 sur la simplification des procédures administratives ? »"),
+                tip = autoTranslate("Suppression de la légalisation de signature pour plusieurs actes, interdiction d'exiger plus d'une copie, portail Idarati.ma et délais stricts de traitement."),
+                keywords = listOf(autoTranslate("Loi 55-19"), autoTranslate("Portail Idarati.ma"), autoTranslate("Numérisation"), autoTranslate("Délais de réponse"))
             ),
             OralQuestion(
-                q = "4. « كيف تتصرف إذا وجه إليك رئيسك الإداري تعليمات تثير لديك تحفظاً ؟ »",
-                tip = "ذكّر بواجب الطاعة والتسلسل الإداري المنصوص عليه في النظام الأساسي للوظيفة العمومية (ظهير 1-58-008) مع الحوار والالتزام بالقوانين الجاري بها العمل.",
-                keywords = listOf("ظهير 1-58-008", "واجب التحفظ", "التسلسل الإداري", "النزاهة")
+                q = autoTranslate("4. « Comment réagiriez-vous si votre supérieur vous donnait une instruction discutable ? »"),
+                tip = autoTranslate("Rappeler le devoir d'obéissance hiérarchique selon le Statut Général de la Fonction Publique (Dahir 1-58-008), tout en formulant des réserves écrites professionnelles en cas d'irrégularité manifeste."),
+                keywords = listOf(autoTranslate("Dahir 1-58-008"), autoTranslate("Devoir de réserve"), autoTranslate("Hiérarchie"), autoTranslate("Éthique"))
             )
         )
-    } else {
-        listOf(
-            OralQuestion(
-                q = "1. « Présentez-vous en 3 minutes devant la commission »",
-                tip = "Structurez en 3 temps : Parcours académique, projets réalisés, et pourquoi vous avez choisi de servir l'intérêt général au sein de ce ministère.",
-                keywords = listOf("Rigueur", "Service public", "Sens du devoir", "Esprit d'équipe")
-            ),
-            OralQuestion(
-                q = "2. « Que savez-vous de la déconcentration et de la régionalisation avancée ? »",
-                tip = "Mentionnez la Charte nationale de la déconcentration administrative (Décret n° 2-17-618) et le transfert des compétences des ministères centraux vers les délégations régionales.",
-                keywords = listOf("Décret 2-17-618", "Services déconcentrés", "Délégation régionale")
-            ),
-            OralQuestion(
-                q = "3. « Qu'apporte la loi 55-19 aux usagers des administrations marocaines ? »",
-                tip = "Elle interdit d'exiger plus d'un exemplaire d'un document, supprime la légalisation de signature pour certaines démarches et fixe un délai maximum de réponse de l'administration.",
-                keywords = listOf("Loi 55-19", "Idarati.ma", "Simplification des procédures", "Digitalisation")
-            ),
-            OralQuestion(
-                q = "4. « Comment réagiriez-vous face à une instruction d'un supérieur qui vous semble discutable ? »",
-                tip = "Rappelez le respect du principe hiérarchique du statut général de la fonction publique (Dahir n° 1-58-008) tout en privilégiant le dialogue et la conformité aux textes légaux.",
-                keywords = listOf("Dahir 1-58-008", "Devoir de réserve", "Loyauté", "Respect hiérarchique")
-            )
-        )
-    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,

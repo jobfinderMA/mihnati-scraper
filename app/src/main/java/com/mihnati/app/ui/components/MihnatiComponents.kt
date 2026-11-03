@@ -1,5 +1,7 @@
 package com.mihnati.app.ui.components
 
+import com.mihnati.app.translation.autoTranslate
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -104,7 +106,7 @@ fun MihnatiTopBar(
                         }
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = "مهنتي",
+                                text = autoTranslate("Mihnati"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = Primary,
                                     fontWeight = FontWeight.Bold,
@@ -112,7 +114,7 @@ fun MihnatiTopBar(
                                 )
                             )
                             Text(
-                                text = if (LanguageManager.isArabic) "• 🇲🇦 التوظيف العمومي" else "• 🇲🇦 Emploi Public",
+                                text = "• 🇲🇦 " + autoTranslate("Emploi Public"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = OnSurfaceVariant,
                                     fontSize = 10.sp
@@ -145,7 +147,7 @@ fun MihnatiTopBar(
                                 .background(Secondary)
                         )
                         Text(
-                            text = if (LanguageManager.isArabic) "مباشر" else "Live Sync",
+                            text = autoTranslate("Live Sync"),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = OnSecondaryContainer,
                                 fontWeight = FontWeight.Bold,
@@ -160,7 +162,7 @@ fun MihnatiTopBar(
                         )
                     }
 
-                    // Bilingual Language Switcher (🇲🇦 عربي / 🇫🇷 FR)
+                    // Bilingual Language Switcher (🇲🇦 AR / 🇫🇷 FR)
                     val context = LocalContext.current
                     val currentLang by LanguageManager.currentLanguage.collectAsState()
                     Box(
@@ -174,7 +176,7 @@ fun MihnatiTopBar(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = if (currentLang == AppLanguage.ARABIC) "🇲🇦 ع" else "🇫🇷 FR",
+                            text = if (currentLang == AppLanguage.ARABIC) "🇲🇦 AR" else "🇫🇷 FR",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.ExtraBold,
                                 color = Primary,
@@ -384,7 +386,7 @@ fun TagBadge(
 @Composable
 fun DemoDataBanner(
     modifier: Modifier = Modifier,
-    label: String = if (LanguageManager.isArabic) "بيانات رسمية موثقة من بوابة التوظيف العمومي (emploi-public.ma)" else "Données officielles simulées (emploi-public.ma)"
+    label: String = "Données officielles simulées (emploi-public.ma)"
 ) {
     Row(
         modifier = modifier
@@ -479,11 +481,11 @@ fun ApplicationStepper(
                 Spacer(modifier = Modifier.height(4.dp))
                 val stageText = if (LanguageManager.isArabic) {
                     when (stage) {
-                        ApplicationStage.DEPOSE -> "تم الإيداع"
-                        ApplicationStage.REVUE -> "الانتقاء"
-                        ApplicationStage.ECRIT -> "الكتابي"
-                        ApplicationStage.ENTRETIEN -> "الشفوي"
-                        ApplicationStage.RESULTAT -> "النتائج"
+                        ApplicationStage.DEPOSE -> autoTranslate("Déposé")
+                        ApplicationStage.REVUE -> autoTranslate("Présélection")
+                        ApplicationStage.ECRIT -> autoTranslate("Écrit")
+                        ApplicationStage.ENTRETIEN -> autoTranslate("Oral")
+                        ApplicationStage.RESULTAT -> autoTranslate("Résultats")
                     }
                 } else {
                     stage.label

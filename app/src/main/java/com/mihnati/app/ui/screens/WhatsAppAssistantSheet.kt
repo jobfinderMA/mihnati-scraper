@@ -1,5 +1,7 @@
 package com.mihnati.app.ui.screens
 
+import com.mihnati.app.translation.autoTranslate
+
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -87,7 +89,7 @@ fun WhatsAppAssistantSheet(
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text(
-                                text = if (LanguageManager.isArabic) "المساعد الذكي مهنتي" else "Assistant IA Mihnati",
+                                text = autoTranslate("Assistant IA Mihnati"),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
@@ -102,7 +104,7 @@ fun WhatsAppAssistantSheet(
                         }
                         Text(
                             text = if (LanguageManager.isArabic) {
-                                if (whatsAppConfig.isConfigured) "متصل : ${whatsAppConfig.provider.displayName}" else "وضع استشارات ومباريات الوظيفة العمومية"
+                                if (whatsAppConfig.isConfigured) "${autoTranslate("Connecté")} : ${whatsAppConfig.provider.displayName}" else autoTranslate("Mode Conseil & Concours Emploi Public")
                             } else {
                                 if (whatsAppConfig.isConfigured) "Connecté : ${whatsAppConfig.provider.displayName}" else "Mode WhatsApp Direct & Conseils Concours"
                             },
@@ -165,7 +167,7 @@ fun WhatsAppAssistantSheet(
             }
 
             DemoDataBanner(
-                label = if (LanguageManager.isArabic) "إجابات فورية مدربة وموثقة وفق الأنظمة والمراسيم الوزارية المغربية" else "Réponses entraînées sur la réglementation de la Fonction Publique marocaine"
+                label = autoTranslate("Réponses entraînées sur la réglementation de la Fonction Publique marocaine")
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -218,7 +220,7 @@ fun WhatsAppAssistantSheet(
                         onValueChange = { inputText = it },
                         placeholder = {
                             Text(
-                                text = if (LanguageManager.isArabic) "اطرح سؤالك (المباريات، الشواهد، السلالم والوثائق المطلوبة...)" else "Posez votre question (concours, éligibilité, pièces...)",
+                                text = autoTranslate("Posez votre question (concours, éligibilité, pièces...)"),
                                 style = MaterialTheme.typography.bodyMedium.copy(color = Outline)
                             )
                         },
@@ -273,7 +275,7 @@ fun WhatsAppAssistantSheet(
                         tint = Primary
                     )
                     Text(
-                        text = if (LanguageManager.isArabic) "إعدادات بوابة واتساب الرسمية" else "Configuration Passerelle WhatsApp",
+                        text = autoTranslate("Configuration Passerelle WhatsApp"),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -281,13 +283,13 @@ fun WhatsAppAssistantSheet(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        text = if (LanguageManager.isArabic) "اضبط إعدادات الربط لتوصيل المساعد الذكي برقم واتساب للأعمال أو بوابة الإرسال المخصصة." else "Configurez vos identifiants pour connecter l'assistant IA directement à un numéro WhatsApp Business dédié.",
+                        text = autoTranslate("Configurez vos identifiants pour connecter l'assistant IA directement à un numéro WhatsApp Business dédié."),
                         style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                     )
 
                     // Provider Options
                     Text(
-                        text = if (LanguageManager.isArabic) "مزود الخدمة :" else "Fournisseur de service :",
+                        text = autoTranslate("Fournisseur de service :"),
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                     )
                     WhatsAppApiProvider.values().forEach { provider ->
@@ -317,7 +319,7 @@ fun WhatsAppAssistantSheet(
                     OutlinedTextField(
                         value = inputPhone,
                         onValueChange = { inputPhone = it },
-                        label = { Text(if (LanguageManager.isArabic) "رقم واتساب (+212...)" else "Numéro WhatsApp (+212...)") },
+                        label = { Text(autoTranslate("Numéro WhatsApp (+212...)")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -326,7 +328,7 @@ fun WhatsAppAssistantSheet(
                         OutlinedTextField(
                             value = inputApiKey,
                             onValueChange = { inputApiKey = it },
-                            label = { Text(if (LanguageManager.isArabic) "مفتاح الربط API / الرمز" else "Clé API / Token d'accès") },
+                            label = { Text(autoTranslate("Clé API / Token d'accès")) },
                             visualTransformation = if (isApiKeyHidden) PasswordVisualTransformation() else VisualTransformation.None,
                             trailingIcon = {
                                 IconButton(onClick = { isApiKeyHidden = !isApiKeyHidden }) {
@@ -366,12 +368,12 @@ fun WhatsAppAssistantSheet(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text(if (LanguageManager.isArabic) "حفظ الإعدادات" else "Sauvegarder")
+                    Text(autoTranslate("Sauvegarder"))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showConfigDialog = false }) {
-                    Text(if (LanguageManager.isArabic) "إلغاء" else "Annuler")
+                    Text(autoTranslate("Annuler"))
                 }
             }
         )
@@ -406,7 +408,7 @@ fun ChatMessageBubble(
             val localizedBubbleText = if (LanguageManager.isArabic && !isUser) {
                 when {
                     message.text.contains("Je suis l'Assistant IA Mihnati", ignoreCase = true) ->
-                        "مرحباً بك! أنا المساعد الذكي لتطبيق مهنتي. يمكنني مساعدتك في التحضير لمباريات الوظيفة العمومية بالمغرب (وزارة المالية، إدارة الجمارك، الأمن الوطني)، تحليل شواهدك وتحديد السلم المناسب، أو ضبط تذكيرات مواعيد إيداع الترشيحات على تقويمك."
+                        autoTranslate("Bienvenue ! Je suis l'assistant intelligent de Mihnati. Je peux vous aider à préparer les concours de la fonction publique au Maroc, analyser vos diplômes pour déterminer l'échelle appropriée, ou configurer des rappels sur votre calendrier.")
                     else -> message.text
                 }
             } else message.text
@@ -429,9 +431,9 @@ fun ChatMessageBubble(
                 message.suggestedActions.forEach { action ->
                     val localizedAction = if (LanguageManager.isArabic) {
                         when {
-                            action.contains("Comment postuler au concours MEF", ignoreCase = true) -> "كيفية الترشح لمباراة وزارة المالية ؟"
-                            action.contains("Quelles pièces pour l'ADII", ignoreCase = true) -> "وثائق مباراة إدارة الجمارك ؟"
-                            action.contains("Équivalence", ignoreCase = true) -> "معادلة الشواهد والسلالم"
+                            action.contains("Comment postuler au concours MEF", ignoreCase = true) -> autoTranslate("Comment postuler au concours du Ministère des Finances ?")
+                            action.contains("Quelles pièces pour l'ADII", ignoreCase = true) -> autoTranslate("Quelles pièces pour le concours de la Douane (ADII) ?")
+                            action.contains("Équivalence", ignoreCase = true) -> autoTranslate("Équivalence des diplômes et échelles")
                             else -> action
                         }
                     } else action

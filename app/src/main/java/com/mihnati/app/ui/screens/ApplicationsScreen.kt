@@ -34,6 +34,7 @@ import com.mihnati.app.ui.components.ApplicationStepper
 import com.mihnati.app.ui.components.DemoDataBanner
 import com.mihnati.app.ui.components.TagBadge
 import com.mihnati.app.ui.theme.*
+import com.mihnati.app.translation.autoTranslate
 
 @Composable
 fun ApplicationsScreen(
@@ -341,7 +342,7 @@ fun ApplicationsScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
-                            text = if (LanguageManager.isArabic) "استعد للاختبارات والمقابلات الرسمية" else "Préparez vos épreuves & entretiens",
+                            text = autoTranslate("Préparez vos épreuves & entretiens"),
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
@@ -349,7 +350,7 @@ fun ApplicationsScreen(
                             )
                         )
                         Text(
-                            text = if (LanguageManager.isArabic) "اطلع مجاناً على نماذج امتحانات المباريات السابقة مع التصحيح ونصائح المقابلات الشفوية." else "Accédez gratuitement aux annales corrigées des concours publics et aux conseils de simulation d'entretien RH Mihnati.",
+                            text = autoTranslate("Accédez gratuitement aux annales corrigées des concours publics et aux conseils de simulation d'entretien RH Mihnati."),
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = OnSurfaceVariant,
                                 lineHeight = 18.sp
@@ -363,7 +364,7 @@ fun ApplicationsScreen(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = if (LanguageManager.isArabic) "تحميل الدلائل والنماذج" else "Télécharger les guides",
+                                text = autoTranslate("Télécharger les guides"),
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = PrimaryContainer,
                                     fontWeight = FontWeight.Bold
@@ -574,7 +575,7 @@ fun ApplicationItemCard(
 
                     Column {
                         Text(
-                            text = MoroccanLocalization.localizedTitle(application.title),
+                            text = autoTranslate(application.title),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -586,13 +587,13 @@ fun ApplicationItemCard(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = MoroccanLocalization.localizedOrg(application.organization),
+                                text = autoTranslate(application.organization),
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                                 maxLines = 1
                             )
                             Text(text = "•", color = OutlineVariant)
                             Text(
-                                text = MoroccanLocalization.localizedCity(application.location),
+                                text = autoTranslate(application.location),
                                 style = MaterialTheme.typography.bodySmall.copy(color = Outline)
                             )
                         }
@@ -721,7 +722,7 @@ fun ApplicationItemCard(
                         )
                     )
                     Text(
-                        text = if (LanguageManager.isArabic) "أودع في ${application.submittedDate}" else "Déposé le ${application.submittedDate}",
+                        text = "${autoTranslate("Déposé le")} ${application.submittedDate}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurface,
                             fontWeight = FontWeight.SemiBold
@@ -738,7 +739,7 @@ fun ApplicationItemCard(
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = if (LanguageManager.isArabic) "+ المرحلة" else "Étape +",
+                                text = autoTranslate("Étape +"),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -762,7 +763,7 @@ fun ApplicationItemCard(
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = if (LanguageManager.isArabic) {
-                                    if (application.currentStage == ApplicationStage.ECRIT) "استدعاء PDF" else "عرض الاستدعاء"
+                                    if (application.currentStage == ApplicationStage.ECRIT) autoTranslate("Convocation PDF") else autoTranslate("Voir convocation")
                                 } else {
                                     if (application.currentStage == ApplicationStage.ECRIT) "Convocation PDF" else "Voir convocation"
                                 },
@@ -772,7 +773,7 @@ fun ApplicationItemCard(
                     } else {
                         TextButton(onClick = onDetailsClick) {
                             Text(
-                                text = if (LanguageManager.isArabic) "التفاصيل" else "Détails",
+                                text = autoTranslate("Détails"),
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = PrimaryContainer,
                                     fontWeight = FontWeight.Bold
@@ -819,7 +820,7 @@ private fun NativeExamListCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${exam.listType.labelFr} • ${exam.listType.labelAr}",
+                        text = autoTranslate(exam.listType.labelFr),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color(exam.listType.badgeColorHex)
@@ -845,7 +846,7 @@ private fun NativeExamListCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = exam.titleAr,
+                text = autoTranslate(exam.titleFr),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = OnSurfaceVariant,
                     fontSize = 13.sp,
@@ -878,7 +879,7 @@ private fun NativeExamListCard(
                     )
                 }
                 Text(
-                    text = "📋 ${exam.candidatesCount} ${if (LanguageManager.isArabic) "مرشح مدعو" else "convoqués"}",
+                    text = "📋 ${exam.candidatesCount} ${autoTranslate("convoqués")}",
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Secondary,
                         fontWeight = FontWeight.Bold
@@ -898,7 +899,7 @@ private fun NativeExamListCard(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = if (LanguageManager.isArabic) "📅 تاريخ الإجراء : " else "📅 Date d'épreuve : ", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(text = autoTranslate("📅 Date d'épreuve : "), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                         Text(text = exam.examDate, style = MaterialTheme.typography.bodySmall)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {

@@ -13,7 +13,7 @@ import java.net.URL
 import java.net.URLEncoder
 
 /**
- * Enterprise WhatsApp OTP & Concours Alert Dispatcher (Mihnati مهنتي).
+ * Enterprise WhatsApp OTP & Concours Alert Dispatcher (Mihnati Mihnati).
  *
  * Capabilities:
  * - Moroccan mobile number parsing & normalization (+212 6/7...)
@@ -181,7 +181,7 @@ object WhatsAppOtpManager {
                     gatewayUrl = gatewayUrl,
                     apiKey = externalWhatsAppApiKey,
                     phone = normalized,
-                    message = "🇲🇦 *Mihnati (مهنتي)*\n\nBonjour $candidateName,\nVotre code de vérification WhatsApp est :\n\n🔐 *$otpCode*\n\nCe code expire dans 10 minutes. Ne le transmettez à personne."
+                    message = "🇲🇦 *Mihnati*\n\nBonjour $candidateName,\nVotre code de vérification WhatsApp est :\n\n🔐 *$otpCode*\n\nCe code expire dans 10 minutes. Ne le transmettez à personne."
                 )
             } catch (e: Exception) {
                 Log.w(TAG, "WhatsApp Gateway dispatch note: ${e.message}")
@@ -280,7 +280,7 @@ object WhatsAppOtpManager {
         }
 
         val messageText = """
-            $emoji *Mihnati (مهنتي) - Alerte Convocations*
+            $emoji *Mihnati - Alerte Convocations*
             
             🏛️ *Administration :* $ministry
             📋 *Concours :* $concoursTitle
@@ -342,7 +342,7 @@ object WhatsAppOtpManager {
                 gatewayUrl = gatewayUrl,
                 apiKey = externalWhatsAppApiKey,
                 phone = normalized,
-                message = "🇲🇦 *Mihnati (مهنتي)*\n\n✅ *Passerelle WhatsApp Connectée !*\n\nVotre compte Green-API est opérationnel. Vous recevrez désormais automatiquement :\n- Vos codes de validation\n- Les listes des convoqués à l'écrit\n- Les convocations aux oraux\n- Les résultats finaux & listes des admis avec fichiers PDF."
+                message = "🇲🇦 *Mihnati*\n\n✅ *Passerelle WhatsApp Connectée !*\n\nVotre compte Green-API est opérationnel. Vous recevrez désormais automatiquement :\n- Vos codes de validation\n- Les listes des convoqués à l'écrit\n- Les convocations aux oraux\n- Les résultats finaux & listes des admis avec fichiers PDF."
             )
             Result.success("Message de test WhatsApp envoyé avec succès !")
         } catch (e: Exception) {

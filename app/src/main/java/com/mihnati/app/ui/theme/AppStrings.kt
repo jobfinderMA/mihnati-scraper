@@ -1,224 +1,230 @@
 package com.mihnati.app.ui.theme
 
-object AppStrings {
-    private val isAr: Boolean
-        get() = LanguageManager.isArabic
+import androidx.compose.runtime.Composable
+import com.mihnati.app.translation.autoTranslate
 
+/**
+ * Centralized Application Strings.
+ * All strings are maintained in clean source language (French).
+ * Automatic runtime translation to Arabic is handled on-device
+ * by the Google ML Kit Translation engine.
+ */
+object AppStrings {
     // Navigation Tabs
-    val navHome: String get() = if (isAr) "الرئيسية" else "Accueil"
-    val navOpportunities: String get() = if (isAr) "المباريات" else "Opportunités"
-    val navApplications: String get() = if (isAr) "ترشيحاتي" else "Candidatures"
-    val navCalendar: String get() = if (isAr) "التقويم" else "Calendrier"
-    val navProfile: String get() = if (isAr) "حسابي" else "Profil"
+    val navHome: String @Composable get() = autoTranslate("Accueil")
+    val navOpportunities: String @Composable get() = autoTranslate("Opportunités")
+    val navApplications: String @Composable get() = autoTranslate("Candidatures")
+    val navCalendar: String @Composable get() = autoTranslate("Calendrier")
+    val navProfile: String @Composable get() = autoTranslate("Profil")
 
     // TopBar & Brand
-    val brandName: String get() = if (isAr) "مهنتي" else "Mihnati"
-    val brandSubtitle: String get() = if (isAr) "مباريات التوظيف العمومي" else "Emploi Public"
-    val liveSyncBadge: String get() = if (isAr) "مزامنة مباشرة" else "Live Sync"
-    val assistantIa: String get() = if (isAr) "المساعد الذكي" else "Assistant IA"
+    val brandName: String get() = "Mihnati"
+    val brandSubtitle: String @Composable get() = autoTranslate("Emploi Public")
+    val liveSyncBadge: String @Composable get() = autoTranslate("Live Sync")
+    val assistantIa: String @Composable get() = autoTranslate("Assistant IA")
     val languageToggleFr: String get() = "🇫🇷 FR"
-    val languageToggleAr: String get() = "🇲🇦 ع"
+    val languageToggleAr: String get() = "🇲🇦 AR"
 
     // Home Screen
-    val welcomeTitle: String get() = if (isAr) "مرحباً بك في مهنتي 👋" else "Bienvenue sur Mihnati 👋"
-    val welcomeSubtitle: String get() = if (isAr) "حضّر مستقبلك المهني في المغرب" else "Préparez votre avenir professionnel au Maroc"
-    val createProfileBadge: String get() = if (isAr) "إنشاء حساب" else "Créer un profil"
-    val verifiedProfileBadge: String get() = if (isAr) "حساب موثق ✓" else "Profil Vérifié"
-    val searchPlaceholder: String get() = if (isAr) "ابحث عن مباراة، إدارة، أو قطاع..." else "Rechercher concours, poste, ministère..."
+    val welcomeTitle: String @Composable get() = autoTranslate("Bienvenue sur Mihnati 👋")
+    val welcomeSubtitle: String @Composable get() = autoTranslate("Préparez votre avenir professionnel au Maroc")
+    val createProfileBadge: String @Composable get() = autoTranslate("Créer un profil")
+    val verifiedProfileBadge: String @Composable get() = autoTranslate("Profil Vérifié ✓")
+    val searchPlaceholder: String @Composable get() = autoTranslate("Rechercher concours, poste, ministère...")
     
     // Tools Header & Cards
-    val toolsHeader: String get() = if (isAr) "صندوق أدوات المباريات 2026" else "BOÎTE À OUTILS CONCOURS 2026"
-    val toolsCount: String get() = if (isAr) "5 أدوات" else "5 outils"
-    val salarySimulator: String get() = if (isAr) "محاكي الأجور" else "Simulateur Salaire"
-    val salarySubtitle: String get() = if (isAr) "السلالم 8 إلى 11" else "Échelles 8 à 11"
-    val contestFile: String get() = if (isAr) "ملف الترشيح" else "Dossier Concours"
-    val contestFileSubtitle: String get() = if (isAr) "الوثائق والبطاقة الوطنية" else "Pièces & CNIE"
-    val coverLetter: String get() = if (isAr) "طلب خطي رسمي" else "Lettre Motivation"
-    val coverLetterSubtitle: String get() = if (isAr) "نموذج قانوني موحد" else "Modèle officiel"
-    val diplomaChecker: String get() = if (isAr) "معادلة الشواهد" else "Vérif. Diplôme"
-    val diplomaCheckerSubtitle: String get() = if (isAr) "السلالم والوظائف" else "Échelle & Corps"
-    val oralPrep: String get() = if (isAr) "التحضير للشفوي" else "Prépa Entretien"
-    val oralPrepSubtitle: String get() = if (isAr) "أسئلة لجان المباريات" else "Questions commissions"
+    val toolsHeader: String @Composable get() = autoTranslate("BOÎTE À OUTILS CONCOURS 2026")
+    val toolsCount: String @Composable get() = autoTranslate("5 outils")
+    val salarySimulator: String @Composable get() = autoTranslate("Simulateur Salaire")
+    val salarySubtitle: String @Composable get() = autoTranslate("Échelles 8 à 11")
+    val contestFile: String @Composable get() = autoTranslate("Dossier Concours")
+    val contestFileSubtitle: String @Composable get() = autoTranslate("Pièces & CNIE")
+    val coverLetter: String @Composable get() = autoTranslate("Lettre Motivation")
+    val coverLetterSubtitle: String @Composable get() = autoTranslate("Modèle officiel")
+    val diplomaChecker: String @Composable get() = autoTranslate("Vérif. Diplôme")
+    val diplomaCheckerSubtitle: String @Composable get() = autoTranslate("Échelle & Corps")
+    val oralPrep: String @Composable get() = autoTranslate("Prépa Entretien")
+    val oralPrepSubtitle: String @Composable get() = autoTranslate("Questions commissions")
 
     // Observatory Stats
-    val observatoryTitle: String get() = if (isAr) "مرصد التوظيف العمومي 2026" else "OBSERVATOIRE DE L'EMPLOI PUBLIC 2026"
-    val liveStatus: String get() = if (isAr) "● مباشر" else "● En direct"
-    val statConcours: String get() = if (isAr) "مباراة مفتوحة" else "Concours"
-    val statPositions: String get() = if (isAr) "منصب مالي" else "Postes État"
-    val statRegions: String get() = if (isAr) "جهة بالمملكة" else "Régions"
-    val statVerified: String get() = if (isAr) "رسمي وموثق" else "Vérifié"
+    val observatoryTitle: String @Composable get() = autoTranslate("OBSERVATOIRE DE L'EMPLOI PUBLIC 2026")
+    val liveStatus: String @Composable get() = autoTranslate("● En direct")
+    val statConcours: String @Composable get() = autoTranslate("Concours ouverts")
+    val statPositions: String @Composable get() = autoTranslate("Postes État")
+    val statRegions: String @Composable get() = autoTranslate("Régions")
+    val statVerified: String @Composable get() = autoTranslate("Officiel & Vérifié")
 
     // Category Tabs
-    val categoryAll: String get() = if (isAr) "الكل" else "Tous"
-    val categoryPublic: String get() = if (isAr) "مباريات عمومية" else "Concours Publics"
-    val categoryTech: String get() = if (isAr) "تكنولوجيا ورقمي" else "Tech & Digital"
-    val categoryFinance: String get() = if (isAr) "أبناك ومالية" else "Banque & Finance"
-    val categoryMasters: String get() = if (isAr) "ماستر وتكوين" else "Masters & Formations"
-    val categoryHealth: String get() = if (isAr) "قطاع الصحة" else "Santé"
-    val categoryCustomAlerts: String get() = if (isAr) "🎯 تنبيهاتي المخصصة" else "🎯 Mes alertes ciblées"
+    val categoryAll: String @Composable get() = autoTranslate("Tous")
+    val categoryPublic: String @Composable get() = autoTranslate("Concours Publics")
+    val categoryTech: String @Composable get() = autoTranslate("Tech & Digital")
+    val categoryFinance: String @Composable get() = autoTranslate("Banque & Finance")
+    val categoryMasters: String @Composable get() = autoTranslate("Masters & Formations")
+    val categoryHealth: String @Composable get() = autoTranslate("Santé")
+    val categoryCustomAlerts: String @Composable get() = autoTranslate("Mes alertes ciblées")
 
     // Cards & Opportunities
-    val expiresSoon: String get() = if (isAr) "ينتهي قريباً" else "Expire bientôt"
-    val expiresPrefix: String get() = if (isAr) "ينتهي خلال" else "Expire dans"
-    val viewOffer: String get() = if (isAr) "تفاصيل المباراة ←" else "Voir l'offre →"
-    val imminentDeadlines: String get() = if (isAr) "آجال وشيكة للإيداع" else "Délais imminents"
-    val viewCalendar: String get() = if (isAr) "التقويم ➔" else "Calendrier ➔"
-    val daysRemaining: String get() = if (isAr) "أيام متبقية" else "j restants"
-    val deadlineClosingPrefix: String get() = if (isAr) "آخر أجل :" else "Clôture :"
-    val onlineSubmission: String get() = if (isAr) "إيداع إلكتروني" else "Dépôt en ligne"
-    val directApply: String get() = if (isAr) "ترشيح مباشر" else "Postuler directement"
-    val recommendedForYou: String get() = if (isAr) "مباريات مقترحة لك" else "Opportunités pour vous"
-    val recommendedSubtitle: String get() = if (isAr) "مختارة حسب ملفك وشواهدك" else "Sélectionnées selon votre profil"
-    val viewAll: String get() = if (isAr) "عرض الكل" else "Voir tout"
-    val noAlertsFoundTitle: String get() = if (isAr) "لا توجد مباريات مطابقة لمعاييرك حالياً" else "Aucun concours ne correspond à vos filtres ciblés"
-    val noAlertsFoundDesc: String get() = if (isAr) "عدل الشهادات والجهات في صفحة حسابي لعرض النتائج." else "Personnalisez vos diplômes et régions dans l'onglet Profil pour filtrer vos offres."
-    val editFiltersBtn: String get() = if (isAr) "تعديل الفلاتر ➔" else "Modifier mes filtres ➔"
+    val expiresSoon: String @Composable get() = autoTranslate("Expire bientôt")
+    val expiresPrefix: String @Composable get() = autoTranslate("Expire dans")
+    val viewOffer: String @Composable get() = autoTranslate("Voir l'offre →")
+    val imminentDeadlines: String @Composable get() = autoTranslate("Délais imminents")
+    val viewCalendar: String @Composable get() = autoTranslate("Calendrier ➔")
+    val daysRemaining: String @Composable get() = autoTranslate("j restants")
+    val deadlineClosingPrefix: String @Composable get() = autoTranslate("Clôture :")
+    val onlineSubmission: String @Composable get() = autoTranslate("Dépôt en ligne")
+    val directApply: String @Composable get() = autoTranslate("Postuler directement")
+    val recommendedForYou: String @Composable get() = autoTranslate("Opportunités pour vous")
+    val recommendedSubtitle: String @Composable get() = autoTranslate("Sélectionnées selon votre profil")
+    val viewAll: String @Composable get() = autoTranslate("Voir tout")
+    val noAlertsFoundTitle: String @Composable get() = autoTranslate("Aucun concours ne correspond à vos filtres ciblés")
+    val noAlertsFoundDesc: String @Composable get() = autoTranslate("Personnalisez vos diplômes et régions dans l'onglet Profil pour filtrer vos offres.")
+    val editFiltersBtn: String @Composable get() = autoTranslate("Modifier mes filtres ➔")
 
     // Clean Opportunity Card
-    val publicSectorScale11: String get() = if (isAr) "سلم الوظيفة العمومية • السلم 11" else "Grille Fonction Publique • Échelle 11"
-    val publicSectorScale10: String get() = if (isAr) "سلم الوظيفة العمومية • السلم 10" else "Grille Fonction Publique • Échelle 10"
-    val publicSectorScale9: String get() = if (isAr) "سلم الوظيفة العمومية • السلم 9" else "Grille Fonction Publique • Échelle 9"
-    val publicSectorStatus: String get() = if (isAr) "نظام الوظيفة العمومية (حسب القرار)" else "Statut Fonction Publique (Selon arrêté)"
-    val salaryAccordingProfile: String get() = if (isAr) "الراتب حسب المؤهلات" else "Rémunération selon profil"
-    val estimateSalaryAction: String get() = if (isAr) "تقدير الأجر ➔" else "Estimer ➔"
-    val matchWord: String get() = if (isAr) "تطابق" else "match"
+    val publicSectorScale11: String @Composable get() = autoTranslate("Grille Fonction Publique • Échelle 11")
+    val publicSectorScale10: String @Composable get() = autoTranslate("Grille Fonction Publique • Échelle 10")
+    val publicSectorScale9: String @Composable get() = autoTranslate("Grille Fonction Publique • Échelle 9")
+    val publicSectorStatus: String @Composable get() = autoTranslate("Statut Fonction Publique (Selon arrêté)")
+    val salaryAccordingProfile: String @Composable get() = autoTranslate("Rémunération selon profil")
+    val estimateSalaryAction: String @Composable get() = autoTranslate("Estimer ➔")
+    val matchWord: String @Composable get() = autoTranslate("match")
 
     // Opportunities Screen
-    val searchOpportunitiesPlaceholder: String get() = if (isAr) "المنصب، الوزارة، المدينة، السلم 11..." else "Poste, ministère, ville, Échelle 11..."
-    val clearAction: String get() = if (isAr) "مسح" else "Effacer"
-    val tabAll: String get() = if (isAr) "الكل" else "Tous"
-    val tabFavorites: String get() = if (isAr) "المفضلة" else "Favoris"
-    val tabPublicSector: String get() = if (isAr) "المباريات العمومية" else "Concours Publics"
-    val tabPrivateSector: String get() = if (isAr) "القطاع الخاص" else "Secteur Privé"
-    val tabMastersTrainings: String get() = if (isAr) "ماستر وتدريب" else "Masters & Stages"
-    val levelAll: String get() = if (isAr) "كل المستويات" else "Tous niveaux"
-    val levelBac2: String get() = if (isAr) "باك+2 / تقني / دبلوم" else "Bac+2 / DUT / BTS"
-    val levelBac3: String get() = if (isAr) "باك+3 / إجازة" else "Bac+3 / Licence"
-    val levelBac5: String get() = if (isAr) "باك+5 / ماستر / مهندس" else "Bac+5 / Master / Ingénieur"
-    val levelDoctorate: String get() = if (isAr) "دكتوراه / باحث" else "Doctorat / Ph.D"
-    val sortDeadlineNear: String get() = if (isAr) "الأقرب أجلاً" else "Échéance proche"
-    val sortProfileMatch: String get() = if (isAr) "الأكثر تطابقاً" else "Pertinence profil"
-    val opportunitiesFound: String get() = if (isAr) "مباراة متوفرة" else "opportunités trouvées"
-    val noOffersFound: String get() = if (isAr) "لم يتم العثور على أي مباراة" else "Aucune offre trouvée"
-    val modifySearchCriteria: String get() = if (isAr) "يرجى تجربة كلمات بحث أخرى أو تغيير معايير التصفية." else "Essayez de modifier vos critères de recherche ou réinitialisez les filtres."
-    val resetFiltersBtn: String get() = if (isAr) "إعادة ضبط الفلاتر" else "Réinitialiser les filtres"
+    val searchOpportunitiesPlaceholder: String @Composable get() = autoTranslate("Poste, ministère, ville, Échelle 11...")
+    val clearAction: String @Composable get() = autoTranslate("Effacer")
+    val tabAll: String @Composable get() = autoTranslate("Tous")
+    val tabFavorites: String @Composable get() = autoTranslate("Favoris")
+    val tabPublicSector: String @Composable get() = autoTranslate("Concours Publics")
+    val tabPrivateSector: String @Composable get() = autoTranslate("Secteur Privé")
+    val tabMastersTrainings: String @Composable get() = autoTranslate("Masters & Stages")
+    val levelAll: String @Composable get() = autoTranslate("Tous niveaux")
+    val levelBac2: String @Composable get() = autoTranslate("Bac+2 / DUT / BTS")
+    val levelBac3: String @Composable get() = autoTranslate("Bac+3 / Licence")
+    val levelBac5: String @Composable get() = autoTranslate("Bac+5 / Master / Ingénieur")
+    val levelDoctorate: String @Composable get() = autoTranslate("Doctorat / Ph.D")
+    val sortDeadlineNear: String @Composable get() = autoTranslate("Échéance proche")
+    val sortProfileMatch: String @Composable get() = autoTranslate("Pertinence profil")
+    val opportunitiesFound: String @Composable get() = autoTranslate("opportunités trouvées")
+    val noOffersFound: String @Composable get() = autoTranslate("Aucune offre trouvée")
+    val modifySearchCriteria: String @Composable get() = autoTranslate("Essayez de modifier vos critères de recherche ou réinitialisez les filtres.")
+    val resetFiltersBtn: String @Composable get() = autoTranslate("Réinitialiser les filtres")
 
     // Applications Screen
-    val myApplicationsTitle: String get() = if (isAr) "ترشيحاتي وتتبّع المباريات" else "Mes Candidatures"
-    val refreshAction: String get() = if (isAr) "تحديث" else "Actualiser"
-    val activeFilesCount: String get() = if (isAr) "ملفات قيد المتابعة" else "dossiers actifs"
-    val finalizedSuccess: String get() = if (isAr) "مكتمل بنجاح" else "finalisé avec succès"
-    val tabMyFiles: String get() = if (isAr) "📂 ملفات الترشيح" else "📂 Mes Dossiers"
-    val tabConvocations: String get() = if (isAr) "📋 لوائح الكتابي والشفوي" else "📋 Listes Écrit & Oral"
-    val filterAll: String get() = if (isAr) "الكل" else "Toutes"
-    val filterPending: String get() = if (isAr) "قيد المعالجة" else "En attente"
-    val filterExam: String get() = if (isAr) "الاختبار الكتابي" else "Écrit / Concours"
-    val filterInterview: String get() = if (isAr) "المقابلة الشفوية" else "Entretien"
-    val filterResult: String get() = if (isAr) "النتائج النهائية" else "Résultat"
-    val stageSubmitted: String get() = if (isAr) "تم الإيداع" else "Déposé"
-    val stageReview: String get() = if (isAr) "قيد المراجعة" else "Revue"
-    val stageWritten: String get() = if (isAr) "الاختبار الكتابي" else "Écrit"
-    val stageOral: String get() = if (isAr) "الشفوي" else "Entretien"
-    val stageAdmitted: String get() = if (isAr) "القبول النهائي" else "Résultat"
-    val addPersonalNote: String get() = if (isAr) "+ ملاحظة خاصة" else "+ Note"
-    val downloadConvocation: String get() = if (isAr) "تحميل الاستدعاء" else "Télécharger Convocation"
-    val noApplicationsTitle: String get() = if (isAr) "لا توجد ترشيحات حالياً" else "Aucune candidature enregistrée"
-    val noApplicationsDesc: String get() = if (isAr) "تصفح المباريات المفتوحة وقدم ترشيحك لمتابعة مراحل الانتقاء هنا." else "Explorez les concours et déposez votre dossier pour suivre les étapes ici."
+    val myApplicationsTitle: String @Composable get() = autoTranslate("Mes Candidatures & Concours")
+    val refreshAction: String @Composable get() = autoTranslate("Actualiser")
+    val activeFilesCount: String @Composable get() = autoTranslate("dossiers actifs")
+    val finalizedSuccess: String @Composable get() = autoTranslate("finalisé avec succès")
+    val tabMyFiles: String @Composable get() = autoTranslate("📂 Mes Dossiers")
+    val tabConvocations: String @Composable get() = autoTranslate("📋 Listes Écrit & Oral")
+    val filterAll: String @Composable get() = autoTranslate("Toutes")
+    val filterPending: String @Composable get() = autoTranslate("En attente")
+    val filterExam: String @Composable get() = autoTranslate("Écrit / Concours")
+    val filterInterview: String @Composable get() = autoTranslate("Entretien")
+    val filterResult: String @Composable get() = autoTranslate("Résultat")
+    val stageSubmitted: String @Composable get() = autoTranslate("Déposé")
+    val stageReview: String @Composable get() = autoTranslate("Revue")
+    val stageWritten: String @Composable get() = autoTranslate("Écrit")
+    val stageOral: String @Composable get() = autoTranslate("Entretien")
+    val stageAdmitted: String @Composable get() = autoTranslate("Résultat")
+    val addPersonalNote: String @Composable get() = autoTranslate("+ Note")
+    val downloadConvocation: String @Composable get() = autoTranslate("Télécharger Convocation")
+    val noApplicationsTitle: String @Composable get() = autoTranslate("Aucune candidature enregistrée")
+    val noApplicationsDesc: String @Composable get() = autoTranslate("Explorez les concours et déposez votre dossier pour suivre les étapes ici.")
 
     // Calendar Screen
-    val calendarTitle: String get() = if (isAr) "مواعيد المباريات والتقويم" else "Mon Calendrier"
-    val newReminderBtn: String get() = if (isAr) "+ تذكير جديد" else "Nouveau rappel"
-    val calendarSubtitle: String get() = if (isAr) "تتبّع مواعيد إيداع الترشيحات، الاختبارات الكتابية والمقابلات الشفوية." else "Suivez les clôtures de concours, épreuves écrites et entretiens RH."
-    val monthNov2026: String get() = if (isAr) "نونبر 2026" else "Novembre 2026"
-    val monthDec2026: String get() = if (isAr) "دجنبر 2026" else "Décembre 2026"
-    val monthJan2027: String get() = if (isAr) "يناير 2027" else "Janvier 2027"
-    val calAll: String get() = if (isAr) "الكل" else "Tous"
-    val calDeadlines: String get() = if (isAr) "⏳ آجال الترشيح" else "⏳ Délais Concours"
-    val calExams: String get() = if (isAr) "🎙️ كتابي وشفوي" else "🎙️ Écrits & Oraux"
-    val calReminders: String get() = if (isAr) "⏰ تذكيراتي" else "⏰ Mes Rappels"
-    val addCalendarDialogTitle: String get() = if (isAr) "إضافة موعد أو تذكير خاص" else "Ajouter un événement au calendrier"
-    val eventTitleLabel: String get() = if (isAr) "عنوان الموعد أو المباراة" else "Titre de l'événement"
-    val eventOrgLabel: String get() = if (isAr) "الوزارة أو الإدارة" else "Ministère ou Organisme"
-    val eventDateLabel: String get() = if (isAr) "التاريخ" else "Date"
-    val eventTimeLabel: String get() = if (isAr) "التوقيت" else "Heure"
-    val eventLocationLabel: String get() = if (isAr) "المدينة أو المركز" else "Lieu / Ville"
-    val saveAction: String get() = if (isAr) "حفظ" else "Enregistrer"
-    val cancelAction: String get() = if (isAr) "إلغاء" else "Annuler"
-    val closeAction: String get() = if (isAr) "إغلاق" else "Fermer"
+    val calendarTitle: String @Composable get() = autoTranslate("Mon Calendrier des Concours")
+    val newReminderBtn: String @Composable get() = autoTranslate("Nouveau rappel")
+    val calendarSubtitle: String @Composable get() = autoTranslate("Suivez les clôtures de concours, épreuves écrites et entretiens RH.")
+    val monthNov2026: String @Composable get() = autoTranslate("Novembre 2026")
+    val monthDec2026: String @Composable get() = autoTranslate("Décembre 2026")
+    val monthJan2027: String @Composable get() = autoTranslate("Janvier 2027")
+    val calAll: String @Composable get() = autoTranslate("Tous")
+    val calDeadlines: String @Composable get() = autoTranslate("⏳ Délais Concours")
+    val calExams: String @Composable get() = autoTranslate("🎙️ Écrits & Oraux")
+    val calReminders: String @Composable get() = autoTranslate("⏰ Mes Rappels")
+    val addCalendarDialogTitle: String @Composable get() = autoTranslate("Ajouter un événement au calendrier")
+    val eventTitleLabel: String @Composable get() = autoTranslate("Titre de l'événement")
+    val eventOrgLabel: String @Composable get() = autoTranslate("Ministère ou Organisme")
+    val eventDateLabel: String @Composable get() = autoTranslate("Date")
+    val eventTimeLabel: String @Composable get() = autoTranslate("Heure")
+    val eventLocationLabel: String @Composable get() = autoTranslate("Lieu / Ville")
+    val saveAction: String @Composable get() = autoTranslate("Enregistrer")
+    val cancelAction: String @Composable get() = autoTranslate("Annuler")
+    val closeAction: String @Composable get() = autoTranslate("Fermer")
 
     // Profile Screen
-    val myAccount: String get() = if (isAr) "حساب المترشح" else "Compte Candidat"
-    val guestMode: String get() = if (isAr) "وضع الزائر • غير متصل" else "Mode Invité • Non connecté"
-    val guestName: String get() = if (isAr) "زائر" else "Invité"
-    val guestBio: String get() = if (isAr) "أنشئ حسابك المجاني للترشح ومتابعة لوائح المباريات." else "Créez votre compte gratuit pour postuler aux concours et synchroniser votre dossier."
-    val activelySearching: String get() = if (isAr) "في بحث نشط عن وظيفة" else "En recherche active"
-    val passiveSearching: String get() = if (isAr) "في متابعة لمباريات الدولة" else "En veille d'opportunités"
-    val editProfile: String get() = if (isAr) "تعديل حسابي" else "Modifier mon profil"
-    val notConnected: String get() = if (isAr) "غير متصل" else "Non connecté"
-    val connected: String get() = if (isAr) "متصل ✓" else "Connecté ✓"
-    val loginButton: String get() = if (isAr) "تسجيل الدخول" else "Connexion"
-    val registerButton: String get() = if (isAr) "إنشاء حساب" else "Créer compte"
-    val manageAccount: String get() = if (isAr) "إدارة الحساب" else "Gérer"
-    val accountMihnati: String get() = if (isAr) "حساب مهنتي" else "Compte Mihnati"
-    val accountGoogle: String get() = if (isAr) "حساب Google" else "Compte Google"
-    val syncAccountHelp: String get() = if (isAr) "أنشئ حسابك للترشح المباشر ومزامنة الوثائق بأمان" else "Créez votre compte pour postuler et synchroniser vos candidatures"
+    val myAccount: String @Composable get() = autoTranslate("Compte Candidat")
+    val guestMode: String @Composable get() = autoTranslate("Mode Invité • Non connecté")
+    val guestName: String @Composable get() = autoTranslate("Invité")
+    val guestBio: String @Composable get() = autoTranslate("Créez votre compte gratuit pour postuler aux concours et synchroniser votre dossier.")
+    val activelySearching: String @Composable get() = autoTranslate("En recherche active")
+    val passiveSearching: String @Composable get() = autoTranslate("En veille d'opportunités")
+    val editProfile: String @Composable get() = autoTranslate("Modifier mon profil")
+    val notConnected: String @Composable get() = autoTranslate("Non connecté")
+    val connected: String @Composable get() = autoTranslate("Connecté ✓")
+    val loginButton: String @Composable get() = autoTranslate("Connexion")
+    val registerButton: String @Composable get() = autoTranslate("Créer compte")
+    val manageAccount: String @Composable get() = autoTranslate("Gérer")
+    val accountMihnati: String @Composable get() = autoTranslate("Compte Mihnati")
+    val accountGoogle: String @Composable get() = autoTranslate("Compte Google")
+    val syncAccountHelp: String @Composable get() = autoTranslate("Créez votre compte pour postuler et synchroniser vos candidatures")
 
     // Profile Sections
-    val myDossier: String get() = if (isAr) "ملف الترشيح الرقمي" else "Dossier de candidature"
-    val degreesHeader: String get() = if (isAr) "الشواهد والدبلومات" else "Diplômes & Formations"
-    val addDegree: String get() = if (isAr) "+ إضافة دبلوم أو شهادة" else "+ Ajouter un diplôme ou certificat"
-    val skillsHeader: String get() = if (isAr) "التخصصات والكفاءات" else "Spécialités & Compétences"
-    val docVaultHeader: String get() = if (isAr) "المحفظة الرقمية الآمنة (CV، البطاقة الوطنية، الشواهد)" else "Porte-documents Sécurisé & Vérifié"
+    val myDossier: String @Composable get() = autoTranslate("Dossier de candidature")
+    val degreesHeader: String @Composable get() = autoTranslate("Diplômes & Formations")
+    val addDegree: String @Composable get() = autoTranslate("+ Ajouter un diplôme ou certificat")
+    val skillsHeader: String @Composable get() = autoTranslate("Spécialités & Compétences")
+    val docVaultHeader: String @Composable get() = autoTranslate("Porte-documents Sécurisé & Vérifié")
     
     // Personalized Alert Filters
-    val alertFiltersTitle: String get() = if (isAr) "إعدادات التنبيهات المخصصة 🎯" else "Filtres d'alertes personnalisées 🎯"
-    val alertFiltersSubtitle: String get() = if (isAr) "حدد الشواهد والجهات لتلقي تنبيهات مطابقة فقط على هاتفك وواتساب" else "Ciblez vos diplômes et régions pour recevoir uniquement les concours pertinents"
-    val targetDegreesLabel: String get() = if (isAr) "الشهادات والدبلومات المستهدفة :" else "Diplômes & Niveaux ciblés :"
-    val targetRegionsLabel: String get() = if (isAr) "الجهات والمدن المستهدفة بالمغرب :" else "Régions ciblées au Maroc :"
-    val minScaleLabel: String get() = if (isAr) "الحد الأدنى للسلم الإداري :" else "Niveau hiérarchique minimum :"
-    val strictAlertsSwitch: String get() = if (isAr) "تفعيل التصفية الدقيقة للإشعارات" else "Filtrage strict des notifications"
-    val strictAlertsSubtitle: String get() = if (isAr) "إرسال إشعارات وواتساب فقط للمباريات التي تطابق معاييرك تماماً" else "Envoyer des alertes Push & WhatsApp UNIQUEMENT pour les concours correspondants"
+    val alertFiltersTitle: String @Composable get() = autoTranslate("Filtres d'alertes personnalisées 🎯")
+    val alertFiltersSubtitle: String @Composable get() = autoTranslate("Ciblez vos diplômes et régions pour recevoir uniquement les concours pertinents")
+    val targetDegreesLabel: String @Composable get() = autoTranslate("Diplômes & Niveaux ciblés :")
+    val targetRegionsLabel: String @Composable get() = autoTranslate("Régions ciblées au Maroc :")
+    val minScaleLabel: String @Composable get() = autoTranslate("Niveau hiérarchique minimum :")
+    val strictAlertsSwitch: String @Composable get() = autoTranslate("Filtrage strict des notifications")
+    val strictAlertsSubtitle: String @Composable get() = autoTranslate("Envoyer des alertes Push & WhatsApp UNIQUEMENT pour les concours correspondants")
 
     // WhatsApp Gateway Section
-    val waGatewayHeader: String get() = if (isAr) "بوابة واتساب ومتابعة الاستدعاءات" else "Passerelle WhatsApp & Convocations"
-    val waGatewaySubtitle: String get() = if (isAr) "إرسال تلقائي للوائح الاختبار الكتابي، الشفوي والنتائج النهائية مع ملفات PDF" else "Envoi instantané des listes Écrit/Oral & Admis avec PDF"
-    val waLinkedNumber: String get() = if (isAr) "رقم واتساب المربوط :" else "Numéro WhatsApp lié :"
-    val waConfigureButton: String get() = if (isAr) "إعدادات بوابة Green-API" else "Configurer la passerelle Green-API"
-    val waConnectedBadge: String get() = if (isAr) "✓ متصلة" else "✓ Connectée"
-    val waDefaultBadge: String get() = if (isAr) "بوابة افتراضية" else "Passerelle par défaut"
+    val waGatewayHeader: String @Composable get() = autoTranslate("Passerelle WhatsApp & Convocations")
+    val waGatewaySubtitle: String @Composable get() = autoTranslate("Envoi instantané des listes Écrit/Oral & Admis avec PDF")
+    val waLinkedNumber: String @Composable get() = autoTranslate("Numéro WhatsApp lié :")
+    val waConfigureButton: String @Composable get() = autoTranslate("Configurer la passerelle Green-API")
+    val waConnectedBadge: String @Composable get() = autoTranslate("✓ Connectée")
+    val waDefaultBadge: String @Composable get() = autoTranslate("Passerelle par défaut")
 
     // Settings
-    val darkModeHeader: String get() = if (isAr) "المظهر والوضع الليلي" else "Apparence & Mode Sombre"
-    val darkModeTitle: String get() = if (isAr) "الوضع الليلي الملكي 🌙" else "Mode Sombre Royal 🌙"
-    val darkModeSubtitle: String get() = if (isAr) "سمة سوداء مريحة للعين وموفرة للبطارية" else "Thème noir profond émeraude pour le confort visuel"
-    val guidesHeader: String get() = if (isAr) "دليل مباريات التوظيف المغربية" else "Guide des concours marocains"
-    val logoutButton: String get() = if (isAr) "تسجيل الخروج" else "Se Déconnecter"
+    val darkModeHeader: String @Composable get() = autoTranslate("Apparence & Mode Sombre")
+    val darkModeTitle: String @Composable get() = autoTranslate("Mode Sombre Royal 🌙")
+    val darkModeSubtitle: String @Composable get() = autoTranslate("Thème noir profond émeraude pour le confort visuel")
+    val guidesHeader: String @Composable get() = autoTranslate("Guide des concours marocains")
+    val logoutButton: String @Composable get() = autoTranslate("Se Déconnecter")
 
-    // Moroccan Career Tools Sheets (Bilingual)
-    val salarySimulatorTitle: String get() = if (isAr) "محاكي الأجور بالوظيفة العمومية" else "Simulateur de Salaire Public"
-    val salarySimulatorOfficialGrid: String get() = if (isAr) "الشبكة الاستدلالية الرسمية للمملكة المغربية" else "Grille indiciaire officielle du Royaume du Maroc"
-    val chooseScaleLabel: String get() = if (isAr) "اختيار السلم الإداري :" else "CHOIX DE L'ÉCHELLE ADMINISTRATIVE"
-    val ministryBonusLabel: String get() = if (isAr) "تعويضات الوزارات الخاصة" else "Primes spécifiques de ministère"
-    val ministryBonusSub: String get() = if (isAr) "مثال: المالية (MEF)، الضرائب (DGI)، الجمارك" else "Ex: Finances (MEF), Impôts (DGI), Douanes"
-    val netSalaryEstimated: String get() = if (isAr) "الراتب الشهري الصافي التقديري" else "SALAIRE NET MENSUEL ESTIMÉ"
-    val brutTreatment: String get() = if (isAr) "الراتب الإجمالي الخام الأساسي :" else "Traitement brut indiciaire :"
-    val socialDeductions: String get() = if (isAr) "اقتطاعات التقاعد والتأمين (CMR & AMO) :" else "Retenues sociales (CMR & AMO) :"
-    val ministryBonusAmount: String get() = if (isAr) "تعويض المردودية والمهام :" else "Indemnité de rendement / primes :"
-    val salaryDisclaimer: String get() = if (isAr) "ℹ️ تقدير تقريبي يستند إلى المرسوم رقم 2-04-403 بشأن النظام الأساسي لأطر وموظفي الدولة واتفاق الحوار الاجتماعي 2024-2026." else "ℹ️ Estimation indicative basée sur le décret n° 2-04-403 fixant le statut des administrateurs et techniciens de l'État et l'accord de revalorisation salariale 2024-2026."
+    // Moroccan Career Tools Sheets
+    val salarySimulatorTitle: String @Composable get() = autoTranslate("Simulateur de Salaire Public")
+    val salarySimulatorOfficialGrid: String @Composable get() = autoTranslate("Grille indiciaire officielle du Royaume du Maroc")
+    val chooseScaleLabel: String @Composable get() = autoTranslate("CHOIX DE L'ÉCHELLE ADMINISTRATIVE")
+    val ministryBonusLabel: String @Composable get() = autoTranslate("Primes spécifiques de ministère")
+    val ministryBonusSub: String @Composable get() = autoTranslate("Ex: Finances (MEF), Impôts (DGI), Douanes")
+    val netSalaryEstimated: String @Composable get() = autoTranslate("SALAIRE NET MENSUEL ESTIMÉ")
+    val brutTreatment: String @Composable get() = autoTranslate("Traitement brut indiciaire :")
+    val socialDeductions: String @Composable get() = autoTranslate("Retenues sociales (CMR & AMO) :")
+    val ministryBonusAmount: String @Composable get() = autoTranslate("Indemnité de rendement / primes :")
+    val salaryDisclaimer: String @Composable get() = autoTranslate("Estimation indicative basée sur le statut des administrateurs et techniciens de l'État et l'accord de revalorisation salariale.")
 
-    val checklistTitle: String get() = if (isAr) "لائحة وثائق ملف الترشيح" else "Dossier de Candidature"
-    val readyDocsCount: String get() = if (isAr) "الوثائق الجاهزة :" else "Pièces prêtes :"
+    val checklistTitle: String @Composable get() = autoTranslate("Dossier de Candidature")
+    val readyDocsCount: String @Composable get() = autoTranslate("Pièces prêtes :")
 
-    val motivationLetterTitle: String get() = if (isAr) "طلب خطي رسمي معبأ للمباراة" else "Lettre de Motivation Pré-remplie"
-    val motivationLetterSubtitle: String get() = if (isAr) "مكيف وفق معطيات ملفك والمباراة الرسمية" else "Adaptée à votre profil et au concours officiel"
-    val copyLetterAction: String get() = if (isAr) "نسخ نص الطلب الخطي" else "Copier la lettre de motivation"
-    val letterCopiedToast: String get() = if (isAr) "تم نسخ الطلب الخطي بنجاح !" else "Lettre copiée dans le presse-papiers !"
+    val motivationLetterTitle: String @Composable get() = autoTranslate("Lettre de Motivation Pré-remplie")
+    val motivationLetterSubtitle: String @Composable get() = autoTranslate("Adaptée à votre profil et au concours officiel")
+    val copyLetterAction: String @Composable get() = autoTranslate("Copier la lettre de motivation")
+    val letterCopiedToast: String @Composable get() = autoTranslate("Lettre copiée dans le presse-papiers !")
 
-    val eligibilityCheckerTitle: String get() = if (isAr) "التحقق من معادلة الدبلوم والسلالم" else "Vérificateur d'Éligibilité"
-    val eligibilityCheckerSubtitle: String get() = if (isAr) "المطابقة الرسمية بين الدبلوم وسلم الوظيفة العمومية" else "Correspondance officielle Diplôme ➔ Échelle de l'État"
-    val chooseDiplomaLabel: String get() = if (isAr) "اختر دبلومك الحالي :" else "CHOISISSEZ VOTRE DIPLÔME ACTUEL :"
-    val publicAccessGrade: String get() = if (isAr) "إطار التوظيف بالوظيفة العمومية" else "GRADE D'ACCÈS DE LA FONCTION PUBLIQUE"
+    val eligibilityCheckerTitle: String @Composable get() = autoTranslate("Vérificateur d'Éligibilité")
+    val eligibilityCheckerSubtitle: String @Composable get() = autoTranslate("Correspondance officielle Diplôme ➔ Échelle de l'État")
+    val chooseDiplomaLabel: String @Composable get() = autoTranslate("CHOISISSEZ VOTRE DIPLÔME ACTUEL :")
+    val publicAccessGrade: String @Composable get() = autoTranslate("GRADE D'ACCÈS DE LA FONCTION PUBLIQUE")
 
-    val oralExamTitle: String get() = if (isAr) "دليل التحضير للاختبار الشفوي" else "Préparation à l'Oral du Concours"
-    val oralExamSubtitle: String get() = if (isAr) "الأسئلة الأكثر تكراراً لدى لجان الوزارات مع المراجع القانونية" else "Questions récurrentes posées par les jurys ministériels"
+    val oralExamTitle: String @Composable get() = autoTranslate("Préparation à l'Oral du Concours")
+    val oralExamSubtitle: String @Composable get() = autoTranslate("Questions récurrentes posées par les jurys ministériels")
 }

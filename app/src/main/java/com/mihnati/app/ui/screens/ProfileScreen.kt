@@ -1,5 +1,7 @@
 package com.mihnati.app.ui.screens
 
+import com.mihnati.app.translation.autoTranslate
+
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -145,7 +147,7 @@ fun ProfileScreen(
                         }
 
                         Text(
-                            text = if (isGuest && LanguageManager.isArabic) AppStrings.guestName else userProfile.fullName,
+                            text = if (isGuest) AppStrings.guestName else userProfile.fullName,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -153,7 +155,7 @@ fun ProfileScreen(
                         )
 
                         Text(
-                            text = if (isGuest && LanguageManager.isArabic) "حساب غير متصل" else userProfile.headline,
+                            text = if (isGuest) autoTranslate("Compte non connecté") else userProfile.headline,
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                             maxLines = 2
                         )
@@ -169,7 +171,7 @@ fun ProfileScreen(
                                 modifier = Modifier.size(14.dp)
                             )
                             Text(
-                                text = if (LanguageManager.isArabic && (userProfile.location == "Maroc" || userProfile.location == "Rabat, Maroc")) "المغرب 🇲🇦" else userProfile.location,
+                                text = autoTranslate(userProfile.location),
                                 style = MaterialTheme.typography.labelSmall.copy(color = OnSurfaceVariant)
                             )
                         }
@@ -179,7 +181,7 @@ fun ProfileScreen(
                 // Bio
                 if (userProfile.bio.isNotBlank()) {
                     Text(
-                        text = if (isGuest && LanguageManager.isArabic) AppStrings.guestBio else userProfile.bio,
+                        text = if (isGuest) AppStrings.guestBio else userProfile.bio,
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurfaceVariant,
                             lineHeight = 18.sp
@@ -428,14 +430,14 @@ fun ProfileScreen(
                         )
                         Column {
                             Text(
-                                text = if (LanguageManager.isArabic) "عزّز فرصك لدى لجان التوظيف والمشغلين" else "Optimisez vos chances auprès des recruteurs",
+                                text = autoTranslate("Optimisez vos chances auprès des recruteurs"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = if (LanguageManager.isArabic) "أضف شواهد التدريب أو مشاريع التخرج لاكتمال ملفك بنسبة 100%." else "Ajoutez votre attestation de stage PFE pour 100% de visibilité.",
+                                text = autoTranslate("Ajoutez votre attestation de stage PFE pour 100% de visibilité."),
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     color = OnSurfaceVariant,
                                     fontSize = 11.sp
@@ -452,7 +454,7 @@ fun ProfileScreen(
                             .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
                         Text(
-                            text = if (LanguageManager.isArabic) "إضافة" else "Ajouter",
+                            text = autoTranslate("Ajouter"),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Primary,
                                 fontWeight = FontWeight.Bold
@@ -498,7 +500,7 @@ fun ProfileScreen(
                     }
                     TagBadge(
                         text = if (LanguageManager.isArabic) {
-                            if (userProfile.degrees.isNotEmpty()) "${userProfile.degrees.size} شواهد" else "0 شواهد"
+                            "${userProfile.degrees.size} ${autoTranslate("diplômes")}"
                         } else {
                             if (userProfile.degrees.isNotEmpty()) "${userProfile.degrees.size} Diplôme(s)" else "0 Diplôme"
                         },
@@ -657,7 +659,7 @@ fun ProfileScreen(
                         )
                     }
                     Text(
-                        text = if (LanguageManager.isArabic) "تعديل" else "Modifier",
+                        text = autoTranslate("Modifier"),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold
@@ -669,7 +671,7 @@ fun ProfileScreen(
                 }
 
                 Text(
-                    text = if (LanguageManager.isArabic) "الكفاءات والمهارات التقنية" else "Compétences techniques & Domaines",
+                    text = autoTranslate("Compétences techniques & Domaines"),
                     style = MaterialTheme.typography.labelMedium.copy(color = OnSurfaceVariant)
                 )
 
@@ -700,7 +702,7 @@ fun ProfileScreen(
                 }
 
                 Text(
-                    text = if (LanguageManager.isArabic) "اللغات المتقنة" else "Maîtrise linguistique",
+                    text = autoTranslate("Maîtrise linguistique"),
                     style = MaterialTheme.typography.labelMedium.copy(color = OnSurfaceVariant),
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -746,7 +748,7 @@ fun ProfileScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = if (LanguageManager.isArabic) "المحفظة الرقمية الآمنة" else "Porte-documents Sécurisé",
+                            text = autoTranslate("Porte-documents Sécurisé"),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -754,14 +756,14 @@ fun ProfileScreen(
                         )
                     }
                     TagBadge(
-                        text = if (LanguageManager.isArabic) "${userProfile.documents.size} وثائق رسمية" else "${userProfile.documents.size} Pièce(s)",
+                        text = "${userProfile.documents.size} ${autoTranslate("Pièce(s)")}",
                         backgroundColor = SecondaryFixed,
                         textColor = OnSecondaryFixed
                     )
                 }
 
                 Text(
-                    text = if (LanguageManager.isArabic) "وثائقك الرسمية مشفرة ومؤمنة (AES-256) وجاهزة للترشح المباشر في مباريات الدولة." else "Vos pièces officielles sont certifiées (AES-256) et prêtes pour la candidature directe aux concours de l'État.",
+                    text = autoTranslate("Vos pièces officielles sont certifiées (AES-256) et prêtes pour la candidature directe aux concours de l'État."),
                     style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.5.sp)
                 )
 
@@ -884,7 +886,7 @@ fun ProfileScreen(
                     Icon(imageVector = Icons.Default.CloudUpload, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (LanguageManager.isArabic) "+ إضافة وثيقة رسمية مشفرة وموثقة" else "+ Téléverser une pièce officielle (Sécurisé & Vérifié)",
+                        text = autoTranslate("+ Téléverser une pièce officielle (Sécurisé & Vérifié)"),
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -912,7 +914,7 @@ fun ProfileScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = if (LanguageManager.isArabic) "خيارات التنبيهات التلقائية" else "Préférences de veille automatique",
+                        text = autoTranslate("Préférences de veille automatique"),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -922,8 +924,8 @@ fun ProfileScreen(
 
                 // Switch 1: Public Sector
                 PreferenceRow(
-                    title = if (LanguageManager.isArabic) "إشعارات مباريات الوظيفة العمومية" else "Alertes Concours Fonction Publique",
-                    subtitle = if (LanguageManager.isArabic) "الوزارات، المكاتب والمؤسسات الوطنية والجماعات" else "Ministères, offices nationaux et collectivités",
+                    title = autoTranslate("Alertes Concours Fonction Publique"),
+                    subtitle = autoTranslate("Ministères, offices nationaux et collectivités"),
                     checked = userProfile.preferences.publicSectorAlerts,
                     onCheckedChange = {
                         MihnatiRepository.updatePreferences(userProfile.preferences.copy(publicSectorAlerts = it))
@@ -932,8 +934,8 @@ fun ProfileScreen(
 
                 // Switch 2: Private Sector
                 PreferenceRow(
-                    title = if (LanguageManager.isArabic) "عروض القطاع الخاص لحاملي الشهادات" else "Offres Secteur Privé ciblées Bac+5",
-                    subtitle = if (LanguageManager.isArabic) "الشركات الكبرى، المقاولات والشركات الناشئة" else "Grandes entreprises, multinationales et startups",
+                    title = autoTranslate("Offres Secteur Privé ciblées Bac+5"),
+                    subtitle = autoTranslate("Grandes entreprises, multinationales et startups"),
                     checked = userProfile.preferences.privateSectorAlerts,
                     onCheckedChange = {
                         MihnatiRepository.updatePreferences(userProfile.preferences.copy(privateSectorAlerts = it))
@@ -942,8 +944,8 @@ fun ProfileScreen(
 
                 // Switch 3: Deadlines
                 PreferenceRow(
-                    title = if (LanguageManager.isArabic) "تذكيرات آجال الترشيح" else "Rappels des dates limites",
-                    subtitle = if (LanguageManager.isArabic) "تنبيه قبل 48 ساعة من إغلاق باب الترشيح" else "Alerte SMS & Push 48h avant la clôture",
+                    title = autoTranslate("Rappels des dates limites"),
+                    subtitle = autoTranslate("Alerte SMS & Push 48h avant la clôture"),
                     checked = userProfile.preferences.deadlineReminders,
                     onCheckedChange = {
                         MihnatiRepository.updatePreferences(userProfile.preferences.copy(deadlineReminders = it))
@@ -1056,10 +1058,10 @@ fun ProfileScreen(
                 )
                 val isArabic = LanguageManager.isArabic
                 val scaleOptions = listOf(
-                    0 to (if (isArabic) "الكل" else "Toutes"),
-                    8 to (if (isArabic) "السلم 8+" else "Échelle 8+"),
-                    10 to (if (isArabic) "السلم 10+" else "Échelle 10+"),
-                    11 to (if (isArabic) "السلم 11" else "Échelle 11")
+                    0 to autoTranslate("Toutes"),
+                    8 to autoTranslate("Échelle 8+"),
+                    10 to autoTranslate("Échelle 10+"),
+                    11 to autoTranslate("Échelle 11")
                 )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     scaleOptions.forEach { (scaleVal, scaleLabel) ->
@@ -1327,7 +1329,7 @@ fun ProfileScreen(
             )
 
             Text(
-                text = "Mihnati مهنتي • Version 2.4.0 (Build 2026.11) • Royaume du Maroc",
+                text = "Mihnati • Version 2.4.0 (Build 2026.11) • Royaume du Maroc",
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = Outline,
                     fontSize = 11.sp
@@ -1343,11 +1345,12 @@ fun ProfileScreen(
     // Edit Profile Modal
     if (showEditProfileDialog) {
         val isAr = LanguageManager.isArabic
+        val toastProfileUpdated = autoTranslate("Profil mis à jour !")
         AlertDialog(
             onDismissRequest = { showEditProfileDialog = false },
             title = {
                 Text(
-                    text = if (isAr) "تعديل بيانات الحساب" else "Modifier mon profil",
+                    text = autoTranslate("Modifier mon profil"),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -1359,35 +1362,35 @@ fun ProfileScreen(
                     OutlinedTextField(
                         value = editName,
                         onValueChange = { editName = it },
-                        label = { Text(if (isAr) "الاسم الكامل" else "Nom complet") },
+                        label = { Text(autoTranslate("Nom complet")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editHeadline,
                         onValueChange = { editHeadline = it },
-                        label = { Text(if (isAr) "المسمى المهني / الصفة الحالية" else "Titre / Fonction actuelle") },
+                        label = { Text(autoTranslate("Titre / Fonction actuelle")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editBio,
                         onValueChange = { editBio = it },
-                        label = { Text(if (isAr) "نبذة مهنية موجزة" else "Courte bio professionnelle") },
+                        label = { Text(autoTranslate("Courte bio professionnelle")) },
                         maxLines = 3,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editLocation,
                         onValueChange = { editLocation = it },
-                        label = { Text(if (isAr) "المدينة / الجهة" else "Ville / Région") },
+                        label = { Text(autoTranslate("Ville / Région")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = editField,
                         onValueChange = { editField = it },
-                        label = { Text(if (isAr) "التخصص المستهدف" else "Spécialité cible") },
+                        label = { Text(autoTranslate("Spécialité cible")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -1396,7 +1399,7 @@ fun ProfileScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(if (isAr) "في بحث نشط عن وظيفة" else "En recherche active")
+                        Text(autoTranslate("En recherche active"))
                         Switch(
                             checked = editActiveSearch,
                             onCheckedChange = { editActiveSearch = it }
@@ -1415,17 +1418,17 @@ fun ProfileScreen(
                             targetField = editField,
                             isActivelySearching = editActiveSearch
                         )
-                        Toast.makeText(context, if (isAr) "تم تحديث الملف بنجاح !" else "Profil mis à jour !", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, toastProfileUpdated, Toast.LENGTH_SHORT).show()
                         showEditProfileDialog = false
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text(if (isAr) "حفظ التعديلات" else "Sauvegarder")
+                    Text(autoTranslate("Sauvegarder"))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showEditProfileDialog = false }) {
-                    Text(if (isAr) "إلغاء" else "Annuler")
+                    Text(autoTranslate("Annuler"))
                 }
             }
         )
@@ -1434,11 +1437,13 @@ fun ProfileScreen(
     // Add Diploma Dialog
     if (showAddDegreeDialog) {
         val isAr = LanguageManager.isArabic
+        val toastDegreeAdded = autoTranslate("Nouveau diplôme ajouté avec succès !")
+        val toastDegreeEmpty = autoTranslate("Veuillez saisir l'intitulé et l'établissement")
         AlertDialog(
             onDismissRequest = { showAddDegreeDialog = false },
             title = {
                 Text(
-                    text = if (isAr) "إضافة دبلوم أو شهادة" else "Ajouter un diplôme",
+                    text = autoTranslate("Ajouter un diplôme"),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -1447,32 +1452,32 @@ fun ProfileScreen(
                     OutlinedTextField(
                         value = newDegreeTitle,
                         onValueChange = { newDegreeTitle = it },
-                        label = { Text(if (isAr) "عنوان الدبلوم أو الشهادة" else "Intitulé du diplôme") },
-                        placeholder = { Text(if (isAr) "مثال: ماستر في المعلوميات" else "Ex: Master Data Science") },
+                        label = { Text(autoTranslate("Intitulé du diplôme")) },
+                        placeholder = { Text(autoTranslate("Ex: Master Data Science")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newDegreeInstitution,
                         onValueChange = { newDegreeInstitution = it },
-                        label = { Text(if (isAr) "المؤسسة أو الجامعة" else "Établissement / Université") },
-                        placeholder = { Text(if (isAr) "مثال: جامعة محمد الخامس بالرباط" else "Ex: Université Hassan II") },
+                        label = { Text(autoTranslate("Établissement / Université")) },
+                        placeholder = { Text(autoTranslate("Ex: Université Hassan II")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newDegreePeriod,
                         onValueChange = { newDegreePeriod = it },
-                        label = { Text(if (isAr) "سنة التخرج أو الفترة" else "Années") },
-                        placeholder = { Text(if (isAr) "مثال: 2024 - 2026" else "Ex: 2024 - 2026") },
+                        label = { Text(autoTranslate("Années")) },
+                        placeholder = { Text(autoTranslate("Ex: 2024 - 2026")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newDegreeMention,
                         onValueChange = { newDegreeMention = it },
-                        label = { Text(if (isAr) "الميزة" else "Mention") },
-                        placeholder = { Text(if (isAr) "مثال: حسن جداً" else "Ex: Mention Bien") },
+                        label = { Text(autoTranslate("Mention")) },
+                        placeholder = { Text(autoTranslate("Ex: Mention Bien")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -1491,24 +1496,24 @@ fun ProfileScreen(
                                 isVerified = true
                             )
                             MihnatiRepository.addDegree(newDeg)
-                            Toast.makeText(context, if (isAr) "تمت إضافة الدبلوم بنجاح !" else "Nouveau diplôme ajouté avec succès !", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, toastDegreeAdded, Toast.LENGTH_SHORT).show()
                             showAddDegreeDialog = false
                             newDegreeTitle = ""
                             newDegreeInstitution = ""
                             newDegreePeriod = ""
                             newDegreeMention = ""
                         } else {
-                            Toast.makeText(context, if (isAr) "يرجى إدخال عنوان الدبلوم والجامعة" else "Veuillez saisir l'intitulé et l'établissement", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, toastDegreeEmpty, Toast.LENGTH_SHORT).show()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text(if (isAr) "إضافة الدبلوم" else "Enregistrer")
+                    Text(autoTranslate("Enregistrer"))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDegreeDialog = false }) {
-                    Text(if (isAr) "إلغاء" else "Annuler")
+                    Text(autoTranslate("Annuler"))
                 }
             }
         )

@@ -1,5 +1,7 @@
 package com.mihnati.app.ui.screens
 
+import com.mihnati.app.translation.autoTranslate
+
 import android.content.Intent
 import android.provider.CalendarContract
 import android.widget.Toast
@@ -97,7 +99,7 @@ fun OpportunityDetailScreen(
                         )
                     }
                     Text(
-                        text = if (LanguageManager.isArabic) "تفاصيل المباراة" else "Détail Opportunité",
+                        text = autoTranslate("Détail Opportunité"),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -167,7 +169,7 @@ fun OpportunityDetailScreen(
                                     .background(Secondary)
                             )
                             Text(
-                                text = if (LanguageManager.isArabic) "توظيف مفتوح 2026" else "Recrutement actif 2026",
+                                text = autoTranslate("Recrutement actif 2026"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = OnSurface,
                                     fontWeight = FontWeight.Bold
@@ -205,7 +207,7 @@ fun OpportunityDetailScreen(
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                text = MoroccanLocalization.localizedCity(opportunity.location),
+                                text = autoTranslate(opportunity.location),
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Color.White,
                                     fontWeight = FontWeight.SemiBold
@@ -220,7 +222,7 @@ fun OpportunityDetailScreen(
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
                             Text(
-                                text = if (LanguageManager.isArabic) "رسمي emploi-public.ma" else "Officiel emploi-public.ma",
+                                text = autoTranslate("Officiel emploi-public.ma"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Color.White)
                             )
                         }
@@ -260,7 +262,7 @@ fun OpportunityDetailScreen(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 Text(
-                                    text = MoroccanLocalization.localizedOrg(opportunity.organization),
+                                    text = autoTranslate(opportunity.organization),
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         color = Secondary,
                                         fontWeight = FontWeight.Bold
@@ -274,14 +276,14 @@ fun OpportunityDetailScreen(
                                 )
                             }
                             Text(
-                                text = if (LanguageManager.isArabic) "الإدارة والتوظيف العمومي" else "Direction & Encadrement",
+                                text = autoTranslate("Direction & Encadrement"),
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                             )
                         }
                     }
 
                     Text(
-                        text = MoroccanLocalization.localizedTitle(opportunity.title),
+                        text = autoTranslate(opportunity.title),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface,
@@ -349,7 +351,7 @@ fun OpportunityDetailScreen(
                             }
                             Column {
                                 Text(
-                                    text = if (LanguageManager.isArabic) "آخر أجل لإيداع الترشيحات" else "Délai limite de candidature",
+                                    text = autoTranslate("Délai limite de candidature"),
                                     style = MaterialTheme.typography.labelSmall.copy(
                                         color = Primary,
                                         fontWeight = FontWeight.Bold
@@ -389,7 +391,7 @@ fun OpportunityDetailScreen(
                                 modifier = Modifier.size(14.dp)
                             )
                             Text(
-                                text = if (LanguageManager.isArabic) "باقي ${opportunity.deadlineDaysRemaining} أيام" else "J-${opportunity.deadlineDaysRemaining}",
+                                text = "J-${opportunity.deadlineDaysRemaining}",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = Tertiary,
                                     fontWeight = FontWeight.Bold
@@ -432,7 +434,7 @@ fun OpportunityDetailScreen(
                                     )
                                 }
                                 Text(
-                                    text = if (LanguageManager.isArabic) "نسبة التطابق مع ملفك" else "Compatibilité avec votre profil",
+                                    text = autoTranslate("Compatibilité avec votre profil"),
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         fontWeight = FontWeight.Bold,
                                         color = OnSurface
@@ -459,7 +461,7 @@ fun OpportunityDetailScreen(
                         )
 
                         Text(
-                            text = if (LanguageManager.isArabic) "✓ تطابق ممتاز : شهادة باك+5 والتخصص مسجلان في ملفك الشخصي بمهنتي." else "✓ Parfait match : Diplôme Bac+5 & spécialité informatique enregistrés sur votre CV Mihnati.",
+                            text = autoTranslate("✓ Parfait match : Diplôme Bac+5 & spécialité informatique enregistrés sur votre CV Mihnati."),
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -487,11 +489,11 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = if (LanguageManager.isArabic) "الشهادة المطلوبة" else "DIPLÔME REQUIS",
+                                text = autoTranslate("DIPLÔME REQUIS"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
-                                text = MoroccanLocalization.localizedDegree(opportunity.degreeRequired),
+                                text = autoTranslate(opportunity.degreeRequired),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface,
@@ -511,7 +513,7 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = if (LanguageManager.isArabic) "التخصص المطلوب" else "SPÉCIALITÉ",
+                                text = autoTranslate("SPÉCIALITÉ"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
@@ -540,7 +542,7 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = if (LanguageManager.isArabic) "الخبرة المطلوبة" else "EXPÉRIENCE",
+                                text = autoTranslate("EXPÉRIENCE"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
@@ -564,24 +566,24 @@ fun OpportunityDetailScreen(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
-                                text = if (opportunity.sectorType == SectorType.PUBLIC) (if (LanguageManager.isArabic) "السلم الإداري الرسمي" else "GRILLE ADMINISTRATIVE") else (if (LanguageManager.isArabic) "الأجر والتعويضات" else "RÉMUNÉRATION"),
+                                text = if (opportunity.sectorType == SectorType.PUBLIC) autoTranslate("GRILLE ADMINISTRATIVE") else autoTranslate("RÉMUNÉRATION"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
                                 text = if (opportunity.sectorType == SectorType.PUBLIC) {
                                     if (opportunity.title.contains("11") || opportunity.degreeRequired.contains("11") || opportunity.degreeRequired.contains("Ingénieur"))
-                                        if (LanguageManager.isArabic) "السلم 11 (شبكة الدولة)" else "Échelle 11 (Grille État)"
+                                        autoTranslate("Échelle 11 (Grille État)")
                                     else if (opportunity.title.contains("10") || opportunity.degreeRequired.contains("10"))
-                                        if (LanguageManager.isArabic) "السلم 10 (شبكة الدولة)" else "Échelle 10 (Grille État)"
+                                        autoTranslate("Échelle 10 (Grille État)")
                                     else if (opportunity.title.contains("9") || opportunity.degreeRequired.contains("9"))
-                                        if (LanguageManager.isArabic) "السلم 9 (شبكة الدولة)" else "Échelle 9 (Grille État)"
+                                        autoTranslate("Échelle 9 (Grille État)")
                                     else
-                                        if (LanguageManager.isArabic) "نظام الوظيفة العمومية" else "Statut fonctionnaire"
+                                        autoTranslate("Statut fonctionnaire")
                                 } else {
                                     if (opportunity.salary.isNotBlank() && !opportunity.salary.contains("Grille", ignoreCase = true))
                                         opportunity.salary
                                     else
-                                        if (LanguageManager.isArabic) "حسب المؤهلات والخبرة" else "Selon profil & barème"
+                                        autoTranslate("Selon profil & barème")
                                 },
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
@@ -637,7 +639,7 @@ fun OpportunityDetailScreen(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        text = if (LanguageManager.isArabic) "الوصف العام للمنصب" else "Description du poste",
+                        text = autoTranslate("Description du poste"),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface
@@ -653,7 +655,7 @@ fun OpportunityDetailScreen(
 
                     if (opportunity.missions.isNotEmpty()) {
                         Text(
-                            text = if (LanguageManager.isArabic) "المهام والمسؤوليات الرئيسية :" else "Missions principales :",
+                            text = autoTranslate("Missions principales :"),
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -723,7 +725,7 @@ fun OpportunityDetailScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = if (LanguageManager.isArabic) "الوثائق المطلوبة لملف الترشيح" else "Pièces à fournir pour le dossier",
+                                text = autoTranslate("Pièces à fournir pour le dossier"),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
@@ -851,9 +853,9 @@ fun OpportunityDetailScreen(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = if (isAlreadyApplied) {
-                            if (LanguageManager.isArabic) "تم إيداع الترشيح (عرض الوصل)" else "Candidature déposée (Voir récépissé)"
+                            autoTranslate("Candidature déposée (Voir récépissé)")
                         } else {
-                            if (LanguageManager.isArabic) "الترشح مباشرة للمباراة" else "Postuler directement"
+                            autoTranslate("Postuler directement")
                         },
                         style = MaterialTheme.typography.labelLarge.copy(
                             fontWeight = FontWeight.Bold,

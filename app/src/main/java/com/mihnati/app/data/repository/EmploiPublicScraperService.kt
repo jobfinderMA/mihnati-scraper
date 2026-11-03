@@ -105,7 +105,7 @@ object EmploiPublicScraperService {
             val items = doc.select("div.s-item")
             var idx = 1
             for (item in items) {
-                val detailA = item.selectFirst("a[href*=/concours/details/]") ?: item.selectFirst("a[href*=/تفاصيل/]")
+                val detailA = item.selectFirst("a[href*=/concours/details/]") ?: item.selectFirst("a[href*=/\u062a\u0641\u0627\u0635\u064a\u0644/]")
                 val h2 = item.selectFirst("h2.card-title") ?: item.selectFirst("h2")
                 val title = h2?.text()?.trim() ?: "Concours de Recrutement"
 
@@ -117,7 +117,7 @@ object EmploiPublicScraperService {
 
                 val allText = item.text()
                 var posts = 1
-                for (w in allText.split(" ", " مناصب", " postes", "\n")) {
+                for (w in allText.split(" ", " \u0645\u0646\u0627\u0635\u0628", " postes", "\n")) {
                     val num = w.trim().toIntOrNull()
                     if (num != null && num in 1..2000) {
                         posts = num
@@ -216,7 +216,7 @@ object EmploiPublicScraperService {
                             ConcoursExamList(
                                 id = "list-cloud-ecrit-$listIdx",
                                 concoursId = id,
-                                titleAr = "لائحة المرشحين لاجتياز الاختبار الكتابي - $title",
+                                titleAr = "Liste des convoqués à l'écrit - $title",
                                 titleFr = "Liste des candidats convoqués à l'épreuve écrite - $title",
                                 administration = admin,
                                 grade = title,
@@ -236,7 +236,7 @@ object EmploiPublicScraperService {
                                 ConcoursExamList(
                                     id = "list-cloud-oral-$listIdx",
                                     concoursId = id,
-                                    titleAr = "لائحة المرشحين لاجتياز المقابلة الشفوية - $title",
+                                    titleAr = "Liste des convoqués à l'oral - $title",
                                     titleFr = "Liste des candidats admissibles pour l'épreuve orale - $title",
                                     administration = admin,
                                     grade = title,
@@ -284,7 +284,7 @@ object EmploiPublicScraperService {
                         ConcoursExamList(
                             id = "list-ecrit-$idx",
                             concoursId = "ep-$uuid",
-                            titleAr = "لائحة المرشحين لاجتياز الاختبار الكتابي - $title",
+                                titleAr = "Liste des convoqués à l'écrit - $title",
                             titleFr = "Liste des candidats convoqués à l'épreuve écrite - $title",
                             administration = admin,
                             grade = title,
@@ -304,7 +304,7 @@ object EmploiPublicScraperService {
                         ConcoursExamList(
                             id = "list-oral-$idx",
                             concoursId = "ep-$uuid",
-                            titleAr = "لائحة المرشحين لاجتياز المقابلة الشفوية - $title",
+                                    titleAr = "Liste des convoqués à l'oral - $title",
                             titleFr = "Liste des candidats admissibles pour l'épreuve orale - $title",
                             administration = admin,
                             grade = title,
@@ -337,9 +337,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-mef-120",
             reference = "MEF-DGI-2026-120",
-            titleAr = "مباراة توظيف متصرفين من الدرجة الثانية (سلم 11)",
+            titleAr = "Concours Administrateurs 2ème grade (Échelle 11)",
             titleFr = "Concours Administrateur 2ème grade (Échelle 11)",
-            administrationAr = "وزارة الاقتصاد والمالية - المديرية العامة للضرائب",
+            administrationAr = "Ministère de l'Économie et des Finances - DGI",
             administrationFr = "Ministère de l'Économie et des Finances (DGI)",
             category = AdministrationCategory.MINISTERE,
             grade = "Administrateur 2ème grade",
@@ -358,9 +358,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-douane-180",
             reference = "ADII-INSP-2026-180",
-            titleAr = "مباراة توظيف مفتشي الجمارك من الدرجة الثالثة (سلم 9)",
+            titleAr = "Concours Inspecteurs des Douanes 3ème grade (Échelle 9)",
             titleFr = "Concours Inspecteurs des Douanes 3ème grade (Échelle 9)",
-            administrationAr = "إدارة الجمارك والضرائب غير المباشرة",
+            administrationAr = "Administration des Douanes et Impôts Indirects (ADII)",
             administrationFr = "Administration des Douanes et Impôts Indirects (ADII)",
             category = AdministrationCategory.MINISTERE,
             grade = "Inspecteur des Douanes (Échelle 9)",
@@ -379,9 +379,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-interieur-450",
             reference = "INT-CAIDS-2026-450",
-            titleAr = "مباراة ولوج السلك العادي للمعهد الملكي للإدارة الترابية (قياد)",
+            titleAr = "Concours Cycle Normal IRAT (Caïds)",
             titleFr = "Concours d'accès au Cycle Normal de l'IRAT (Caïds)",
-            administrationAr = "وزارة الداخلية - المعهد الملكي للإدارة الترابية",
+            administrationAr = "Ministère de l'Intérieur - IRAT",
             administrationFr = "Ministère de l'Intérieur (IRAT Kénitra)",
             category = AdministrationCategory.MINISTERE,
             grade = "Caïd / Administrateur de l'Intérieur",
@@ -400,9 +400,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-sante-600",
             reference = "MSPS-INF-2026-600",
-            titleAr = "مباراة توظيف ممرضين وتقنيي الصحة من الدرجة الأولى (سلم 10)",
+            titleAr = "Concours Infirmiers et Techniciens de Santé 1er grade (Échelle 10)",
             titleFr = "Concours Recrutement Infirmiers & Techniciens de Santé (Échelle 10)",
-            administrationAr = "وزارة الصحة والحماية الاجتماعية",
+            administrationAr = "Ministère de la Santé et de la Protection Sociale",
             administrationFr = "Ministère de la Santé et de la Protection Sociale",
             category = AdministrationCategory.MINISTERE,
             grade = "Infirmier / Technicien de santé 1er grade",
@@ -421,9 +421,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-justice-150",
             reference = "MJ-GREFFE-2026-150",
-            titleAr = "مباراة توظيف منتدبين قضائيين من الدرجة الثانية (سلم 11)",
+            titleAr = "Concours Délégués Judiciaires 2ème grade (Échelle 11)",
             titleFr = "Concours Délégués Judiciaires 2ème grade (Échelle 11)",
-            administrationAr = "وزارة العدل",
+            administrationAr = "Ministère de la Justice",
             administrationFr = "Ministère de la Justice",
             category = AdministrationCategory.MINISTERE,
             grade = "Délégué Judiciaire (Échelle 11)",
@@ -442,9 +442,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-mtra-85",
             reference = "MTNRA-ING-2026-85",
-            titleAr = "مباراة توظيف مهندسي الدولة من الدرجة الأولى في الرقمنة (سلم 11)",
+            titleAr = "Concours Ingénieurs d'État 1er grade Digitalisation (Échelle 11)",
             titleFr = "Concours Ingénieurs d'État 1er grade en Digital (Échelle 11)",
-            administrationAr = "وزارة الانتقال الرقمي وإصلاح الإدارة",
+            administrationAr = "Ministère de la Transition Numérique et de la Réforme de l'Administration",
             administrationFr = "Ministère de la Transition Numérique et de la Réforme de l'Administration",
             category = AdministrationCategory.MINISTERE,
             grade = "Ingénieur d'État 1er grade",
@@ -463,9 +463,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-cnss-220",
             reference = "CNSS-CAD-2026-220",
-            titleAr = "مباراة توظيف أطر وأعوان بالصندوق الوطني للضمان الاجتماعي",
+            titleAr = "Concours Cadres et Agents CNSS",
             titleFr = "Recrutement Cadres & Agents CNSS (Secteur Public)",
-            administrationAr = "الصندوق الوطني للضمان الاجتماعي",
+            administrationAr = "Caisse Nationale de Sécurité Sociale (CNSS)",
             administrationFr = "Caisse Nationale de Sécurité Sociale (CNSS)",
             category = AdministrationCategory.ETABLISSEMENT_PUBLIC,
             grade = "Cadre Supérieur / Analyste",
@@ -484,9 +484,9 @@ object EmploiPublicScraperService {
         EmploiPublicConcours(
             id = "ep-rabat-35",
             reference = "COMM-RABAT-2026-35",
-            titleAr = "مباراة توظيف تقنيين من الدرجة الثالثة بجماعة الرباط (سلم 9)",
+            titleAr = "Concours Techniciens 3ème grade Commune de Rabat (Échelle 9)",
             titleFr = "Concours Techniciens 3ème grade - Commune de Rabat",
-            administrationAr = "جماعة الرباط - جهة الرباط سلا القنيطرة",
+            administrationAr = "Commune de Rabat - Région Rabat-Salé-Kénitra",
             administrationFr = "Commune Urbaine de Rabat",
             category = AdministrationCategory.COLLECTIVITE,
             grade = "Technicien 3ème grade",
@@ -508,7 +508,7 @@ object EmploiPublicScraperService {
         ConcoursExamList(
             id = "list-oral-mef",
             concoursId = "ep-mef-120",
-            titleAr = "لائحة المرشحين المقبولين لاجتياز الاختبار الشفوي - متصرفين من الدرجة الثانية",
+            titleAr = "Liste des convoqués à l'oral - Administrateurs 2ème grade",
             titleFr = "Liste des candidats admissibles à l'épreuve orale - Administrateurs 2ème grade",
             administration = "Ministère de l'Économie et des Finances",
             grade = "Administrateur 2ème grade (Échelle 11)",
@@ -523,7 +523,7 @@ object EmploiPublicScraperService {
         ConcoursExamList(
             id = "list-ecrit-douane",
             concoursId = "ep-douane-180",
-            titleAr = "لائحة المرشحين لاجتياز الاختبار الكتابي - مفتشي الجمارك سلم 9",
+            titleAr = "Liste des convoqués à l'écrit - Inspecteurs Douanes Échelle 9",
             titleFr = "Liste des candidats convoqués à l'épreuve écrite - Inspecteurs des Douanes",
             administration = "Administration des Douanes et Impôts Indirects",
             grade = "Inspecteur des Douanes (Échelle 9)",
@@ -538,7 +538,7 @@ object EmploiPublicScraperService {
         ConcoursExamList(
             id = "list-ecrit-sante",
             concoursId = "ep-sante-600",
-            titleAr = "لوائح المترشحين المقبولين لاجتياز الاختبار الكتابي لمباراة ممرضي الصحة",
+            titleAr = "Liste des candidats retenus à l'écrit - Infirmiers Santé",
             titleFr = "Convocations épreuve écrite - Infirmiers & Techniciens de Santé",
             administration = "Ministère de la Santé et de la Protection Sociale",
             grade = "Infirmier 1er grade (Échelle 10)",
@@ -553,7 +553,7 @@ object EmploiPublicScraperService {
         ConcoursExamList(
             id = "list-final-interieur",
             concoursId = "ep-interieur-450",
-            titleAr = "النتائج النهائية ولائحة الانتظار لمباراة متصرفي وزارة الداخلية",
+            titleAr = "Résultats Définitifs et Liste d'Attente - Ministère de l'Intérieur",
             titleFr = "Résultats Définitifs et Liste d'Attente - Ministère de l'Intérieur",
             administration = "Ministère de l'Intérieur",
             grade = "Administrateur 2ème grade (Échelle 11)",
@@ -568,7 +568,7 @@ object EmploiPublicScraperService {
         ConcoursExamList(
             id = "list-attente-justice",
             concoursId = "ep-justice-150",
-            titleAr = "لائحة الانتظار لشغل مناصب منتدبين قضائيين حسب الاستحقاق",
+            titleAr = "Liste d'Attente Délégués Judiciaires selon mérite",
             titleFr = "Liste d'Attente pour les postes de Délégués Judiciaires",
             administration = "Ministère de la Justice",
             grade = "Délégué Judiciaire (Échelle 11)",
@@ -585,7 +585,7 @@ object EmploiPublicScraperService {
     fun getGradesGuide(): List<EmploiPublicGrade> = listOf(
         EmploiPublicGrade(
             nameFr = "Administrateur 2ème grade",
-            nameAr = "متصرف من الدرجة الثانية",
+            nameAr = "Administrateur 2ème grade",
             echelle = 11,
             minDiploma = "Master, Master Spécialisé, DESA, Diplôme Bac+5 équivalent",
             startingSalary = "8 500 DH à 11 200 DH net / mois",
@@ -593,7 +593,7 @@ object EmploiPublicScraperService {
         ),
         EmploiPublicGrade(
             nameFr = "Ingénieur d'État 1er grade",
-            nameAr = "مهندس دولة من الدرجة الأولى",
+            nameAr = "Ingénieur d'État 1er grade",
             echelle = 11,
             minDiploma = "Diplôme d'Ingénieur d'État reconnu (Bac+5)",
             startingSalary = "9 200 DH à 12 500 DH net / mois",
@@ -601,7 +601,7 @@ object EmploiPublicScraperService {
         ),
         EmploiPublicGrade(
             nameFr = "Administrateur 3ème grade",
-            nameAr = "متصرف من الدرجة الثالثة",
+            nameAr = "Administrateur 3ème grade",
             echelle = 10,
             minDiploma = "Licence Fondamentale, Licence Professionnelle (Bac+3)",
             startingSalary = "5 800 DH à 7 200 DH net / mois",
@@ -609,7 +609,7 @@ object EmploiPublicScraperService {
         ),
         EmploiPublicGrade(
             nameFr = "Technicien 3ème grade",
-            nameAr = "تقني من الدرجة الثالثة",
+            nameAr = "Technicien 3ème grade",
             echelle = 9,
             minDiploma = "DUT, BTS, Technicien Spécialisé OFPPT (Bac+2)",
             startingSalary = "4 600 DH à 5 800 DH net / mois",
@@ -617,7 +617,7 @@ object EmploiPublicScraperService {
         ),
         EmploiPublicGrade(
             nameFr = "Technicien 4ème grade",
-            nameAr = "تقني من الدرجة الرابعة",
+            nameAr = "Technicien 4ème grade",
             echelle = 8,
             minDiploma = "Diplôme de Technicien (Niveau Bac + Formation 2 ans)",
             startingSalary = "4 000 DH à 4 800 DH net / mois",
@@ -625,7 +625,7 @@ object EmploiPublicScraperService {
         ),
         EmploiPublicGrade(
             nameFr = "Adjoint Technique",
-            nameAr = "مساعد تقني",
+            nameAr = "Adjoint technique",
             echelle = 6,
             minDiploma = "Certificat de Qualification Professionnelle (CQP)",
             startingSalary = "3 800 DH à 4 300 DH net / mois",

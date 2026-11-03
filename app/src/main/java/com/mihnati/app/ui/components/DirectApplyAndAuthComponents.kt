@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
+import com.mihnati.app.translation.autoTranslate
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -185,22 +186,22 @@ fun GoogleSignInDialog(
                     val isAr = LanguageManager.isArabic
                     Text(
                         text = if (isAlreadySignedIn) {
-                            if (isAr) "حسابي في مهنتي" else "Mon Compte Mihnati"
+                            autoTranslate("Mon Compte Mihnati")
                         } else if (authStep == 1) {
-                            if (isAr) "التحقق من البريد الإلكتروني" else "Vérification de l'email"
+                            autoTranslate("Vérification de l'email")
                         } else {
-                            if (isAr) "تسجيل الدخول وإنشاء حساب" else "Connexion & Inscription"
+                            autoTranslate("Connexion & Inscription")
                         },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = if (isAlreadySignedIn) {
-                            if (isAr) "جلسة موثقة ومتزامنة بأمان" else "Session vérifiée et synchronisée"
+                            autoTranslate("Session vérifiée et synchronisée")
                         } else if (authStep == 1) {
-                            if (isAr) "رمز التحقق السري ورابط التفعيل" else "Code secret & Lien officiel Firebase"
+                            autoTranslate("Code secret & Lien officiel Firebase")
                         } else {
-                            if (isAr) "دخول عبر Google • واتساب • بريد إلكتروني" else "Google 1-Tap • Code Gmail • Mot de passe"
+                            autoTranslate("Google 1-Tap • Code Gmail • Mot de passe")
                         },
                         style = MaterialTheme.typography.labelSmall,
                         color = OnSurfaceVariant
@@ -330,7 +331,7 @@ fun GoogleSignInDialog(
                             onClick = { isPasswordRegisterMode = false; errorMessage = null },
                             label = {
                                 Text(
-                                    text = if (LanguageManager.isArabic) "🔑 تسجيل الدخول" else "🔑 Se connecter",
+                                    text = autoTranslate("🔑 Se connecter"),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp,
                                     modifier = Modifier.fillMaxWidth(),
@@ -348,7 +349,7 @@ fun GoogleSignInDialog(
                             onClick = { isPasswordRegisterMode = true; errorMessage = null },
                             label = {
                                 Text(
-                                    text = if (LanguageManager.isArabic) "📝 إنشاء حساب" else "📝 Créer un compte",
+                                    text = autoTranslate("📝 Créer un compte"),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp,
                                     modifier = Modifier.fillMaxWidth(),
@@ -394,17 +395,13 @@ fun GoogleSignInDialog(
                             Spacer(modifier = Modifier.width(14.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = if (isPasswordRegisterMode) {
-                                        if (LanguageManager.isArabic) "التسجيل السريع عبر Google" else "S'inscrire avec Google"
-                                    } else {
-                                        if (LanguageManager.isArabic) "المتابعة عبر Google" else "Continuer avec Google"
-                                    },
+                                    text = if (isPasswordRegisterMode) autoTranslate("S'inscrire avec Google") else autoTranslate("Continuer avec Google"),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = if (LanguageManager.isArabic) "مصادقة رسمية عبر خدمات Google Play" else "Authentification officielle Google Play",
+                                    text = autoTranslate("Authentification officielle Google Play"),
                                     fontSize = 11.sp,
                                     color = OnSurfaceVariant
                                 )
@@ -446,12 +443,12 @@ fun GoogleSignInDialog(
                         Tab(
                             selected = emailAuthMode == 0,
                             onClick = { emailAuthMode = 0; errorMessage = null },
-                            text = { Text(if (LanguageManager.isArabic) "واتساب 💬" else "WhatsApp 💬", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text(autoTranslate("WhatsApp 💬"), fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                         )
                         Tab(
                             selected = emailAuthMode == 1,
                             onClick = { emailAuthMode = 1; errorMessage = null },
-                            text = { Text(if (LanguageManager.isArabic) "البريد الإلكتروني 📧" else "Email & Mot de passe 📧", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+                            text = { Text(autoTranslate("Email & Mot de passe 📧"), fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                         )
                     }
 
@@ -540,7 +537,7 @@ fun GoogleSignInDialog(
                                             try {
                                                 val waIntent = WhatsAppOtpManager.createWhatsAppDirectIntent(
                                                     normalized,
-                                                    "🇲🇦 Mihnati (مهنتي)\n\nVotre code secret de vérification est : $code\n\n(Valable 10 minutes pour valider votre compte)."
+                                                    "🇲🇦 Mihnati \n\nVotre code secret de vérification est : $code\n\n(Valable 10 minutes pour valider votre compte)."
                                                 )
                                                 context.startActivity(waIntent)
                                             } catch (e: Exception) {

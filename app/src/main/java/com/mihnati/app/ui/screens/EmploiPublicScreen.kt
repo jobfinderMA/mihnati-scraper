@@ -1,5 +1,7 @@
 package com.mihnati.app.ui.screens
 
+import com.mihnati.app.translation.autoTranslate
+
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -36,9 +38,9 @@ import com.mihnati.app.ui.components.TagBadge
 import com.mihnati.app.ui.theme.*
 
 enum class EmploiPublicTab(val titleFr: String, val titleAr: String, val icon: String) {
-    CONCOURS("Concours & Postes", "مباريات التوظيف", "🏛️"),
-    LISTES_EXAMEN("Listes Écrit & Oral", "لوائح الاختبارات", "📋"),
-    GRADES_DIPLOMES("Grades & Diplômes", "السلالم والشهادات", "🎓")
+    CONCOURS("Concours & Postes", "Concours & Postes", "🏛️"),
+    LISTES_EXAMEN("Listes Écrit & Oral", "Listes Écrit & Oral", "📋"),
+    GRADES_DIPLOMES("Grades & Diplômes", "Grades & Diplômes", "🎓")
 }
 
 @Composable
@@ -134,7 +136,7 @@ fun EmploiPublicScreen(
                                 )
                             )
                             Text(
-                                text = "بوابة التشغيل العمومي بالمملكة المغربية",
+                                text = autoTranslate("Portail du Recrutement Public au Maroc"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = PrimaryFixedDim,
                                     fontSize = 11.sp
@@ -382,7 +384,7 @@ fun EmploiPublicScreen(
 }
 
 // -------------------------------------------------------------
-// TAB 1: Concours & Postes (مباريات التوظيف)
+// TAB 1: Concours & Postes
 // -------------------------------------------------------------
 @Composable
 private fun ConcoursTabContent(
@@ -500,7 +502,7 @@ private fun ConcoursCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = concours.titleAr,
+                text = autoTranslate(concours.titleFr),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = OnSurfaceVariant,
                     fontSize = 13.sp,
@@ -604,7 +606,7 @@ private fun ConcoursCard(
 }
 
 // -------------------------------------------------------------
-// TAB 2: Listes Écrit & Oral & Résultats (لوائح الاختبارات)
+// TAB 2: Listes Écrit & Oral & Résultats
 // -------------------------------------------------------------
 @Composable
 private fun ExamListsTabContent(
@@ -638,7 +640,7 @@ private fun ExamListsTabContent(
                     FilterChip(
                         selected = selectedType == type,
                         onClick = { onTypeSelected(if (selectedType == type) null else type) },
-                        label = { Text("${type.labelFr} / ${type.labelAr}") }
+                        label = { Text(autoTranslate(type.labelFr)) }
                     )
                 }
             }
@@ -681,7 +683,7 @@ private fun ExamListCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${exam.listType.labelFr} • ${exam.listType.labelAr}",
+                        text = autoTranslate(exam.listType.labelFr),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color(exam.listType.badgeColorHex)
@@ -707,7 +709,7 @@ private fun ExamListCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = exam.titleAr,
+                text = autoTranslate(exam.titleFr),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = OnSurfaceVariant,
                     fontSize = 13.sp,
@@ -808,7 +810,7 @@ private fun ExamListCard(
 }
 
 // -------------------------------------------------------------
-// TAB 3: Grades & Diplômes (السلالم والشهادات)
+// TAB 3: Grades & Diplômes
 // -------------------------------------------------------------
 @Composable
 private fun GradesTabContent(grades: List<EmploiPublicGrade>) {

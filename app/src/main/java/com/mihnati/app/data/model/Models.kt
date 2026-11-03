@@ -177,12 +177,12 @@ data class AlertPreferences(
             val oppDegree = opportunity.degreeRequired.lowercase()
             val matchesDegree = targetDegrees.any { target ->
                 when (target) {
-                    "Master" -> oppDegree.contains("master") || oppDegree.contains("bac+5") || oppDegree.contains("bac +5") || oppDegree.contains("ماستر") || oppDegree.contains("دراسات عليا")
-                    "Ingénieur" -> oppDegree.contains("ingénieur") || oppDegree.contains("ingenieur") || oppDegree.contains("مهندس")
-                    "Licence" -> oppDegree.contains("licence") || oppDegree.contains("bac+3") || oppDegree.contains("bac +3") || oppDegree.contains("إجازة") || oppDegree.contains("اجازة")
-                    "Technicien" -> oppDegree.contains("technicien") || oppDegree.contains("dts") || oppDegree.contains("dut") || oppDegree.contains("bts") || oppDegree.contains("تقني")
-                    "Bac" -> oppDegree.contains("baccalauréat") || oppDegree.contains("bac") || oppDegree.contains("باكالوريا")
-                    "Doctorat" -> oppDegree.contains("doctorat") || oppDegree.contains("دكتوراه")
+                    "Master" -> oppDegree.contains("master") || oppDegree.contains("bac+5") || oppDegree.contains("bac +5") || oppDegree.contains("\u0645\u0627\u0633\u062a\u0631") || oppDegree.contains("\u062f\u0631\u0627\u0633\u0627\u062a \u0639\u0644\u064a\u0627")
+                    "Ingénieur" -> oppDegree.contains("ingénieur") || oppDegree.contains("ingenieur") || oppDegree.contains("\u0645\u0647\u0646\u062f\u0633")
+                    "Licence" -> oppDegree.contains("licence") || oppDegree.contains("bac+3") || oppDegree.contains("bac +3") || oppDegree.contains("\u0625\u062c\u0627\u0632\u0629") || oppDegree.contains("\u0627\u062c\u0627\u0632\u0629")
+                    "Technicien" -> oppDegree.contains("technicien") || oppDegree.contains("dts") || oppDegree.contains("dut") || oppDegree.contains("bts") || oppDegree.contains("\u062a\u0642\u0646\u064a")
+                    "Bac" -> oppDegree.contains("baccalauréat") || oppDegree.contains("bac") || oppDegree.contains("\u0628\u0627\u0643\u0627\u0644\u0648\u0631\u064a\u0627")
+                    "Doctorat" -> oppDegree.contains("doctorat") || oppDegree.contains("\u062f\u0643\u062a\u0648\u0631\u0627\u0647")
                     else -> oppDegree.contains(target.lowercase())
                 }
             }
@@ -193,7 +193,7 @@ data class AlertPreferences(
         if (targetRegions.isNotEmpty()) {
             val oppLoc = opportunity.location.lowercase()
             val matchesRegion = targetRegions.any { reg ->
-                oppLoc.contains(reg.lowercase()) || oppLoc.contains("maroc") || oppLoc.contains("national") || oppLoc.contains("rabat") || oppLoc.contains("المغرب")
+                oppLoc.contains(reg.lowercase()) || oppLoc.contains("maroc") || oppLoc.contains("national") || oppLoc.contains("rabat") || oppLoc.contains("\u0627\u0644\u0645\u063a\u0631\u0628")
             }
             if (!matchesRegion) return false
         }

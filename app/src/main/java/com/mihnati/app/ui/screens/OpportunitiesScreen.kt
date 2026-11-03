@@ -32,6 +32,7 @@ import com.mihnati.app.ui.components.DiplomaEligibilityBottomSheet
 import com.mihnati.app.ui.components.SalarySimulatorBottomSheet
 import com.mihnati.app.ui.components.TagBadge
 import com.mihnati.app.ui.theme.*
+import com.mihnati.app.translation.autoTranslate
 
 @Composable
 fun OpportunitiesScreen(
@@ -254,7 +255,7 @@ fun OpportunitiesScreen(
                 // Tab "Urgent (<5j)"
                 item {
                     FilterChipPill(
-                        label = if (LanguageManager.isArabic) "عاجل (<5 أيام)" else "Urgent (<5j)",
+                        label = autoTranslate("Urgent (<5j)"),
                         count = urgentCount,
                         isSelected = onlyUrgent,
                         emoji = "⏱️",
@@ -495,7 +496,7 @@ fun OpportunitiesScreen(
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
-                            text = if (LanguageManager.isArabic) "تصفية حسب الدبلوم المطلوب" else "FILTRER PAR DIPLÔME REQUIS",
+                            text = autoTranslate("FILTRER PAR DIPLÔME REQUIS"),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Outline,
                                 fontWeight = FontWeight.Bold,
@@ -559,7 +560,7 @@ fun OpportunitiesScreen(
 
                 if (selectedSector != null || selectedLevel != "Tous niveaux" || onlyFavorites || onlyUrgent || searchQuery.isNotEmpty()) {
                     Text(
-                        text = if (LanguageManager.isArabic) "إعادة ضبط" else "Réinitialiser",
+                        text = autoTranslate("Réinitialiser"),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold
@@ -609,7 +610,7 @@ fun OpportunitiesScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = Primary),
                             shape = RoundedCornerShape(10.dp)
                         ) {
-                            Text(if (LanguageManager.isArabic) "عرض جميع المباريات" else "Voir toutes les opportunités")
+                            Text(autoTranslate("Voir toutes les opportunités"))
                         }
                     }
                 }
@@ -662,14 +663,14 @@ fun OpportunitiesScreen(
                         }
                         Column {
                             Text(
-                                text = if (LanguageManager.isArabic) "المساعد الذكي مهنتي" else "Assistant IA Mihnati",
+                                text = autoTranslate("Assistant IA Mihnati"),
                                 style = MaterialTheme.typography.labelLarge.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface
                                 )
                             )
                             Text(
-                                text = if (LanguageManager.isArabic) "استفسارات حول الامتحانات الشفوية والسلالم" else "Questions sur les oraux & barèmes",
+                                text = autoTranslate("Questions sur les oraux & barèmes"),
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                             )
                         }
@@ -682,7 +683,7 @@ fun OpportunitiesScreen(
                         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = if (LanguageManager.isArabic) "طرح سؤال" else "Poser une question",
+                            text = autoTranslate("Poser une question"),
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                         )
                     }
@@ -818,7 +819,7 @@ fun CleanOpportunityCard(
 
                     Column {
                         Text(
-                            text = MoroccanLocalization.localizedOrg(opportunity.organization),
+                            text = autoTranslate(opportunity.organization),
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = OnSurface,
                                 fontWeight = FontWeight.Bold
@@ -836,7 +837,7 @@ fun CleanOpportunityCard(
                                 modifier = Modifier.size(13.dp)
                             )
                             Text(
-                                text = MoroccanLocalization.localizedCity(opportunity.location),
+                                text = autoTranslate(opportunity.location),
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                                 maxLines = 1
                             )
@@ -860,7 +861,7 @@ fun CleanOpportunityCard(
 
             // Title
             Text(
-                text = MoroccanLocalization.localizedTitle(opportunity.title),
+                text = autoTranslate(opportunity.title),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = OnSurface,
@@ -937,7 +938,7 @@ fun CleanOpportunityCard(
             ) {
                 // Degree Badge
                 TagBadge(
-                    text = MoroccanLocalization.localizedDegree(opportunity.degreeRequired.split("(").firstOrNull()?.trim() ?: opportunity.degreeRequired),
+                    text = autoTranslate(opportunity.degreeRequired.split("(").firstOrNull()?.trim() ?: opportunity.degreeRequired),
                     backgroundColor = SurfaceContainer,
                     textColor = OnSurface
                 )
@@ -953,9 +954,9 @@ fun CleanOpportunityCard(
                 val isUrgent = opportunity.deadlineDaysRemaining <= 4
                 TagBadge(
                     text = if (isUrgent) {
-                        if (LanguageManager.isArabic) "باقي ${opportunity.deadlineDaysRemaining} أيام" else "J-${opportunity.deadlineDaysRemaining}"
+                        "J-${opportunity.deadlineDaysRemaining}"
                     } else {
-                        if (LanguageManager.isArabic) "باقي ${opportunity.deadlineDaysRemaining} أيام" else "${opportunity.deadlineDaysRemaining}j restants"
+                        "${opportunity.deadlineDaysRemaining} ${autoTranslate("j restants")}"
                     },
                     backgroundColor = if (isUrgent) ErrorContainer else TertiaryFixed,
                     textColor = if (isUrgent) OnErrorContainer else OnTertiaryFixed

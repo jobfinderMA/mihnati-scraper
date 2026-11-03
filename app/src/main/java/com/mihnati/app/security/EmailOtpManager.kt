@@ -166,7 +166,7 @@ object EmailOtpManager {
               "sender": {"name": "Mihnati Emploi Public", "email": "auth@mihnati.ma"},
               "to": [{"email": "$recipientEmail", "name": "$name"}],
               "subject": "Code de vérification Mihnati : $code",
-              "htmlContent": "<div style='font-family:sans-serif;padding:20px;border-radius:12px;background:#F8FAFC;'><h2 style='color:#0F172A;'>Mihnati 🇲🇦 مهنتي</h2><p>Bonjour <strong>$name</strong>,</p><p>Votre code de confirmation secret pour activer votre compte Mihnati est :</p><h1 style='letter-spacing:6px;color:#1D4ED8;background:#EFF6FF;padding:12px;border-radius:8px;display:inline-block;'>$code</h1><p style='color:#64748B;font-size:12px;'>Ce code expire dans 10 minutes. Ne le transmettez à personne.</p></div>"
+              "htmlContent": "<div style='font-family:sans-serif;padding:20px;border-radius:12px;background:#F8FAFC;'><h2 style='color:#0F172A;'>Mihnati 🇲🇦</h2><p>Bonjour <strong>$name</strong>,</p><p>Votre code de confirmation secret pour activer votre compte Mihnati est :</p><h1 style='letter-spacing:6px;color:#1D4ED8;background:#EFF6FF;padding:12px;border-radius:8px;display:inline-block;'>$code</h1><p style='color:#64748B;font-size:12px;'>Ce code expire dans 10 minutes. Ne le transmettez à personne.</p></div>"
             }
         """.trimIndent()
 

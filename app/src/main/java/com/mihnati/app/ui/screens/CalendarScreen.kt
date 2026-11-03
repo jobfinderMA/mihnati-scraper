@@ -30,6 +30,7 @@ import com.mihnati.app.data.repository.MihnatiRepository
 import com.mihnati.app.ui.components.DemoDataBanner
 import com.mihnati.app.ui.components.TagBadge
 import com.mihnati.app.ui.theme.*
+import com.mihnati.app.translation.autoTranslate
 import java.util.UUID
 
 @Composable
@@ -60,10 +61,13 @@ fun CalendarScreen(
 
     val filteredEvents = remember(events, selectedFilter, selectedMonth) {
         events.filter { event ->
-            val monthMatches = when (selectedMonth) {
-                "Novembre 2026", AppStrings.monthNov2026 -> event.date.contains("Nov", ignoreCase = true) || event.date.contains("نونبر", ignoreCase = true)
-                "Décembre 2026", AppStrings.monthDec2026 -> event.date.contains("Déc", ignoreCase = true) || event.date.contains("Dec", ignoreCase = true) || event.date.contains("دجنبر", ignoreCase = true)
-                "Janvier 2027", AppStrings.monthJan2027 -> event.date.contains("Jan", ignoreCase = true) || event.date.contains("يناير", ignoreCase = true)
+            val monthMatches = when {
+                selectedMonth.contains("Nov", ignoreCase = true) || selectedMonth.contains("\u0646\u0648\u0646\u0628\u0631", ignoreCase = true) ->
+                    event.date.contains("Nov", ignoreCase = true) || event.date.contains("\u0646\u0648\u0646\u0628\u0631", ignoreCase = true)
+                selectedMonth.contains("Déc", ignoreCase = true) || selectedMonth.contains("Dec", ignoreCase = true) || selectedMonth.contains("\u062f\u062c\u0646\u0628\u0631", ignoreCase = true) ->
+                    event.date.contains("Déc", ignoreCase = true) || event.date.contains("Dec", ignoreCase = true) || event.date.contains("\u062f\u062c\u0646\u0628\u0631", ignoreCase = true)
+                selectedMonth.contains("Jan", ignoreCase = true) || selectedMonth.contains("\u064a\u0646\u0627\u064a\u0631", ignoreCase = true) ->
+                    event.date.contains("Jan", ignoreCase = true) || event.date.contains("\u064a\u0646\u0627\u064a\u0631", ignoreCase = true)
                 else -> true
             }
 
@@ -236,7 +240,7 @@ fun CalendarScreen(
                             modifier = Modifier.size(40.dp)
                         )
                         Text(
-                            text = if (LanguageManager.isArabic) "لا توجد مواعيد أو مباريات مبرمجة لهذه الفترة" else "Aucun événement prévu pour cette sélection",
+                            text = autoTranslate("Aucun événement prévu pour cette sélection"),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = OnSurfaceVariant,
                                 fontWeight = FontWeight.SemiBold
@@ -282,7 +286,7 @@ fun CalendarScreen(
             onDismissRequest = { showAddEventDialog = false },
             title = {
                 Text(
-                    text = if (LanguageManager.isArabic) "إضافة موعد أو تذكير خاص" else "Ajouter un événement / rappel",
+                    text = autoTranslate("Ajouter un événement / rappel"),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -291,7 +295,7 @@ fun CalendarScreen(
                     OutlinedTextField(
                         value = newEventTitle,
                         onValueChange = { newEventTitle = it },
-                        label = { Text(if (LanguageManager.isArabic) "عنوان الموعد" else "Titre de l'échéance") },
+                        label = { Text(autoTranslate("Titre de l'échéance")) },
                         placeholder = { Text("Ex: Dépôt légalisation diplôme") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -401,23 +405,16 @@ fun CalendarEventCard(
                 ) {
                     TagBadge(
                         text = if (event.daysRemaining <= 3) {
-                            if (LanguageManager.isArabic) "عاجل • باقي ${event.daysRemaining} أيام" else "J-${event.daysRemaining} URGENT"
+                            "J-${event.daysRemaining} URGENT"
                         } else {
-                            if (LanguageManager.isArabic) "باقي ${event.daysRemaining} أيام" else "J-${event.daysRemaining} restants"
+                            "J-${event.daysRemaining} ${autoTranslate("restants")}"
                         },
                         backgroundColor = if (event.daysRemaining <= 3) ErrorContainer else TertiaryFixed,
                         textColor = if (event.daysRemaining <= 3) OnErrorContainer else OnTertiaryFixed,
                         icon = Icons.Default.Timer
                     )
                     TagBadge(
-                        text = if (LanguageManager.isArabic) {
-                            when (event.eventType) {
-                                CalendarEventType.CLOTURE_CONCOURS -> "آجال الترشيح"
-                                CalendarEventType.EXAMEN_ECRIT -> "الاختبار الكتابي"
-                                CalendarEventType.ENTRETIEN -> "المقابلة الشفوية"
-                                CalendarEventType.RAPPEL_PERSO -> "تذكير خاص"
-                            }
-                        } else event.eventType.label,
+                        text = autoTranslate(event.eventType.label),
                         backgroundColor = SurfaceContainer,
                         textColor = OnSurfaceVariant
                     )
@@ -455,7 +452,7 @@ fun CalendarEventCard(
             // Title & Organization
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
-                    text = MoroccanLocalization.localizedTitle(event.title),
+                    text = autoTranslate(event.title),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = OnSurface,
@@ -463,7 +460,7 @@ fun CalendarEventCard(
                     )
                 )
                 Text(
-                    text = MoroccanLocalization.localizedOrg(event.organization),
+                    text = autoTranslate(event.organization),
                     style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                 )
             }
@@ -511,7 +508,7 @@ fun CalendarEventCard(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = MoroccanLocalization.localizedCity(event.location),
+                            text = autoTranslate(event.location),
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = OnSurfaceVariant,
                                 fontSize = 11.sp
@@ -544,7 +541,7 @@ fun CalendarEventCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = if (LanguageManager.isArabic) "إضافة إلى تقويم الهاتف" else "Ajouter à l'agenda",
+                        text = autoTranslate("Ajouter à l'agenda"),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Primary,
                             fontWeight = FontWeight.Bold
@@ -555,7 +552,7 @@ fun CalendarEventCard(
                 if (event.opportunityId != null) {
                     TextButton(onClick = onOpenDetails) {
                         Text(
-                            text = if (LanguageManager.isArabic) "عرض الإعلان الرسمي" else "Voir l'avis officiel",
+                            text = autoTranslate("Voir l'avis officiel"),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Primary,
                                 fontWeight = FontWeight.Bold

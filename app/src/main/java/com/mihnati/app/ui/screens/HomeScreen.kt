@@ -36,6 +36,7 @@ import com.mihnati.app.ui.components.TagBadge
 import com.mihnati.app.ui.theme.*
 import com.mihnati.app.ui.theme.AppStrings
 import com.mihnati.app.ui.theme.LanguageManager
+import com.mihnati.app.translation.autoTranslate
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
@@ -48,16 +49,24 @@ fun HomeScreen(
     val userProfile by MihnatiRepository.userProfile.collectAsState()
 
     val isArabic = LanguageManager.isArabic
-    var selectedCategory by remember(isArabic) { mutableStateOf(AppStrings.categoryAll) }
-    val categories = remember(isArabic) {
+    val catAll = AppStrings.categoryAll
+    val catAlerts = AppStrings.categoryCustomAlerts
+    val catPublic = AppStrings.categoryPublic
+    val catTech = AppStrings.categoryTech
+    val catFinance = AppStrings.categoryFinance
+    val catMasters = AppStrings.categoryMasters
+    val catHealth = AppStrings.categoryHealth
+
+    var selectedCategory by remember(isArabic) { mutableStateOf(catAll) }
+    val categories = remember(catAll, catAlerts, catPublic, catTech, catFinance, catMasters, catHealth) {
         listOf(
-            AppStrings.categoryAll to "✨",
-            AppStrings.categoryCustomAlerts to "🎯",
-            AppStrings.categoryPublic to "🏛️",
-            AppStrings.categoryTech to "💻",
-            AppStrings.categoryFinance to "💼",
-            AppStrings.categoryMasters to "🎓",
-            AppStrings.categoryHealth to "🏥"
+            catAll to "✨",
+            catAlerts to "🎯",
+            catPublic to "🏛️",
+            catTech to "💻",
+            catFinance to "💼",
+            catMasters to "🎓",
+            catHealth to "🏥"
         )
     }
 
@@ -91,7 +100,7 @@ fun HomeScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val isGuest = userProfile.account.provider == "guest" || userProfile.fullName == "Invité"
                     val greetingTitle = if (!isGuest && userProfile.fullName.isNotBlank()) {
-                        if (LanguageManager.isArabic) "مرحباً ${userProfile.fullName.split(" ").firstOrNull() ?: ""}" else "Bonjour ${userProfile.fullName.split(" ").firstOrNull() ?: ""}"
+                        "${autoTranslate("Bonjour")} ${userProfile.fullName.split(" ").firstOrNull() ?: ""}"
                     } else {
                         AppStrings.welcomeTitle
                     }
@@ -128,7 +137,7 @@ fun HomeScreen(
                         .background(Secondary)
                 )
                 val pillText = if (userProfile.account.provider != "guest" && userProfile.fullName != "Invité") {
-                    if (userProfile.targetLevel.isNotBlank()) "${userProfile.targetLevel} ${if (LanguageManager.isArabic) "موثق" else "Vérifié"}" else AppStrings.verifiedProfileBadge
+                    if (userProfile.targetLevel.isNotBlank()) "${userProfile.targetLevel} ${autoTranslate("Vérifié")}" else AppStrings.verifiedProfileBadge
                 } else {
                     AppStrings.createProfileBadge
                 }
@@ -566,7 +575,7 @@ fun HomeScreen(
                                 modifier = Modifier.size(13.dp)
                             )
                             Text(
-                                text = "${AppStrings.expiresPrefix} ${urgentOpportunity.deadlineDaysRemaining}${if (LanguageManager.isArabic) " أيام" else "j"}",
+                                text = "${AppStrings.expiresPrefix} ${urgentOpportunity.deadlineDaysRemaining} ${autoTranslate("jours")}",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = OnTertiaryFixed,
                                     fontWeight = FontWeight.Bold
@@ -583,7 +592,7 @@ fun HomeScreen(
                     }
 
                     Text(
-                        text = MoroccanLocalization.localizedTitle(urgentOpportunity.title),
+                        text = autoTranslate(urgentOpportunity.title),
                         style = MaterialTheme.typography.titleLarge.copy(
                             color = OnPrimary,
                             fontWeight = FontWeight.Bold,
@@ -592,7 +601,7 @@ fun HomeScreen(
                     )
 
                     Text(
-                        text = "${MoroccanLocalization.localizedOrg(urgentOpportunity.organization)} • 120 ${if (LanguageManager.isArabic) "منصب مالي" else "postes"}",
+                        text = "${autoTranslate(urgentOpportunity.organization)} • 120 ${autoTranslate("postes")}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = PrimaryFixed
                         )
@@ -604,7 +613,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "🏛️ ${if (LanguageManager.isArabic) "السلم 11 • جدول الأجور الرسمي" else "Échelle 11 • Grille indiciaire"}",
+                            text = "🏛️ ${autoTranslate("Échelle 11 • Grille indiciaire")}",
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = SecondaryFixed,
                                 fontWeight = FontWeight.Bold
@@ -689,13 +698,13 @@ fun HomeScreen(
                 ) {
                     Column {
                         TagBadge(
-                            text = if (LanguageManager.isArabic) "باقي يومين" else "2j restants",
+                            text = "${autoTranslate("Restants")} 2j",
                             backgroundColor = ErrorContainer,
                             textColor = OnErrorContainer
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = if (LanguageManager.isArabic) "إدارة الجمارك والضرائب" else "Douanes & Impôts",
+                            text = autoTranslate("Douanes & Impôts"),
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -703,14 +712,14 @@ fun HomeScreen(
                             maxLines = 1
                         )
                         Text(
-                            text = if (LanguageManager.isArabic) "مفتش من الدرجة الثالثة" else "Inspecteur 3ème grade",
+                            text = autoTranslate("Inspecteur 3ème grade"),
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                             modifier = Modifier.padding(top = 2.dp),
                             maxLines = 1
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = if (LanguageManager.isArabic) "آخر أجل: 04 نونبر 2026" else "Clôture: 04 Nov 2026",
+                            text = autoTranslate("Clôture: 04 Nov 2026"),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = Tertiary,
                                 fontWeight = FontWeight.Bold
@@ -731,13 +740,13 @@ fun HomeScreen(
                 ) {
                     Column {
                         TagBadge(
-                            text = if (LanguageManager.isArabic) "باقي 5 أيام" else "5j restants",
+                            text = "${autoTranslate("Restants")} 5j",
                             backgroundColor = TertiaryFixed,
                             textColor = OnTertiaryFixed
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = if (LanguageManager.isArabic) "منحة الخوارزمي" else "Bourse Khawarizmi",
+                            text = autoTranslate("Bourse Khawarizmi"),
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = OnSurface
@@ -745,7 +754,7 @@ fun HomeScreen(
                             maxLines = 1
                         )
                         Text(
-                            text = if (LanguageManager.isArabic) "دكتوراه والذكاء الاصطناعي CNRST" else "Doctorat & IA CNRST",
+                            text = autoTranslate("Doctorat & IA CNRST"),
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant),
                             modifier = Modifier.padding(top = 2.dp),
                             maxLines = 1
@@ -806,24 +815,31 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val displayedOpportunities = remember(opportunities, selectedCategory, userProfile.preferences, LanguageManager.isArabic) {
+            val strCustomAlerts = AppStrings.categoryCustomAlerts
+            val strPublicOpp = AppStrings.categoryPublic
+            val strTechOpp = AppStrings.categoryTech
+            val strFinanceOpp = AppStrings.categoryFinance
+            val strMastersOpp = AppStrings.categoryMasters
+            val strHealthOpp = AppStrings.categoryHealth
+
+            val displayedOpportunities = remember(opportunities, selectedCategory, userProfile.preferences, strCustomAlerts, strPublicOpp, strTechOpp, strFinanceOpp, strMastersOpp, strHealthOpp) {
                 val list = when (selectedCategory) {
-                    "Mes alertes ciblées", AppStrings.categoryCustomAlerts ->
+                    "Mes alertes ciblées", strCustomAlerts ->
                         opportunities.filter { userProfile.preferences.matches(it) }
-                    "Concours Publics", AppStrings.categoryPublic -> opportunities.filter { it.sectorType == SectorType.PUBLIC }
-                    "Tech & Digital", AppStrings.categoryTech -> opportunities.filter {
+                    "Concours Publics", strPublicOpp -> opportunities.filter { it.sectorType == SectorType.PUBLIC }
+                    "Tech & Digital", strTechOpp -> opportunities.filter {
                         it.field.contains("Informatique", ignoreCase = true) ||
                         it.field.contains("SI", ignoreCase = true) ||
                         it.title.contains("Java", ignoreCase = true) ||
                         it.title.contains("Cloud", ignoreCase = true)
                     }
-                    "Banque & Finance", AppStrings.categoryFinance -> opportunities.filter {
+                    "Banque & Finance", strFinanceOpp -> opportunities.filter {
                         it.organization.contains("Banque", ignoreCase = true) ||
                         it.field.contains("Économie", ignoreCase = true) ||
                         it.field.contains("Audit", ignoreCase = true)
                     }
-                    "Masters", "Masters & Formations", AppStrings.categoryMasters -> opportunities.filter { it.sectorType == SectorType.FORMATION }
-                    "Santé", AppStrings.categoryHealth -> opportunities.filter {
+                    "Masters", "Masters & Formations", strMastersOpp -> opportunities.filter { it.sectorType == SectorType.FORMATION }
+                    "Santé", strHealthOpp -> opportunities.filter {
                         it.organization.contains("Santé", ignoreCase = true) ||
                         it.field.contains("Santé", ignoreCase = true)
                     }
@@ -845,13 +861,13 @@ fun HomeScreen(
                     ) {
                         Text("🎯", fontSize = 24.sp)
                         Text(
-                            text = if (LanguageManager.isArabic) "لا توجد مباريات مطابقة لمعاييرك حالياً" else "Aucun concours ne correspond à vos filtres ciblés",
+                            text = AppStrings.noAlertsFoundTitle,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp,
                             color = Primary
                         )
                         Text(
-                            text = if (LanguageManager.isArabic) "عدل الشهادات والجهات في صفحة حسابي لعرض النتائج." else "Personnalisez vos diplômes et régions dans l'onglet Profil pour filtrer vos offres.",
+                            text = AppStrings.noAlertsFoundDesc,
                             fontSize = 11.sp,
                             color = OnSurfaceVariant,
                             textAlign = TextAlign.Center
@@ -861,7 +877,7 @@ fun HomeScreen(
                             modifier = Modifier.padding(top = 4.dp),
                             shape = RoundedCornerShape(8.dp)
                         ) {
-                            Text(if (LanguageManager.isArabic) "تعديل الفلاتر ➔" else "Modifier mes filtres ➔", fontSize = 11.sp)
+                            Text(AppStrings.editFiltersBtn, fontSize = 11.sp)
                         }
                     }
                 }

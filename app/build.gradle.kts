@@ -66,6 +66,9 @@ dependencies {
     implementation("org.jsoup:jsoup:1.18.3")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
+    // Google ML Kit On-Device Translation
+    implementation("com.google.mlkit:translate:17.0.3")
+
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     // Firebase BOM & Cloud Services
     implementation(platform(libs.firebase.bom))
