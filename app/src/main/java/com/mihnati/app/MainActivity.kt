@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
         // 2. Schedule 24/7 background WorkManager cloud sync
         MihnatiNotificationHelper.schedulePeriodicCloudSync(this)
 
-        // 3. Automatically fetch latest scraped concours from Cloud CDN
-        EmploiPublicRepository.triggerLiveSync()
+        // 3. Automatically initialize scraper repository with bundled asset & Cloud CDN
+        EmploiPublicRepository.initContext(this.applicationContext)
 
         // 4. Initialize Cloud Backend (Universal Adapter - Firebase)
         com.mihnati.app.data.cloud.CloudServiceManager.init(this, "Firebase")

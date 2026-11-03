@@ -63,6 +63,11 @@ object EmploiPublicRepository {
         }
     }
 
+    fun initContext(context: android.content.Context) {
+        EmploiPublicScraperService.initContext(context)
+        triggerLiveSync()
+    }
+
     fun triggerLiveSync(onComplete: ((Boolean, String) -> Unit)? = null) {
         if (_syncStatus.value.isSyncing) return
 

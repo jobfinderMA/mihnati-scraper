@@ -52,7 +52,11 @@ data class Opportunity(
     val workplaceDetail: String = "Environnement technologique et collaboratif",
     val isBookmarked: Boolean = false,
     val isDemoData: Boolean = true,
-    val sourceUrl: String = "https://www.emploi-public.ma"
+    val sourceUrl: String = "https://www.emploi-public.ma",
+    val sourceName: String = "Emploi-Public",
+    val isWeeklySpecial: Boolean = false,
+    val examDate: String = "",
+    val postsCount: Int = 1
 )
 
 data class Application(

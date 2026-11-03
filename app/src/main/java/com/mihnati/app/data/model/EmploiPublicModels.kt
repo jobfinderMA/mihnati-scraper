@@ -33,6 +33,8 @@ data class EmploiPublicConcours(
     val location: String = "National / Rabat",
     val avisPdfUrl: String = "https://www.emploi-public.ma",
     val detailsUrl: String = "https://www.emploi-public.ma/ar/concoursRecrutement.asp",
+    val source: String = "emploi-public.ma",
+    val isWeeklySpecial: Boolean = false,
     val isSaved: Boolean = false
 )
 
@@ -49,7 +51,8 @@ data class ConcoursExamList(
     val examDate: String,
     val examCenters: List<String>,
     val pdfDownloadUrl: String,
-    val publishDate: String
+    val publishDate: String,
+    val source: String = "emploi-public.ma"
 )
 
 data class EmploiPublicGrade(

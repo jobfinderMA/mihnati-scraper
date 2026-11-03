@@ -5,6 +5,7 @@ Runs on an hourly schedule daily and exports structured data to JSON and SQLite.
 """
 
 import os
+import re
 import sys
 import time
 import json
@@ -355,6 +356,108 @@ def dispatch_whatsapp_notification(conv):
         except Exception as e:
             logger.warning(f"[WhatsApp Gateway] Dispatch error: {e}")
 
+
+def scrape_manasseb_posts(limit=30):
+    """
+    Scrapes latest opportunities and convocations from Manasseb.com
+    via the official WordPress REST API.
+    """
+    logger.info(f"Fetching latest opportunities from Manasseb.com (limit={limit})...")
+    concours_list = []
+    convocations_list = []
+    
+    try:
+        url = f"https://www.manasseb.com/wp-json/wp/v2/posts?per_page={limit}"
+        resp = requests.get(url, headers=HEADERS, timeout=15, verify=False)
+        if resp.status_code != 200:
+            logger.warning(f"Manasseb API returned status code {resp.status_code}")
+            return [], []
+        
+        posts = resp.json()
+        for p in posts:
+            p_id = str(p.get('id', ''))
+            title = p.get('title', {}).get('rendered', '')
+            title = re.sub(r'&#8211;', '-', title)
+            title = re.sub(r'&#8217;', "'", title)
+            title = re.sub(r'&amp;', '&', title)
+            link = p.get('link', '')
+            c_html = p.get('content', {}).get('rendered', '')
+            pub_date = p.get('date', '')[:10]
+
+            # Administration extraction
+            admin_match = re.search(r'(?:الإدارة المنظمة|المؤسسة)\s*:\s*([^<\n\r]+)', c_html)
+            admin = admin_match.group(1).strip() if admin_match else "Administration Publique"
+            admin = re.sub(r'<[^>]+>', '', admin).strip()
+
+            # Deadline extraction
+            dl_match = re.search(r'آخر أجل(?: لإيداع الترشيحات)?\s*:\s*([^<\n\r]+)', c_html)
+            deadline = dl_match.group(1).strip() if dl_match else "Novembre 2026"
+            deadline = re.sub(r'&#8211;', '-', deadline).strip()
+
+            # Exam date extraction
+            exam_match = re.search(r'تاريخ إجراء المباراة\s*:\s*([^<\n\r]+)', c_html)
+            exam_date = exam_match.group(1).strip() if exam_match else ""
+
+            # Posts count extraction
+            posts_match = re.search(r'عدد المناصب\s*:\s*(?:<[^>]+>|\s)*(\d+)', c_html)
+            posts_count = int(posts_match.group(1)) if posts_match else 1
+
+            # Échelle extraction
+            echelle = 11
+            if '11' in title or 'السلم 11' in c_html: echelle = 11
+            elif '10' in title or 'السلم 10' in c_html: echelle = 10
+            elif '9' in title or 'السلم 9' in c_html: echelle = 9
+            elif '8' in title or 'السلم 8' in c_html: echelle = 8
+
+            # Distinguish Convocations (Listes d'examen) from Concours
+            is_convocation = any(w in title for w in [
+                'لائحة', 'لوائح', 'المدعوين', 'المرشحين', 'شفوي', 'كتابي', 'نتائج'
+            ])
+
+            if is_convocation:
+                conv_type = 'ORAL' if 'شفوي' in title else ('ECRIT' if 'كتابي' in title else 'RESULTAT')
+                convocations_list.append({
+                    'id': f"manasseb-conv-{p_id}",
+                    'concours_id': f"manasseb-{p_id}",
+                    'type': conv_type,
+                    'title': title,
+                    'administration': admin,
+                    'exam_date': exam_date or deadline,
+                    'exam_center': "Maroc",
+                    'candidates_count': posts_count * 25,
+                    'pdf_url': link,
+                    'source': 'manasseb.com'
+                })
+            else:
+                concours_list.append({
+                    'id': f"manasseb-{p_id}",
+                    'title': title,
+                    'title_ar': title,
+                    'grade': f"Échelle {echelle}",
+                    'echelle': str(echelle),
+                    'administration': admin,
+                    'administration_ar': admin,
+                    'speciality': "Administration & Métiers",
+                    'degree_required': "Bac+3 / Bac+5 / Master / Licence",
+                    'posts_count': posts_count,
+                    'deadline': deadline,
+                    'exam_date': exam_date,
+                    'publication_date': pub_date,
+                    'reference_code': f"MANASSEB-{p_id}",
+                    'submission_url': link,
+                    'detail_url': link,
+                    'written_list_url': '',
+                    'oral_list_url': '',
+                    'source': 'manasseb.com',
+                    'is_weekly_special': True
+                })
+
+        logger.info(f"Successfully scraped from Manasseb.com: {len(concours_list)} concours, {len(convocations_list)} convocations")
+        return concours_list, convocations_list
+    except Exception as e:
+        logger.warning(f"Error scraping Manasseb.com: {e}")
+        return [], []
+
 def save_to_database(concours_list, convocations_list):
     """Saves scraped data to SQLite database."""
     conn = sqlite3.connect(DB_PATH)
@@ -424,6 +527,11 @@ def run_job():
         concours = scrape_concours_list(max_pages=3)
         convocations = scrape_convocations_and_results(concours)
         
+        # Scrape Manasseb.com for regional, university & municipal openings
+        manasseb_concours, manasseb_convocations = scrape_manasseb_posts(limit=25)
+        concours.extend(manasseb_concours)
+        convocations.extend(manasseb_convocations)
+
         save_to_database(concours, convocations)
         export_json(concours, convocations)
         logger.info("Scrape job completed successfully!")

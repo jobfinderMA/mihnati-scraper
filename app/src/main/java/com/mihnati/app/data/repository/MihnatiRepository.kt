@@ -629,9 +629,14 @@ object MihnatiRepository {
     fun mergeScrapedConcours(scrapedList: List<com.mihnati.app.data.model.EmploiPublicConcours>) {
         _opportunities.update { existing ->
             val newOpportunities = scrapedList.map { c ->
+                val displaySourceName = if (c.source.contains("manasseb", ignoreCase = true) || c.id.startsWith("manasseb")) {
+                    "Manasseb.com"
+                } else {
+                    "Emploi-Public"
+                }
                 Opportunity(
                     id = c.id,
-                    title = "${c.titleFr} (${c.numPosts} postes)",
+                    title = if (c.titleFr.contains("poste", ignoreCase = true)) c.titleFr else "${c.titleFr} (${c.numPosts} postes)",
                     organization = c.administrationFr,
                     location = c.location,
                     sectorType = SectorType.PUBLIC,
@@ -644,7 +649,7 @@ object MihnatiRepository {
                     experience = "Sans expérience requise",
                     salary = "Grille indiciaire officielle (Échelle ${c.echelle})",
                     contractType = "Concours National",
-                    description = "${c.titleAr} - ${c.titleFr}. Recrutement dans les services de l'administration marocaine. Diplôme requis : ${c.diplomaRequired}.",
+                    description = "${c.titleFr}. Recrutement dans les services de l'administration marocaine. Diplôme requis : ${c.diplomaRequired}.",
                     requiredDocuments = listOf(
                         RequiredDocument("Demande manuscrite", "Adressée à Monsieur le Ministre / Directeur", isReady = true),
                         RequiredDocument("Copie certifiée CIN", "Carte Nationale d'Identité électronique", isReady = true),
@@ -655,6 +660,10 @@ object MihnatiRepository {
                     workplaceName = c.administrationFr,
                     workplaceDetail = "Services Centraux et Directions Régionales",
                     sourceUrl = c.detailsUrl,
+                    sourceName = displaySourceName,
+                    isWeeklySpecial = c.isWeeklySpecial,
+                    examDate = c.examDate ?: "",
+                    postsCount = c.numPosts,
                     isDemoData = false
                 )
             }

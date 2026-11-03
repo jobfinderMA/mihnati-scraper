@@ -222,7 +222,7 @@ fun OpportunityDetailScreen(
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
                             Text(
-                                text = autoTranslate("Officiel emploi-public.ma"),
+                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "Source : Manasseb.com" else "Officiel emploi-public.ma",
                                 style = MaterialTheme.typography.labelSmall.copy(color = Color.White)
                             )
                         }
@@ -302,11 +302,17 @@ fun OpportunityDetailScreen(
                             icon = Icons.Default.Apartment
                         )
                         TagBadge(
-                            text = opportunity.contractType,
-                            backgroundColor = SecondaryContainer,
-                            textColor = OnSecondaryContainer,
-                            icon = Icons.Default.Handshake
+                            text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "🌐 Manasseb" else "🏛️ Emploi-Public",
+                            backgroundColor = SecondaryContainer.copy(alpha = 0.6f),
+                            textColor = OnSecondaryContainer
                         )
+                        if (opportunity.postsCount > 1) {
+                            TagBadge(
+                                text = "👥 ${opportunity.postsCount} " + autoTranslate("postes"),
+                                backgroundColor = SurfaceContainerHigh,
+                                textColor = OnSurface
+                            )
+                        }
                     }
                 }
             }
@@ -397,6 +403,59 @@ fun OpportunityDetailScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                             )
+                        }
+                    }
+                }
+
+                // Written Exam Date Card (from Manasseb & Emploi-Public official notices)
+                if (opportunity.examDate.isNotBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(SecondaryContainer.copy(alpha = 0.45f))
+                            .padding(14.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(38.dp)
+                                        .clip(CircleShape)
+                                        .background(Secondary),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.EventAvailable,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                                Column {
+                                    Text(
+                                        text = autoTranslate("Date de l'épreuve écrite"),
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            color = Secondary,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                    Text(
+                                        text = opportunity.examDate,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            color = OnSecondaryContainer,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
                 }

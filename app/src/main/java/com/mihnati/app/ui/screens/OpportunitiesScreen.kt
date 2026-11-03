@@ -46,6 +46,8 @@ fun OpportunitiesScreen(
     var selectedLevel by remember { mutableStateOf("Tous niveaux") }
     var onlyFavorites by remember { mutableStateOf(false) }
     var onlyUrgent by remember { mutableStateOf(false) }
+    var onlyWeeklySpecial by remember { mutableStateOf(false) }
+    var selectedSource by remember { mutableStateOf<String?>(null) }
     var isLevelTrayExpanded by remember { mutableStateOf(false) }
     var selectedSort by remember { mutableStateOf("Échéance proche") }
 
@@ -64,6 +66,8 @@ fun OpportunitiesScreen(
 
     val bookmarkedCount = remember(opportunities) { opportunities.count { it.isBookmarked } }
     val urgentCount = remember(opportunities) { opportunities.count { it.deadlineDaysRemaining <= 5 } }
+    val weeklySpecialCount = remember(opportunities) { opportunities.count { it.isWeeklySpecial } }
+    val manassebCount = remember(opportunities) { opportunities.count { it.sourceName.contains("Manasseb", ignoreCase = true) } }
 
     // Filter logic
     val filteredOpportunities = remember(
@@ -73,6 +77,8 @@ fun OpportunitiesScreen(
         selectedLevel,
         onlyFavorites,
         onlyUrgent,
+        onlyWeeklySpecial,
+        selectedSource,
         selectedSort
     ) {
         var list = opportunities
@@ -83,6 +89,14 @@ fun OpportunitiesScreen(
 
         if (onlyUrgent) {
             list = list.filter { it.deadlineDaysRemaining <= 5 }
+        }
+
+        if (onlyWeeklySpecial) {
+            list = list.filter { it.isWeeklySpecial }
+        }
+
+        if (selectedSource != null) {
+            list = list.filter { it.sourceName.contains(selectedSource!!, ignoreCase = true) }
         }
 
         if (searchQuery.isNotBlank()) {
@@ -185,7 +199,7 @@ fun OpportunitiesScreen(
             ) {
                 // Tab "Tous"
                 item {
-                    val isAll = selectedSector == null && !onlyFavorites && !onlyUrgent
+                    val isAll = selectedSector == null && !onlyFavorites && !onlyUrgent && !onlyWeeklySpecial && selectedSource == null
                     FilterChipPill(
                         label = AppStrings.tabAll,
                         count = opportunities.size,
@@ -194,6 +208,8 @@ fun OpportunitiesScreen(
                             selectedSector = null
                             onlyFavorites = false
                             onlyUrgent = false
+                            onlyWeeklySpecial = false
+                            selectedSource = null
                         }
                     )
                 }
@@ -265,6 +281,49 @@ fun OpportunitiesScreen(
                             if (onlyUrgent) {
                                 selectedSector = null
                                 onlyFavorites = false
+                                onlyWeeklySpecial = false
+                                selectedSource = null
+                            }
+                        }
+                    )
+                }
+
+                // Tab "Cette Semaine" (Manasseb inspired)
+                item {
+                    FilterChipPill(
+                        label = autoTranslate("Cette Semaine"),
+                        count = weeklySpecialCount,
+                        isSelected = onlyWeeklySpecial,
+                        emoji = "🔥",
+                        activeColor = Tertiary,
+                        onClick = {
+                            onlyWeeklySpecial = !onlyWeeklySpecial
+                            if (onlyWeeklySpecial) {
+                                selectedSector = null
+                                onlyFavorites = false
+                                onlyUrgent = false
+                                selectedSource = null
+                            }
+                        }
+                    )
+                }
+
+                // Tab "Manasseb.com"
+                item {
+                    val isManasseb = selectedSource == "Manasseb"
+                    FilterChipPill(
+                        label = "Manasseb.com",
+                        count = manassebCount,
+                        isSelected = isManasseb,
+                        emoji = "🌐",
+                        activeColor = Secondary,
+                        onClick = {
+                            selectedSource = if (isManasseb) null else "Manasseb"
+                            if (selectedSource != null) {
+                                selectedSector = null
+                                onlyFavorites = false
+                                onlyUrgent = false
+                                onlyWeeklySpecial = false
                             }
                         }
                     )
@@ -842,6 +901,32 @@ fun CleanOpportunityCard(
                                 maxLines = 1
                             )
                         }
+
+                        // Source attribution badge
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.padding(top = 2.dp)
+                        ) {
+                            Text(
+                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "🌐 Manasseb.com" else "🏛️ Emploi-Public",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 10.sp,
+                                    color = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) Secondary else Primary,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            )
+                            if (opportunity.isWeeklySpecial) {
+                                Text(
+                                    text = "• 🔥 " + autoTranslate("Cette Semaine"),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontSize = 10.sp,
+                                        color = Tertiary,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -961,6 +1046,15 @@ fun CleanOpportunityCard(
                     backgroundColor = if (isUrgent) ErrorContainer else TertiaryFixed,
                     textColor = if (isUrgent) OnErrorContainer else OnTertiaryFixed
                 )
+
+                // Written Exam Date Badge if available
+                if (opportunity.examDate.isNotBlank()) {
+                    TagBadge(
+                        text = "📅 " + autoTranslate("Écrit :") + " " + opportunity.examDate,
+                        backgroundColor = SecondaryContainer.copy(alpha = 0.5f),
+                        textColor = OnSecondaryContainer
+                    )
+                }
             }
         }
     }

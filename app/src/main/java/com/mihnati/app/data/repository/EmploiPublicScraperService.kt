@@ -18,18 +18,49 @@ object EmploiPublicScraperService {
     private const val CLOUD_CDN_URL = "https://raw.githubusercontent.com/jobfinderMA/mihnati-scraper/main/scraper/scraped_data.json"
     private const val TIMEOUT_MS = 15000
 
-    suspend fun fetchLiveConcours(): List<EmploiPublicConcours> = withContext(Dispatchers.IO) {
-        val scrapedList = mutableListOf<EmploiPublicConcours>()
+    private var appContext: android.content.Context? = null
 
-        // 1. Try to fetch from the 24/7 Cloud CDN (GitHub Actions automated bot)
+    fun initContext(context: android.content.Context) {
+        appContext = context.applicationContext
+    }
+
+    fun loadScrapedJson(): String? {
+        // 1. Try bundled assets first for instant offline/online access
+        try {
+            appContext?.assets?.open("scraped_emploi_public.json")?.use { stream ->
+                val str = stream.bufferedReader().use { it.readText() }
+                if (str.isNotBlank()) return str
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Asset read fallback notice: ${e.message}")
+        }
+
+        // 2. Try Cloud CDN
         try {
             val url = java.net.URL(CLOUD_CDN_URL)
             val connection = url.openConnection() as java.net.HttpURLConnection
-            connection.connectTimeout = 8000
-            connection.readTimeout = 8000
+            connection.connectTimeout = 4000
+            connection.readTimeout = 4000
             connection.requestMethod = "GET"
             if (connection.responseCode == 200) {
-                val jsonString = connection.inputStream.bufferedReader().use { it.readText() }
+                val str = connection.inputStream.bufferedReader().use { it.readText() }
+                if (str.isNotBlank()) return str
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Cloud CDN fetch notice: ${e.message}")
+        }
+
+        return null
+    }
+
+
+    suspend fun fetchLiveConcours(): List<EmploiPublicConcours> = withContext(Dispatchers.IO) {
+        val scrapedList = mutableListOf<EmploiPublicConcours>()
+
+        // 1. Try to fetch from local asset or Cloud CDN (with Manasseb + Emploi-Public data)
+        try {
+            val jsonString = loadScrapedJson()
+            if (!jsonString.isNullOrBlank()) {
                 val root = org.json.JSONObject(jsonString)
                 val jsonArray = root.optJSONArray("concours")
                 if (jsonArray != null && jsonArray.length() > 0) {
@@ -41,16 +72,20 @@ object EmploiPublicScraperService {
                         val posts = obj.optInt("posts_count", 1)
                         val rawDeadline = obj.optString("deadline", "Novembre 2026")
                         val cleanDeadline = rawDeadline.replace("\n", " ").replace(Regex("\\s+"), " ").trim()
+                        val examDate = obj.optString("exam_date", "").ifEmpty { null }
                         val degree = obj.optString("degree_required", "Bac+5 / Master")
                         val detailUrl = obj.optString("detail_url", "${BASE_URL_FR}concours-liste")
                         val writtenListUrl = obj.optString("written_list_url", "")
+                        val rawSource = obj.optString("source", if (id.startsWith("manasseb")) "manasseb.com" else "emploi-public.ma")
+                        val source = if (rawSource.contains("manasseb", ignoreCase = true) || id.startsWith("manasseb")) "manasseb.com" else "emploi-public.ma"
+                        val isWeeklySpecial = obj.optBoolean("is_weekly_special", false)
 
                         val echelle = when {
                             title.contains("11") || title.contains("Ingénieur") || title.contains("Administrateur 2") -> 11
                             title.contains("10") || title.contains("Administrateur 3") -> 10
                             title.contains("9") || title.contains("Technicien 3") -> 9
                             title.contains("8") || title.contains("Adjoint") -> 8
-                            else -> 11
+                            else -> obj.optInt("echelle", 11)
                         }
 
                         val category = when {
@@ -58,13 +93,13 @@ object EmploiPublicScraperService {
                             admin.contains("Conseil", ignoreCase = true) || admin.contains("Cour", ignoreCase = true) -> AdministrationCategory.MINISTERE
                             admin.contains("Office", ignoreCase = true) || admin.contains("Agence", ignoreCase = true) -> AdministrationCategory.ETABLISSEMENT_PUBLIC
                             admin.contains("Province", ignoreCase = true) || admin.contains("Région", ignoreCase = true) || admin.contains("Commune", ignoreCase = true) -> AdministrationCategory.COLLECTIVITE
-                            else -> AdministrationCategory.MINISTERE
+                            else -> AdministrationCategory.ETABLISSEMENT_PUBLIC
                         }
 
                         scrapedList.add(
                             EmploiPublicConcours(
                                 id = id,
-                                reference = "EP-2026-${id.removePrefix("ep-").take(8).uppercase()}",
+                                reference = if (id.startsWith("manasseb")) "MNB-2026-${id.removePrefix("manasseb-").take(8).uppercase()}" else "EP-2026-${id.removePrefix("ep-").take(8).uppercase()}",
                                 titleAr = title,
                                 titleFr = title,
                                 administrationAr = admin,
@@ -77,17 +112,20 @@ object EmploiPublicScraperService {
                                 numPosts = posts,
                                 publishDate = "Octobre / Novembre 2026",
                                 deadlineDate = cleanDeadline,
-                                deadlineDaysRemaining = 5,
-                                location = "Rabat, Casablanca & Régions",
+                                deadlineDaysRemaining = if (cleanDeadline.contains("Novembre", ignoreCase = true)) 4 else 8,
+                                examDate = examDate,
+                                location = if (source.contains("manasseb")) "Régions du Maroc" else "Rabat, Casablanca & Régions",
                                 avisPdfUrl = writtenListUrl.ifEmpty { detailUrl },
-                                detailsUrl = detailUrl
+                                detailsUrl = detailUrl,
+                                source = source,
+                                isWeeklySpecial = isWeeklySpecial
                             )
                         )
                     }
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Cloud CDN fetch error: ${e.message}, falling back to direct scraper")
+            Log.w(TAG, "Scraped json load error: ${e.message}, falling back to direct scraper")
         }
 
         // 2. If Cloud CDN returned items, return them immediately
@@ -191,26 +229,63 @@ object EmploiPublicScraperService {
     suspend fun fetchLiveExamLists(): List<ConcoursExamList> = withContext(Dispatchers.IO) {
         val lists = mutableListOf<ConcoursExamList>()
 
-        // 1. Generate live convocations from Cloud CDN data if available
+        // 1. Generate live convocations from scraped data (including real Manasseb convocations)
         try {
-            val url = java.net.URL(CLOUD_CDN_URL)
-            val connection = url.openConnection() as java.net.HttpURLConnection
-            connection.connectTimeout = 8000
-            connection.readTimeout = 8000
-            connection.requestMethod = "GET"
-            if (connection.responseCode == 200) {
-                val jsonString = connection.inputStream.bufferedReader().use { it.readText() }
+            val jsonString = loadScrapedJson()
+            if (!jsonString.isNullOrBlank()) {
                 val root = org.json.JSONObject(jsonString)
+
+                // 1.1 Read real convocations list from Manasseb & Emploi-Public
+                val convArray = root.optJSONArray("convocations")
+                if (convArray != null && convArray.length() > 0) {
+                    for (i in 0 until convArray.length()) {
+                        val obj = convArray.getJSONObject(i)
+                        val id = obj.optString("id", "conv-$i")
+                        val concoursId = obj.optString("concours_id", "")
+                        val typeStr = obj.optString("type", "ECRIT")
+                        val title = obj.optString("title", "Convocation")
+                        val admin = obj.optString("administration", "Administration Publique")
+                        val examDate = obj.optString("exam_date", "Novembre / Décembre 2026")
+                        val center = obj.optString("exam_center", "Centre d'examen")
+                        val candidates = obj.optInt("candidates_count", 120)
+                        val pdfUrl = obj.optString("pdf_url", "https://www.manasseb.com")
+                        val source = obj.optString("source", "manasseb.com")
+
+                        val listType = if (typeStr.equals("ORAL", ignoreCase = true)) ExamListType.ORAL else ExamListType.ECRIT
+
+                        lists.add(
+                            ConcoursExamList(
+                                id = id,
+                                concoursId = concoursId,
+                                titleAr = title,
+                                titleFr = title,
+                                administration = admin,
+                                grade = title,
+                                echelle = 11,
+                                listType = listType,
+                                candidatesCount = candidates,
+                                examDate = examDate,
+                                examCenters = listOf(center),
+                                pdfDownloadUrl = pdfUrl,
+                                publishDate = "Novembre 2026",
+                                source = source
+                            )
+                        )
+                    }
+                }
+
+                // 1.2 Supplement with concours convocations
                 val jsonArray = root.optJSONArray("concours")
                 if (jsonArray != null && jsonArray.length() > 0) {
                     var listIdx = 1
-                    for (i in 0 until minOf(jsonArray.length(), 10)) {
+                    for (i in 0 until minOf(jsonArray.length(), 8)) {
                         val obj = jsonArray.getJSONObject(i)
                         val id = obj.optString("id", "ep-$i")
                         val title = obj.optString("title", "Concours")
                         val admin = obj.optString("administration", "Administration Publique")
                         val writtenListUrl = obj.optString("written_list_url", "")
                         val oralListUrl = obj.optString("oral_list_url", "")
+                        val source = obj.optString("source", "emploi-public.ma")
 
                         lists.add(
                             ConcoursExamList(
@@ -226,7 +301,8 @@ object EmploiPublicScraperService {
                                 examDate = "Novembre / Décembre 2026",
                                 examCenters = listOf("Rabat", "Casablanca", "Fès", "Marrakech"),
                                 pdfDownloadUrl = writtenListUrl.ifEmpty { "https://www.emploi-public.ma" },
-                                publishDate = "Novembre 2026"
+                                publishDate = "Novembre 2026",
+                                source = source
                             )
                         )
                         listIdx++
@@ -246,7 +322,8 @@ object EmploiPublicScraperService {
                                     examDate = "Décembre 2026",
                                     examCenters = listOf("Siège Central Rabat"),
                                     pdfDownloadUrl = oralListUrl.ifEmpty { "https://www.emploi-public.ma" },
-                                    publishDate = "Novembre 2026"
+                                    publishDate = "Novembre 2026",
+                                    source = source
                                 )
                             )
                             listIdx++
