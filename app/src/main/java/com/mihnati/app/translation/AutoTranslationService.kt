@@ -7,6 +7,7 @@ import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
+import com.mihnati.app.ui.theme.AppLanguage
 import com.mihnati.app.ui.theme.LanguageManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,21 +20,28 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.resume
 
 /**
- * On-Device Automatic Translation Service powered by Google ML Kit.
- * Handles on-the-fly French to Arabic translation at runtime without
+ * On-Device Automatic Bi-Directional Translation Service powered by Google ML Kit.
+ * Handles instant zero-latency French <-> Arabic translation at runtime without
  * requiring any hardcoded Arabic text in the codebase.
  */
 object AutoTranslationService {
-    private val options = TranslatorOptions.Builder()
+    private val frToArOptions = TranslatorOptions.Builder()
         .setSourceLanguage(TranslateLanguage.FRENCH)
         .setTargetLanguage(TranslateLanguage.ARABIC)
         .build()
 
-    private val translator: Translator = Translation.getClient(options)
-    
-    // In-memory cache for instant zero-latency lookups
-    private val cache = ConcurrentHashMap<String, String>()
-    
+    private val arToFrOptions = TranslatorOptions.Builder()
+        .setSourceLanguage(TranslateLanguage.ARABIC)
+        .setTargetLanguage(TranslateLanguage.FRENCH)
+        .build()
+
+    private val frToArTranslator: Translator = Translation.getClient(frToArOptions)
+    private val arToFrTranslator: Translator = Translation.getClient(arToFrOptions)
+
+    // In-memory dictionaries for instant 0ms lookups
+    private val frToArDict = ConcurrentHashMap<String, String>()
+    private val arToFrDict = ConcurrentHashMap<String, String>()
+
     private val _isModelReady = MutableStateFlow(false)
     val isModelReady: StateFlow<Boolean> = _isModelReady
 
@@ -45,23 +53,41 @@ object AutoTranslationService {
 
     fun initialize(context: Context) {
         try {
+            // 1. Load pre-bundled official Moroccan dictionary from assets
+            loadAssetDictionary(context)
+
+            // 2. Load disk cache
             val dir = File(context.filesDir, "mlkit_translations")
             if (!dir.exists()) dir.mkdirs()
-            cacheFile = File(dir, "fr_ar_cache.tsv")
-
-            // Load persisted cache entries from disk
+            cacheFile = File(dir, "bilingual_cache.tsv")
             loadDiskCache()
 
-            // Trigger Google ML Kit on-device model download
+            // 3. Trigger Google ML Kit on-device model download in background
             val conditions = DownloadConditions.Builder().build()
-            translator.downloadModelIfNeeded(conditions)
+            frToArTranslator.downloadModelIfNeeded(conditions)
                 .addOnSuccessListener {
                     _isModelReady.value = true
                 }
-                .addOnFailureListener {
-                    // Retry with standard conditions if needed
-                    _isModelReady.value = false
+            arToFrTranslator.downloadModelIfNeeded(conditions)
+        } catch (_: Exception) {}
+    }
+
+    private fun loadAssetDictionary(context: Context) {
+        try {
+            context.assets.open("mihnati_dictionary.tsv").bufferedReader().useLines { lines ->
+                lines.forEach { line ->
+                    val parts = line.split("\t")
+                    if (parts.size >= 2) {
+                        val fr = parts[0].trim()
+                        val ar = parts[1].trim()
+                        if (fr.isNotEmpty() && ar.isNotEmpty()) {
+                            frToArDict[fr] = ar
+                            arToFrDict[ar] = fr
+                            frToArDict[fr.lowercase()] = ar
+                        }
+                    }
                 }
+            }
         } catch (_: Exception) {}
     }
 
@@ -71,39 +97,64 @@ object AutoTranslationService {
         try {
             file.forEachLine { line ->
                 val parts = line.split("\t")
-                if (parts.size >= 2) {
-                    val key = parts[0].trim()
-                    val value = parts[1].trim()
-                    if (key.isNotEmpty() && value.isNotEmpty()) {
-                        cache[key] = value
+                if (parts.size >= 3) {
+                    val lang = parts[0].trim()
+                    val src = parts[1].trim()
+                    val dst = parts[2].trim()
+                    if (src.isNotEmpty() && dst.isNotEmpty()) {
+                        if (lang == "fr_ar") {
+                            frToArDict[src] = dst
+                        } else {
+                            arToFrDict[src] = dst
+                        }
                     }
                 }
             }
         } catch (_: Exception) {}
     }
 
-    private fun saveToDisk(source: String, translated: String) {
+    private fun saveToDisk(direction: String, source: String, translated: String) {
         val file = cacheFile ?: return
         scope.launch {
             try {
-                file.appendText("$source\t$translated\n")
+                file.appendText("$direction\t$source\t$translated\n")
             } catch (_: Exception) {}
         }
     }
 
-    /**
-     * Translates a single text from French to Arabic on-device using ML Kit.
-     */
-    suspend fun translate(text: String): String {
+    fun isTextArabic(text: String): Boolean {
+        for (char in text) {
+            val block = Character.UnicodeBlock.of(char)
+            if (block == Character.UnicodeBlock.ARABIC ||
+                block == Character.UnicodeBlock.ARABIC_SUPPLEMENT ||
+                block == Character.UnicodeBlock.ARABIC_EXTENDED_A ||
+                block == Character.UnicodeBlock.ARABIC_PRESENTATION_FORMS_A ||
+                block == Character.UnicodeBlock.ARABIC_PRESENTATION_FORMS_B) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun getArabic(frenchText: String): String? {
+        return frToArDict[frenchText] ?: frToArDict[frenchText.trim()] ?: frToArDict[frenchText.lowercase().trim()]
+    }
+
+    fun getFrench(arabicText: String): String? {
+        return arToFrDict[arabicText] ?: arToFrDict[arabicText.trim()]
+    }
+
+    suspend fun translateFrToAr(text: String): String {
         if (text.isBlank()) return text
-        cache[text]?.let { return it }
+        getArabic(text)?.let { return it }
 
         return suspendCancellableCoroutine { continuation ->
-            translator.translate(text)
+            frToArTranslator.translate(text)
                 .addOnSuccessListener { result ->
                     if (result.isNotBlank()) {
-                        cache[text] = result
-                        saveToDisk(text, result)
+                        frToArDict[text] = result
+                        arToFrDict[result] = text
+                        saveToDisk("fr_ar", text, result)
                         _translationVersion.value += 1
                         continuation.resume(result)
                     } else {
@@ -111,50 +162,70 @@ object AutoTranslationService {
                     }
                 }
                 .addOnFailureListener {
-                    // Fallback to source text if model is still downloading or offline
                     continuation.resume(text)
                 }
         }
     }
 
-    /**
-     * Batch translation for pre-warming UI elements.
-     */
-    fun preWarm(texts: List<String>) {
-        scope.launch {
-            texts.forEach { text ->
-                if (!cache.containsKey(text) && text.isNotBlank()) {
-                    translate(text)
-                }
-            }
-        }
-    }
+    suspend fun translateArToFr(text: String): String {
+        if (text.isBlank()) return text
+        getFrench(text)?.let { return it }
 
-    fun getCached(text: String): String? {
-        return cache[text]
+        return suspendCancellableCoroutine { continuation ->
+            arToFrTranslator.translate(text)
+                .addOnSuccessListener { result ->
+                    if (result.isNotBlank()) {
+                        arToFrDict[text] = result
+                        frToArDict[result] = text
+                        saveToDisk("ar_fr", text, result)
+                        _translationVersion.value += 1
+                        continuation.resume(result)
+                    } else {
+                        continuation.resume(text)
+                    }
+                }
+                .addOnFailureListener {
+                    continuation.resume(text)
+                }
+        }
     }
 }
 
 /**
- * Composable extension to automatically translate French text to Arabic
- * when Arabic mode is active using Google ML Kit.
+ * Reactive Composable extension to automatically translate UI strings
+ * to Arabic when Arabic mode is selected, or to French when French mode is selected.
+ * Reacts instantaneously to language swap.
  */
 @Composable
 fun autoTranslate(text: String): String {
-    val isArabic = LanguageManager.isArabic
-    if (!isArabic || text.isBlank()) return text
+    val currentLang by LanguageManager.currentLanguage.collectAsState()
+    val isArabic = currentLang == AppLanguage.ARABIC
 
-    // Quick lookup in cache
-    val cached = AutoTranslationService.getCached(text)
-    if (cached != null) return cached
+    if (text.isBlank()) return text
 
-    // Reactive state updated once ML Kit completes translation
-    var translated by remember(text, isArabic) { mutableStateOf(text) }
+    if (isArabic) {
+        if (AutoTranslationService.isTextArabic(text)) return text
 
-    LaunchedEffect(text, isArabic) {
-        val result = AutoTranslationService.translate(text)
-        translated = result
+        val cached = AutoTranslationService.getArabic(text)
+        if (cached != null) return cached
+
+        var translated by remember(text, currentLang) { mutableStateOf(text) }
+        LaunchedEffect(text, currentLang) {
+            val result = AutoTranslationService.translateFrToAr(text)
+            translated = result
+        }
+        return translated
+    } else {
+        if (!AutoTranslationService.isTextArabic(text)) return text
+
+        val cached = AutoTranslationService.getFrench(text)
+        if (cached != null) return cached
+
+        var translated by remember(text, currentLang) { mutableStateOf(text) }
+        LaunchedEffect(text, currentLang) {
+            val result = AutoTranslationService.translateArToFr(text)
+            translated = result
+        }
+        return translated
     }
-
-    return translated
 }

@@ -56,7 +56,9 @@ data class Opportunity(
     val sourceName: String = "Emploi-Public",
     val isWeeklySpecial: Boolean = false,
     val examDate: String = "",
-    val postsCount: Int = 1
+    val postsCount: Int = 1,
+    val titleAr: String = "",
+    val organizationAr: String = ""
 )
 
 data class Application(

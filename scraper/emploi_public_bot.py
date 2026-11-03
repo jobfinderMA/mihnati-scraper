@@ -357,10 +357,58 @@ def dispatch_whatsapp_notification(conv):
             logger.warning(f"[WhatsApp Gateway] Dispatch error: {e}")
 
 
-def scrape_manasseb_posts(limit=30):
+
+ADMIN_TRANSLATION_MAP = {
+    'جامعة ابن طفيل': ('Université Ibn Tofail - Kénitra', 'جامعة ابن طفيل - القنيطرة'),
+    'جامعة السلطان مولاي سليمان': ('Université Sultan Moulay Slimane - Béni Mellal', 'جامعة السلطان مولاي سليمان - بني ملال'),
+    'غرفة التجارة والصناعة والخدمات لدرعة تافيلالت': ('Chambre de Commerce CCIS Drâa-Tafilalet', 'غرفة التجارة والصناعة والخدمات لدرعة تافيلالت'),
+    'وكالة الحوض المائي لدرعة واد نون': ('Agence du Bassin Hydraulique de Drâa Oued Noun', 'وكالة الحوض المائي لدرعة واد نون'),
+    'إقليم زاكورة': ('Province de Zagora - Tazzarine', 'إقليم زاكورة - تازارين'),
+    'أطلس اون لاين': ('Atlas On Line (Royal Air Maroc)', 'أطلس أون لاين / الخطوط الملكية المغربية'),
+    'الخطوط الملكية المغربية': ('Royal Air Maroc (RAM)', 'الخطوط الملكية المغربية'),
+    'شركة التنمية المحلية مراكش مسافر': ('Société de Développement Local (SDL) Marrakech', 'شركة التنمية المحلية مراكش مسافر'),
+    'الشركة الجهوية متعددة الخدمات بني ملال': ('Société Régionale Multiservices (SRM) Béni Mellal', 'الشركة الجهوية متعددة الخدمات بني ملال - خنيفرة'),
+    'جامعة محمد الخامس': ('Université Mohammed V - Rabat', 'جامعة محمد الخامس - الرباط'),
+    'جامعة الحسن الثاني': ('Université Hassan II - Casablanca', 'جامعة الحسن الثاني - الدار البيضاء'),
+    'جامعة القاضي عياض': ('Université Cadi Ayyad - Marrakech', 'جامعة القاضي عياض - مراكش'),
+    'جامعة سيدي محمد بن عبد الله': ('Université Sidi Mohamed Ben Abdellah - Fès', 'جامعة سيدي محمد بن عبد الله - فاس'),
+}
+
+GRADE_TRANSLATION_MAP = {
+    'متصرف من الدرجة الثانية': ('Concours Administrateur 2ème grade (Échelle 11)', 'مباراة متصرف من الدرجة الثانية (السلم 11)'),
+    'متصرف من الدرجة الثالثة': ('Concours Administrateur 3ème grade (Échelle 10)', 'مباراة متصرف من الدرجة الثالثة (السلم 10)'),
+    'مهندس دولة من الدرجة الأولى': ("Concours Ingénieur d'État 1er grade (Échelle 11)", 'مباراة مهندس دولة من الدرجة الأولى (السلم 11)'),
+    'مهندس معماري من الدرجة الأولى': ('Concours Architecte 1er grade (Échelle 11)', 'مباراة مهندس معماري من الدرجة الأولى (السلم 11)'),
+    'تقني من الدرجة الثالثة': ('Concours Technicien 3ème grade (Échelle 9)', 'مباراة تقني من الدرجة الثالثة (السلم 9)'),
+    'تقني من الدرجة الرابعة': ('Concours Technicien 4ème grade (Échelle 8)', 'مباراة تقني من الدرجة الرابعة (السلم 8)'),
+    'مساعد تقني من الدرجة الثانية': ('Concours Adjoint Technique 2ème grade', 'مباراة مساعد تقني من الدرجة الثانية'),
+    'مساعد إداري من الدرجة الثانية': ('Concours Adjoint Administratif 2ème grade', 'مباراة مساعد إداري من الدرجة الثانية'),
+    'مستشار الهاتف': ('Recrutement Téléconseiller Clientèle', 'مباراة توظيف مستشار الهاتف'),
+    'مسؤول اداري ومالي': ('Recrutement Responsable Administratif et Financier', 'توظيف مسؤول إداري ومالي'),
+    'مسؤول': ("Recrutement Cadre Responsable d'exploitation", 'توظيف مسؤول'),
+}
+
+def translate_manasseb_fields(raw_text):
+    admin_fr = "Administration Publique"
+    admin_ar = "الإدارة العمومية"
+    for k, (v_fr, v_ar) in ADMIN_TRANSLATION_MAP.items():
+        if k in raw_text:
+            admin_fr, admin_ar = v_fr, v_ar
+            break
+
+    title_fr = "Concours de Recrutement"
+    title_ar = "مباراة توظيف"
+    for k, (v_fr, v_ar) in GRADE_TRANSLATION_MAP.items():
+        if k in raw_text:
+            title_fr, title_ar = v_fr, v_ar
+            break
+            
+    return admin_fr, admin_ar, title_fr, title_ar
+
+def scrape_manasseb_posts(limit=35):
     """
     Scrapes latest opportunities and convocations from Manasseb.com
-    via the official WordPress REST API.
+    via the official WordPress REST API with clean bilingual titles.
     """
     logger.info(f"Fetching latest opportunities from Manasseb.com (limit={limit})...")
     concours_list = []
@@ -372,22 +420,22 @@ def scrape_manasseb_posts(limit=30):
         if resp.status_code != 200:
             logger.warning(f"Manasseb API returned status code {resp.status_code}")
             return [], []
-        
+            
         posts = resp.json()
+        logger.info(f"Retrieved {len(posts)} posts from Manasseb.com")
+        
         for p in posts:
-            p_id = str(p.get('id', ''))
-            title = p.get('title', {}).get('rendered', '')
-            title = re.sub(r'&#8211;', '-', title)
-            title = re.sub(r'&#8217;', "'", title)
-            title = re.sub(r'&amp;', '&', title)
+            p_id = p.get('id', '')
+            raw_title = p.get('title', {}).get('rendered', '')
+            raw_title = BeautifulSoup(raw_title, 'html.parser').get_text().strip()
+            raw_title = re.sub(r'&#8211;', '-', raw_title)
+            raw_title = re.sub(r'&#8217;', "'", raw_title)
+            raw_title = re.sub(r'&amp;', '&', raw_title)
             link = p.get('link', '')
             c_html = p.get('content', {}).get('rendered', '')
             pub_date = p.get('date', '')[:10]
 
-            # Administration extraction
-            admin_match = re.search(r'(?:الإدارة المنظمة|المؤسسة)\s*:\s*([^<\n\r]+)', c_html)
-            admin = admin_match.group(1).strip() if admin_match else "Administration Publique"
-            admin = re.sub(r'<[^>]+>', '', admin).strip()
+            admin_fr, admin_ar, title_fr, title_ar = translate_manasseb_fields(raw_title)
 
             # Deadline extraction
             dl_match = re.search(r'آخر أجل(?: لإيداع الترشيحات)?\s*:\s*([^<\n\r]+)', c_html)
@@ -404,24 +452,24 @@ def scrape_manasseb_posts(limit=30):
 
             # Échelle extraction
             echelle = 11
-            if '11' in title or 'السلم 11' in c_html: echelle = 11
-            elif '10' in title or 'السلم 10' in c_html: echelle = 10
-            elif '9' in title or 'السلم 9' in c_html: echelle = 9
-            elif '8' in title or 'السلم 8' in c_html: echelle = 8
+            if '11' in raw_title or 'السلم 11' in c_html: echelle = 11
+            elif '10' in raw_title or 'السلم 10' in c_html: echelle = 10
+            elif '9' in raw_title or 'السلم 9' in c_html: echelle = 9
+            elif '8' in raw_title or 'السلم 8' in c_html: echelle = 8
 
             # Distinguish Convocations (Listes d'examen) from Concours
-            is_convocation = any(w in title for w in [
+            is_convocation = any(w in raw_title for w in [
                 'لائحة', 'لوائح', 'المدعوين', 'المرشحين', 'شفوي', 'كتابي', 'نتائج'
             ])
 
             if is_convocation:
-                conv_type = 'ORAL' if 'شفوي' in title else ('ECRIT' if 'كتابي' in title else 'RESULTAT')
+                conv_type = 'ORAL' if 'شفوي' in raw_title else ('ECRIT' if 'كتابي' in raw_title else 'RESULTAT')
                 convocations_list.append({
                     'id': f"manasseb-conv-{p_id}",
                     'concours_id': f"manasseb-{p_id}",
                     'type': conv_type,
-                    'title': title,
-                    'administration': admin,
+                    'title': f"{title_fr} ({conv_type})",
+                    'administration': admin_fr,
                     'exam_date': exam_date or deadline,
                     'exam_center': "Maroc",
                     'candidates_count': posts_count * 25,
@@ -431,12 +479,12 @@ def scrape_manasseb_posts(limit=30):
             else:
                 concours_list.append({
                     'id': f"manasseb-{p_id}",
-                    'title': title,
-                    'title_ar': title,
+                    'title': title_fr,
+                    'title_ar': title_ar,
                     'grade': f"Échelle {echelle}",
                     'echelle': str(echelle),
-                    'administration': admin,
-                    'administration_ar': admin,
+                    'administration': admin_fr,
+                    'administration_ar': admin_ar,
                     'speciality': "Administration & Métiers",
                     'degree_required': "Bac+3 / Bac+5 / Master / Licence",
                     'posts_count': posts_count,
@@ -451,28 +499,93 @@ def scrape_manasseb_posts(limit=30):
                     'source': 'manasseb.com',
                     'is_weekly_special': True
                 })
-
-        logger.info(f"Successfully scraped from Manasseb.com: {len(concours_list)} concours, {len(convocations_list)} convocations")
-        return concours_list, convocations_list
+        logger.info(f"Successfully processed from Manasseb.com: {len(concours_list)} concours, {len(convocations_list)} convocations")
     except Exception as e:
-        logger.warning(f"Error scraping Manasseb.com: {e}")
-        return [], []
+        logger.error(f"Error scraping Manasseb.com: {e}", exc_info=True)
+        
+    return concours_list, convocations_list
+
+def deduplicate_concours_and_convocations(concours_list, convocations_list):
+    """
+    Strict deduplication across all sources (Emploi-Public + Manasseb).
+    Eliminates identical titles, merges duplicate vacancies, and cleans lists.
+    """
+    # 1. Filter out convocations that were misplaced in concours array
+    clean_concours = []
+    for c in concours_list:
+        t_low = c.get('title', '').lower()
+        if any(w in t_low for w in ['publication de la liste', 'convoqués pour', 'examen écrit du concours', 'entretien oral']):
+            conv_type = 'ORAL' if 'oral' in t_low else 'ECRIT'
+            convocations_list.append({
+                'id': f"conv-{c.get('id', '')}",
+                'concours_id': c.get('id', ''),
+                'type': conv_type,
+                'title': c.get('title', ''),
+                'administration': c.get('administration', 'Administration Publique'),
+                'exam_date': c.get('deadline', 'Novembre 2026'),
+                'exam_center': "Maroc",
+                'candidates_count': c.get('posts_count', 1) * 30,
+                'pdf_url': c.get('written_list_url') or c.get('detail_url') or "https://www.emploi-public.ma",
+                'source': c.get('source') or 'emploi-public.ma'
+            })
+        else:
+            clean_concours.append(c)
+
+    # 2. Deduplicate concours by (normalized_admin, normalized_title)
+    seen_concours = {}
+    deduped_concours = []
+    for c in clean_concours:
+        t = c.get('title', '').lower()
+        a = c.get('administration', '').lower()
+        for w in ['avis', 'concours', 'recrutement', 'de', 'du', 'des', 'd', 'l', 'grade', 'echelle', 'poste', 'postes', '•', ':']:
+            t = t.replace(w, '')
+            a = a.replace(w, '')
+        t_clean = ' '.join(t.split())[:22]
+        a_clean = ' '.join(a.split())[:22]
+        key = (a_clean, t_clean)
+
+        if key in seen_concours:
+            existing = seen_concours[key]
+            # Accumulate posts count or take maximum
+            existing['posts_count'] = max(existing.get('posts_count', 1), c.get('posts_count', 1))
+            if not existing.get('exam_date') and c.get('exam_date'):
+                existing['exam_date'] = c.get('exam_date')
+            if 'manasseb' in c.get('source', '') and 'manasseb' not in existing.get('source', ''):
+                existing['source'] = 'emploi-public.ma + manasseb.com'
+        else:
+            seen_concours[key] = c
+            deduped_concours.append(c)
+
+    # 3. Deduplicate convocations
+    seen_convs = {}
+    deduped_convs = []
+    for conv in convocations_list:
+        key = (conv.get('administration', '').lower().strip()[:20], conv.get('type', ''), conv.get('exam_date', '').strip())
+        if key not in seen_convs:
+            seen_convs[key] = conv
+            deduped_convs.append(conv)
+
+    return deduped_concours, deduped_convs
 
 def save_to_database(concours_list, convocations_list):
-    """Saves scraped data to SQLite database."""
+    """Saves scraped concours and convocations into SQLite database."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+    
+    # Clear older scraped records to keep DB completely deduplicated & fresh
+    cursor.execute('DELETE FROM concours')
+    cursor.execute('DELETE FROM convocations')
     
     for c in concours_list:
         cursor.execute('''
             INSERT OR REPLACE INTO concours (
-                id, title, grade, echelle, administration, degree_required,
+                id, title, title_ar, echelle, administration, degree_required,
                 posts_count, deadline, detail_url, written_list_url, oral_list_url, updated_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
-            c['id'], c['title'], c['title'], c['echelle'], c['administration'],
-            c['degree_required'], c['posts_count'], c['deadline'], c['detail_url'],
-            c['written_list_url'], c['oral_list_url'], datetime.now().isoformat()
+            c['id'], c['title'], c.get('title_ar', c['title']), c.get('echelle', '11'), c['administration'],
+            c.get('degree_required', 'Bac+5'), c.get('posts_count', 1), c.get('deadline', 'Novembre 2026'),
+            c.get('detail_url', ''), c.get('written_list_url', ''), c.get('oral_list_url', ''), datetime.now().isoformat()
         ))
     
     for conv in convocations_list:
@@ -482,20 +595,20 @@ def save_to_database(concours_list, convocations_list):
                 exam_center, candidates_count, pdf_url
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
-            conv['id'], conv['concours_id'], conv['type'], conv['title'],
+            conv['id'], conv.get('concours_id', ''), conv['type'], conv['title'],
             conv['administration'], conv['exam_date'], conv['exam_center'],
             conv['candidates_count'], conv['pdf_url']
         ))
         
     conn.commit()
     conn.close()
-    logger.info(f"Database updated successfully: {DB_PATH}")
+    logger.info(f"Database updated successfully with {len(concours_list)} concours and {len(convocations_list)} convocations: {DB_PATH}")
 
 def export_json(concours_list, convocations_list):
     """Exports structured data to JSON for Mihnati Android application sync."""
     data = {
         'last_sync': datetime.now().isoformat(),
-        'source': 'https://www.emploi-public.ma',
+        'source': 'https://www.emploi-public.ma + https://www.manasseb.com',
         'concours_count': len(concours_list),
         'convocations_count': len(convocations_list),
         'concours': concours_list,
@@ -524,17 +637,20 @@ def run_job():
     
     try:
         init_database()
-        concours = scrape_concours_list(max_pages=3)
-        convocations = scrape_convocations_and_results(concours)
+        raw_concours = scrape_concours_list(max_pages=3)
+        raw_convocations = scrape_convocations_and_results(raw_concours)
         
-        # Scrape Manasseb.com for regional, university & municipal openings
-        manasseb_concours, manasseb_convocations = scrape_manasseb_posts(limit=25)
-        concours.extend(manasseb_concours)
-        convocations.extend(manasseb_convocations)
+        # Scrape Manasseb.com
+        manasseb_concours, manasseb_convocations = scrape_manasseb_posts(limit=30)
+        raw_concours.extend(manasseb_concours)
+        raw_convocations.extend(manasseb_convocations)
 
-        save_to_database(concours, convocations)
-        export_json(concours, convocations)
-        logger.info("Scrape job completed successfully!")
+        # STRICT DEDUPLICATION AND CLEANING
+        final_concours, final_convocations = deduplicate_concours_and_convocations(raw_concours, raw_convocations)
+
+        save_to_database(final_concours, final_convocations)
+        export_json(final_concours, final_convocations)
+        logger.info(f"Scrape job completed successfully! {len(final_concours)} deduplicated concours, {len(final_convocations)} convocations.")
     except Exception as e:
         logger.error(f"Error during scrape job: {e}", exc_info=True)
 

@@ -52,6 +52,10 @@ fun OpportunityDetailScreen(
     val applications by MihnatiRepository.applications.collectAsState()
     val userProfile by MihnatiRepository.userProfile.collectAsState()
     val opportunity = opportunities.find { it.id == opportunityId } ?: opportunities.firstOrNull()
+    val currentLang by com.mihnati.app.ui.theme.LanguageManager.currentLanguage.collectAsState()
+    val isArabic = currentLang == com.mihnati.app.ui.theme.AppLanguage.ARABIC
+    val orgDisplayName = if (opportunity != null && isArabic && opportunity.organizationAr.isNotBlank()) opportunity.organizationAr else autoTranslate(opportunity?.organization ?: "")
+    val titleDisplayName = if (opportunity != null && isArabic && opportunity.titleAr.isNotBlank()) opportunity.titleAr else autoTranslate(opportunity?.title ?: "")
     val existingApp = remember(applications, opportunity) {
         applications.find { it.opportunityId == opportunity?.id }
     }
@@ -262,7 +266,7 @@ fun OpportunityDetailScreen(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 Text(
-                                    text = autoTranslate(opportunity.organization),
+                                    text = orgDisplayName,
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         color = Secondary,
                                         fontWeight = FontWeight.Bold
@@ -283,7 +287,7 @@ fun OpportunityDetailScreen(
                     }
 
                     Text(
-                        text = autoTranslate(opportunity.title),
+                        text = titleDisplayName,
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnSurface,

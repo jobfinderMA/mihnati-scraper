@@ -628,47 +628,73 @@ object MihnatiRepository {
 
     fun mergeScrapedConcours(scrapedList: List<com.mihnati.app.data.model.EmploiPublicConcours>) {
         _opportunities.update { existing ->
-            val newOpportunities = scrapedList.map { c ->
-                val displaySourceName = if (c.source.contains("manasseb", ignoreCase = true) || c.id.startsWith("manasseb")) {
-                    "Manasseb.com"
-                } else {
-                    "Emploi-Public"
+            val seenKeys = mutableSetOf<String>()
+            val deduplicated = mutableListOf<Opportunity>()
+
+            // 1. Process and strictly deduplicate scraped opportunities
+            for (c in scrapedList) {
+                val cleanAdmin = c.administrationFr.lowercase().replace("universite", "").replace("ministere", "").replace("de", "").replace("l'", "").trim()
+                val cleanTitle = c.titleFr.lowercase().replace("concours", "").replace("recrutement", "").replace("avis", "").replace("de", "").trim()
+                val normKey = "${cleanAdmin.take(15)}_${cleanTitle.take(15)}_${c.echelle}"
+
+                if (!seenKeys.contains(normKey)) {
+                    seenKeys.add(normKey)
+                    val displaySourceName = if (c.source.contains("manasseb", ignoreCase = true) || c.id.startsWith("manasseb")) {
+                        "Manasseb.com"
+                    } else {
+                        "Emploi-Public"
+                    }
+                    deduplicated.add(
+                        Opportunity(
+                            id = c.id,
+                            title = if (c.titleFr.contains("poste", ignoreCase = true)) c.titleFr else "${c.titleFr} (${c.numPosts} postes)",
+                            titleAr = c.titleAr,
+                            organization = c.administrationFr,
+                            organizationAr = c.administrationAr,
+                            location = c.location,
+                            sectorType = SectorType.PUBLIC,
+                            reference = c.reference,
+                            deadline = c.deadlineDate,
+                            deadlineDaysRemaining = c.deadlineDaysRemaining,
+                            matchPercentage = if (c.echelle == 11) 96 else 88,
+                            degreeRequired = c.diplomaRequired,
+                            field = c.grade,
+                            experience = "Sans expérience requise",
+                            salary = "Grille indiciaire officielle (Échelle ${c.echelle})",
+                            contractType = "Concours National",
+                            description = "${c.titleFr}. Recrutement dans les services de l'administration marocaine. Diplôme requis : ${c.diplomaRequired}.",
+                            requiredDocuments = listOf(
+                                RequiredDocument("Demande manuscrite", "Adressée à Monsieur le Ministre / Directeur", isReady = true),
+                                RequiredDocument("Copie certifiée CIN", "Carte Nationale d'Identité électronique", isReady = true),
+                                RequiredDocument("Copie du Diplôme", c.diplomaRequired, isReady = true),
+                                RequiredDocument("Arrêté d'équivalence", "Pour diplômes étrangers ou privés", isReady = true),
+                                RequiredDocument("CV actualisé", "Format modèle fonction publique", isReady = true)
+                            ),
+                            workplaceName = c.administrationFr,
+                            workplaceDetail = "Services Centraux et Directions Régionales",
+                            sourceUrl = c.detailsUrl,
+                            sourceName = displaySourceName,
+                            isWeeklySpecial = c.isWeeklySpecial,
+                            examDate = c.examDate ?: "",
+                            postsCount = c.numPosts,
+                            isDemoData = false
+                        )
+                    )
                 }
-                Opportunity(
-                    id = c.id,
-                    title = if (c.titleFr.contains("poste", ignoreCase = true)) c.titleFr else "${c.titleFr} (${c.numPosts} postes)",
-                    organization = c.administrationFr,
-                    location = c.location,
-                    sectorType = SectorType.PUBLIC,
-                    reference = c.reference,
-                    deadline = c.deadlineDate,
-                    deadlineDaysRemaining = c.deadlineDaysRemaining,
-                    matchPercentage = if (c.echelle == 11) 96 else 88,
-                    degreeRequired = c.diplomaRequired,
-                    field = c.grade,
-                    experience = "Sans expérience requise",
-                    salary = "Grille indiciaire officielle (Échelle ${c.echelle})",
-                    contractType = "Concours National",
-                    description = "${c.titleFr}. Recrutement dans les services de l'administration marocaine. Diplôme requis : ${c.diplomaRequired}.",
-                    requiredDocuments = listOf(
-                        RequiredDocument("Demande manuscrite", "Adressée à Monsieur le Ministre / Directeur", isReady = true),
-                        RequiredDocument("Copie certifiée CIN", "Carte Nationale d'Identité électronique", isReady = true),
-                        RequiredDocument("Copie du Diplôme", c.diplomaRequired, isReady = true),
-                        RequiredDocument("Arrêté d'équivalence", "Pour diplômes étrangers ou privés", isReady = true),
-                        RequiredDocument("CV actualisé", "Format modèle fonction publique", isReady = true)
-                    ),
-                    workplaceName = c.administrationFr,
-                    workplaceDetail = "Services Centraux et Directions Régionales",
-                    sourceUrl = c.detailsUrl,
-                    sourceName = displaySourceName,
-                    isWeeklySpecial = c.isWeeklySpecial,
-                    examDate = c.examDate ?: "",
-                    postsCount = c.numPosts,
-                    isDemoData = false
-                )
             }
-            val existingIds = newOpportunities.map { it.id }.toSet()
-            newOpportunities + existing.filter { it.id !in existingIds }
+
+            // 2. Append non-duplicate existing opportunities
+            for (item in existing) {
+                val cleanAdmin = item.organization.lowercase().replace("universite", "").replace("ministere", "").replace("de", "").replace("l'", "").trim()
+                val cleanTitle = item.title.lowercase().replace("concours", "").replace("recrutement", "").replace("avis", "").replace("de", "").trim()
+                val normKey = "${cleanAdmin.take(15)}_${cleanTitle.take(15)}"
+                if (!seenKeys.contains(normKey) && !item.id.startsWith("ep-") && !item.id.startsWith("manasseb-")) {
+                    seenKeys.add(normKey)
+                    deduplicated.add(item)
+                }
+            }
+
+            deduplicated
         }
     }
 

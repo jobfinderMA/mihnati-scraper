@@ -68,7 +68,9 @@ object EmploiPublicScraperService {
                         val obj = jsonArray.getJSONObject(i)
                         val id = obj.optString("id", "ep-$i")
                         val title = obj.optString("title", "Concours de Recrutement")
+                        val titleAr = obj.optString("title_ar", title)
                         val admin = obj.optString("administration", "Administration Publique")
+                        val adminAr = obj.optString("administration_ar", admin)
                         val posts = obj.optInt("posts_count", 1)
                         val rawDeadline = obj.optString("deadline", "Novembre 2026")
                         val cleanDeadline = rawDeadline.replace("\n", " ").replace(Regex("\\s+"), " ").trim()
@@ -100,9 +102,9 @@ object EmploiPublicScraperService {
                             EmploiPublicConcours(
                                 id = id,
                                 reference = if (id.startsWith("manasseb")) "MNB-2026-${id.removePrefix("manasseb-").take(8).uppercase()}" else "EP-2026-${id.removePrefix("ep-").take(8).uppercase()}",
-                                titleAr = title,
+                                titleAr = titleAr,
                                 titleFr = title,
-                                administrationAr = admin,
+                                administrationAr = adminAr,
                                 administrationFr = admin,
                                 category = category,
                                 grade = title,

@@ -839,6 +839,11 @@ fun CleanOpportunityCard(
     onBookmarkToggle: () -> Unit,
     onOpenSalarySimulator: () -> Unit
 ) {
+    val currentLang by com.mihnati.app.ui.theme.LanguageManager.currentLanguage.collectAsState()
+    val isArabic = currentLang == com.mihnati.app.ui.theme.AppLanguage.ARABIC
+    val orgDisplayName = if (isArabic && opportunity.organizationAr.isNotBlank()) opportunity.organizationAr else autoTranslate(opportunity.organization)
+    val titleDisplayName = if (isArabic && opportunity.titleAr.isNotBlank()) opportunity.titleAr else autoTranslate(opportunity.title)
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -878,7 +883,7 @@ fun CleanOpportunityCard(
 
                     Column {
                         Text(
-                            text = autoTranslate(opportunity.organization),
+                            text = orgDisplayName,
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = OnSurface,
                                 fontWeight = FontWeight.Bold
@@ -946,7 +951,7 @@ fun CleanOpportunityCard(
 
             // Title
             Text(
-                text = autoTranslate(opportunity.title),
+                text = titleDisplayName,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = OnSurface,
