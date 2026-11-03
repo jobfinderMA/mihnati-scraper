@@ -667,11 +667,11 @@ fun DiplomaEligibilityBottomSheet(
                     HorizontalDivider(color = OnSecondaryContainer.copy(alpha = 0.2f))
 
                     Text(
-                        text = "✓ Accès ouvert par concours national (Décret n° 2-04-403 fixant le statut des cadres de l'État).",
+                        text = autoTranslate("✓ Accès ouvert par concours national (Décret n° 2-04-403 fixant le statut des cadres de l'État)."),
                         style = MaterialTheme.typography.bodySmall.copy(color = OnSecondaryContainer)
                     )
                     Text(
-                        text = "✓ Pour les diplômes d'écoles privées ou étrangères : Arrêté d'équivalence ministériel publié au B.O. obligatoire.",
+                        text = autoTranslate("✓ Pour les diplômes d'écoles privées ou étrangères : Arrêté d'équivalence ministériel publié au B.O. obligatoire."),
                         style = MaterialTheme.typography.bodySmall.copy(color = OnSecondaryContainer)
                     )
                 }

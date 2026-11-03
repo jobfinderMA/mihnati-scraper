@@ -398,7 +398,7 @@ fun ApplicationsScreen(
             },
             title = {
                 Text(
-                    text = "Convocation Officielle",
+                    text = autoTranslate("Convocation Officielle"),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -409,11 +409,11 @@ fun ApplicationsScreen(
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(
-                        text = "Organisme : ${app.organization}",
+                        text = "${autoTranslate("Organisme :")} ${autoTranslate(app.organization)}",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = "Référence : ${app.referenceNumber}",
+                        text = "${autoTranslate("Référence :")} ${app.referenceNumber}",
                         style = MaterialTheme.typography.bodyMedium.copy(color = Outline)
                     )
                     HorizontalDivider(color = SurfaceContainerHigh)
@@ -438,12 +438,12 @@ fun ApplicationsScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = PrimaryContainer)
                 ) {
-                    Text("Télécharger PDF")
+                    Text(autoTranslate("Télécharger PDF"))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showConvocationDialog = null }) {
-                    Text("Fermer")
+                    Text(autoTranslate("Fermer"))
                 }
             }
         )
@@ -456,7 +456,7 @@ fun ApplicationsScreen(
             onDismissRequest = { showNotesDialog = null },
             title = {
                 Text(
-                    text = "Notes personnelles",
+                    text = autoTranslate("Notes personnelles"),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             },
@@ -471,7 +471,7 @@ fun ApplicationsScreen(
                         onValueChange = { currentNoteText = it },
                         modifier = Modifier.fillMaxWidth(),
                         maxLines = 4,
-                        placeholder = { Text("Ex: Dossier légalisé déposé au bureau d'ordre") }
+                        placeholder = { Text(autoTranslate("Ex: Dossier légalisé déposé au bureau d'ordre")) }
                     )
                 }
             },
@@ -484,12 +484,12 @@ fun ApplicationsScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text("Enregistrer")
+                    Text(autoTranslate("Enregistrer"))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showNotesDialog = null }) {
-                    Text("Fermer")
+                    Text(autoTranslate("Fermer"))
                 }
             }
         )
@@ -535,7 +535,7 @@ fun ApplicationItemCard(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = "Admis & Retenu 🎉",
+                            text = autoTranslate("Admis & Retenu 🎉"),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = OnSecondaryContainer,
                                 fontWeight = FontWeight.Bold
@@ -543,7 +543,7 @@ fun ApplicationItemCard(
                         )
                     }
                     Text(
-                        text = "Offre validée",
+                        text = autoTranslate("Offre validée"),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Secondary,
                             fontWeight = FontWeight.Bold
@@ -695,7 +695,7 @@ fun ApplicationItemCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = "Notes : ${application.candidateNotes}",
+                        text = "${autoTranslate("Notes :")} ${application.candidateNotes}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurfaceVariant,
                             fontSize = 11.sp

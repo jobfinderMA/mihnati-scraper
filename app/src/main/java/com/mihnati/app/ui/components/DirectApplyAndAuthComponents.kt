@@ -1055,7 +1055,7 @@ fun GoogleSignInDialog(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Fermer")
+                Text(autoTranslate("Fermer"))
             }
         }
     )
@@ -1183,7 +1183,7 @@ fun WhatsAppGatewayConfigDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Fermer")
+                Text(autoTranslate("Fermer"))
             }
         }
     )
@@ -1312,11 +1312,11 @@ fun SecureDocumentUploadBottomSheet(
                     }
                     Column {
                         Text(
-                            text = "Téléversement Sécurisé & Vérifié",
+                            text = autoTranslate("Téléversement Sécurisé & Vérifié"),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Chiffrement AES-256 • Conforme concours publics",
+                            text = autoTranslate("Chiffrement AES-256 • Conforme concours publics"),
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -1342,7 +1342,7 @@ fun SecureDocumentUploadBottomSheet(
                     Icon(imageVector = Icons.Default.Security, contentDescription = null, tint = Secondary, modifier = Modifier.size(20.dp))
                     Column {
                         Text(
-                            text = "Contrôle d'authenticité et d'intégrité",
+                            text = autoTranslate("Contrôle d'authenticité et d'intégrité"),
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = OnSurface)
                         )
                         Text(
@@ -1641,11 +1641,11 @@ fun DirectApplicationBottomSheet(
                     }
                     Column {
                         Text(
-                            text = "Candidature Directe",
+                            text = autoTranslate("Candidature Directe"),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Dépôt électronique sécurisé via Mihnati",
+                            text = autoTranslate("Dépôt électronique sécurisé via Mihnati"),
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -1716,12 +1716,12 @@ fun DirectApplicationBottomSheet(
                         }
 
                         Text(
-                            text = "Candidature Déposée avec Succès !",
+                            text = autoTranslate("Candidature Déposée avec Succès !"),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.ExtraBold, color = OnSurface)
                         )
 
                         Text(
-                            text = "Votre récépissé électronique officiel de dépôt a été enregistré dans votre espace candidat.",
+                            text = autoTranslate("Votre récépissé électronique officiel de dépôt a été enregistré dans votre espace candidat."),
                             style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Center, color = OnSurfaceVariant)
                         )
 
@@ -1772,7 +1772,7 @@ fun DirectApplicationBottomSheet(
             } else {
                 // Checklist of Required Documents
                 Text(
-                    text = "PIÈCES EXIGÉES POUR CE RECRUTEMENT :",
+                    text = autoTranslate("PIÈCES EXIGÉES POUR CE RECRUTEMENT :"),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         color = Outline,
@@ -1837,7 +1837,7 @@ fun DirectApplicationBottomSheet(
                             }
                             Column {
                                 Text(
-                                    text = "Alertes Convocations WhatsApp (100% Automatique)",
+                                    text = autoTranslate("Alertes Convocations WhatsApp (100% Automatique)"),
                                     style = MaterialTheme.typography.labelSmall.copy(
                                         fontWeight = FontWeight.Bold,
                                         color = Color(0xFF0F5132)

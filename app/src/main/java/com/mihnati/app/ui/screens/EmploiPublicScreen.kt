@@ -129,7 +129,7 @@ fun EmploiPublicScreen(
                         }
                         Column {
                             Text(
-                                text = "Portail Emploi-Public.ma",
+                                text = autoTranslate("Portail Emploi-Public.ma"),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White
@@ -167,7 +167,7 @@ fun EmploiPublicScreen(
                                 strokeWidth = 2.dp
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = "Scraping...", style = MaterialTheme.typography.labelSmall)
+                            Text(text = autoTranslate("Scraping..."), style = MaterialTheme.typography.labelSmall)
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Sync,
@@ -176,7 +176,7 @@ fun EmploiPublicScreen(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Actualiser",
+                                text = autoTranslate("Actualiser"),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -411,28 +411,28 @@ private fun ConcoursTabContent(
                     FilterChip(
                         selected = selectedEchelle == 0,
                         onClick = { onEchelleSelected(0) },
-                        label = { Text("Toutes échelles (${concoursList.size})") }
+                        label = { Text("${autoTranslate("Toutes échelles")} (${concoursList.size})") }
                     )
                 }
                 item {
                     FilterChip(
                         selected = selectedEchelle == 11,
                         onClick = { onEchelleSelected(if (selectedEchelle == 11) 0 else 11) },
-                        label = { Text("Échelle 11 (Master / Ingénieur)") }
+                        label = { Text(autoTranslate("Échelle 11 (Master / Ingénieur)")) }
                     )
                 }
                 item {
                     FilterChip(
                         selected = selectedEchelle == 10,
                         onClick = { onEchelleSelected(if (selectedEchelle == 10) 0 else 10) },
-                        label = { Text("Échelle 10 (Licence)") }
+                        label = { Text(autoTranslate("Échelle 10 (Licence)")) }
                     )
                 }
                 item {
                     FilterChip(
                         selected = selectedEchelle == 9,
                         onClick = { onEchelleSelected(if (selectedEchelle == 9) 0 else 9) },
-                        label = { Text("Échelle 9 (DUT / BTS)") }
+                        label = { Text(autoTranslate("Échelle 9 (DUT / BTS)")) }
                     )
                 }
             }
@@ -480,7 +480,7 @@ private fun ConcoursCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "👥 ${concours.numPosts} postes",
+                        text = "👥 ${concours.numPosts} ${autoTranslate("postes")}",
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = Secondary
@@ -550,7 +550,7 @@ private fun ConcoursCard(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "🎓 Diplôme requis : ", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(text = autoTranslate("🎓 Diplôme requis : "), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                         Text(
                             text = concours.diplomaRequired,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
@@ -559,7 +559,7 @@ private fun ConcoursCard(
                         )
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "⏰ Date limite : ", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(text = autoTranslate("⏰ Date limite : "), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                         Text(
                             text = "${concours.deadlineDate} (reste ${concours.deadlineDaysRemaining} jours)",
                             style = MaterialTheme.typography.labelSmall.copy(
@@ -586,7 +586,7 @@ private fun ConcoursCard(
                 ) {
                     Icon(imageVector = Icons.Default.PictureAsPdf, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Avis PDF", style = MaterialTheme.typography.labelSmall)
+                    Text(text = autoTranslate("Avis PDF"), style = MaterialTheme.typography.labelSmall)
                 }
 
                 Button(
@@ -598,7 +598,7 @@ private fun ConcoursCard(
                 ) {
                     Icon(imageVector = Icons.Default.BookmarkAdd, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Suivre dossier", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                    Text(text = autoTranslate("Suivre dossier"), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                 }
             }
         }
@@ -633,7 +633,7 @@ private fun ExamListsTabContent(
                     FilterChip(
                         selected = selectedType == null,
                         onClick = { onTypeSelected(null) },
-                        label = { Text("Toutes les listes (${lists.size})") }
+                        label = { Text("${autoTranslate("Toutes les listes")} (${lists.size})") }
                     )
                 }
                 items(ExamListType.values()) { type ->
@@ -742,7 +742,7 @@ private fun ExamListCard(
                     )
                 }
                 Text(
-                    text = "📋 ${exam.candidatesCount} candidats",
+                    text = "📋 ${exam.candidatesCount} ${autoTranslate("candidats")}",
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Secondary,
                         fontWeight = FontWeight.Bold
@@ -762,11 +762,11 @@ private fun ExamListCard(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "📅 Date d'épreuve : ", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(text = autoTranslate("📅 Date d'épreuve : "), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                         Text(text = exam.examDate, style = MaterialTheme.typography.bodySmall)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "📍 Centres : ", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        Text(text = autoTranslate("📍 Centres : "), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                         Text(
                             text = exam.examCenters.joinToString(", "),
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
@@ -791,7 +791,7 @@ private fun ExamListCard(
                 ) {
                     Icon(imageVector = Icons.Default.Description, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Télécharger Liste PDF", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                    Text(text = autoTranslate("Télécharger Liste PDF"), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                 }
 
                 OutlinedButton(
@@ -802,7 +802,7 @@ private fun ExamListCard(
                 ) {
                     Icon(imageVector = Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Rappel Agenda", style = MaterialTheme.typography.labelSmall)
+                    Text(text = autoTranslate("Rappel Agenda"), style = MaterialTheme.typography.labelSmall)
                 }
             }
         }
@@ -831,7 +831,7 @@ private fun GradesTabContent(grades: List<EmploiPublicGrade>) {
             ) {
                 Column {
                     Text(
-                        text = "Échelles & Rémunérations dans la Fonction Publique",
+                        text = autoTranslate("Échelles & Rémunérations dans la Fonction Publique"),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold,
                             color = OnPrimaryFixed
@@ -839,7 +839,7 @@ private fun GradesTabContent(grades: List<EmploiPublicGrade>) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Grille officielle de correspondance entre vos diplômes d'études supérieures et les grades de recrutement au Maroc (Statut Général de la Fonction Publique).",
+                        text = autoTranslate("Grille officielle de correspondance entre vos diplômes d'études supérieures et les grades de recrutement au Maroc (Statut Général de la Fonction Publique)."),
                         style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                     )
                 }
@@ -901,7 +901,7 @@ private fun GradeCard(grade: EmploiPublicGrade) {
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = "Échelle ${grade.echelle}",
+                        text = "${autoTranslate("Échelle")} ${grade.echelle}",
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Secondary,
                             fontWeight = FontWeight.Bold
@@ -930,7 +930,7 @@ private fun GradeCard(grade: EmploiPublicGrade) {
             ) {
                 Row(verticalAlignment = Alignment.Top) {
                     Text(
-                        text = "🎓 Diplômes éligibles : ",
+                        text = autoTranslate("🎓 Diplômes éligibles : "),
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(
@@ -940,7 +940,7 @@ private fun GradeCard(grade: EmploiPublicGrade) {
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "💰 Salaire net indicatif : ",
+                        text = autoTranslate("💰 Salaire net indicatif : "),
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(

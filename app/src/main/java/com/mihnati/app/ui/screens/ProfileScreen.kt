@@ -548,7 +548,7 @@ fun ProfileScreen(
                                                 modifier = Modifier.size(11.dp)
                                             )
                                             Text(
-                                                text = "Vérifié",
+                                                text = autoTranslate("Vérifié"),
                                                 style = MaterialTheme.typography.labelSmall.copy(
                                                     fontSize = 10.sp,
                                                     color = OnSecondaryContainer,
@@ -1282,7 +1282,7 @@ fun ProfileScreen(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        text = "Session & Démonstration",
+                        text = autoTranslate("Session & Démonstration"),
                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold, color = OnSurface)
                     )
 

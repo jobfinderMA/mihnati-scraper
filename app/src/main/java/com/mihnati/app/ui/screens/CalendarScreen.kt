@@ -304,8 +304,8 @@ fun CalendarScreen(
                     OutlinedTextField(
                         value = newEventOrg,
                         onValueChange = { newEventOrg = it },
-                        label = { Text("Organisme ou Ministère") },
-                        placeholder = { Text("Ex: Ministère ou Wilaya") },
+                        label = { Text(autoTranslate("Organisme ou Ministère")) },
+                        placeholder = { Text(autoTranslate("Ex: Ministère ou Wilaya")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -314,14 +314,14 @@ fun CalendarScreen(
                         OutlinedTextField(
                             value = newEventDate,
                             onValueChange = { newEventDate = it },
-                            label = { Text("Date") },
+                            label = { Text(autoTranslate("Date")) },
                             singleLine = true,
                             modifier = Modifier.weight(1f)
                         )
                         OutlinedTextField(
                             value = newEventTime,
                             onValueChange = { newEventTime = it },
-                            label = { Text("Heure") },
+                            label = { Text(autoTranslate("Heure")) },
                             singleLine = true,
                             modifier = Modifier.weight(1f)
                         )
@@ -330,8 +330,8 @@ fun CalendarScreen(
                     OutlinedTextField(
                         value = newEventLocation,
                         onValueChange = { newEventLocation = it },
-                        label = { Text("Lieu") },
-                        placeholder = { Text("Ex: Faculté ou En ligne") },
+                        label = { Text(autoTranslate("Lieu")) },
+                        placeholder = { Text(autoTranslate("Ex: Faculté ou En ligne")) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -365,12 +365,12 @@ fun CalendarScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                 ) {
-                    Text("Ajouter")
+                    Text(autoTranslate("Ajouter"))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddEventDialog = false }) {
-                    Text("Annuler")
+                    Text(autoTranslate("Annuler"))
                 }
             }
         )
