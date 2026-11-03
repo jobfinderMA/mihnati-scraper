@@ -68,9 +68,11 @@ object EmploiPublicScraperService {
                         val obj = jsonArray.getJSONObject(i)
                         val id = obj.optString("id", "ep-$i")
                         val title = obj.optString("title", "Concours de Recrutement")
-                        val titleAr = obj.optString("title_ar", title)
+                        val rawTitleAr = obj.optString("title_ar", "")
+                        val titleAr = if (rawTitleAr.isNotBlank() && !rawTitleAr.equals("null", ignoreCase = true) && com.mihnati.app.translation.AutoTranslationService.isTextArabic(rawTitleAr)) rawTitleAr else ""
                         val admin = obj.optString("administration", "Administration Publique")
-                        val adminAr = obj.optString("administration_ar", admin)
+                        val rawAdminAr = obj.optString("administration_ar", "")
+                        val adminAr = if (rawAdminAr.isNotBlank() && !rawAdminAr.equals("null", ignoreCase = true) && com.mihnati.app.translation.AutoTranslationService.isTextArabic(rawAdminAr)) rawAdminAr else ""
                         val posts = obj.optInt("posts_count", 1)
                         val rawDeadline = obj.optString("deadline", "Novembre 2026")
                         val cleanDeadline = rawDeadline.replace("\n", " ").replace(Regex("\\s+"), " ").trim()

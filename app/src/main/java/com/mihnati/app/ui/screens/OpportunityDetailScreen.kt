@@ -54,8 +54,33 @@ fun OpportunityDetailScreen(
     val opportunity = opportunities.find { it.id == opportunityId } ?: opportunities.firstOrNull()
     val currentLang by com.mihnati.app.ui.theme.LanguageManager.currentLanguage.collectAsState()
     val isArabic = currentLang == com.mihnati.app.ui.theme.AppLanguage.ARABIC
-    val orgDisplayName = if (opportunity != null && isArabic && opportunity.organizationAr.isNotBlank()) opportunity.organizationAr else autoTranslate(opportunity?.organization ?: "")
-    val titleDisplayName = if (opportunity != null && isArabic && opportunity.titleAr.isNotBlank()) opportunity.titleAr else autoTranslate(opportunity?.title ?: "")
+    val orgDisplayName = if (isArabic) {
+        if (opportunity != null && opportunity.organizationAr.isNotBlank() && com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.organizationAr)) {
+            opportunity.organizationAr
+        } else {
+            autoTranslate(opportunity?.organization ?: "")
+        }
+    } else {
+        if (opportunity != null && com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.organization)) {
+            autoTranslate(opportunity.organization)
+        } else {
+            opportunity?.organization ?: ""
+        }
+    }
+
+    val titleDisplayName = if (isArabic) {
+        if (opportunity != null && opportunity.titleAr.isNotBlank() && com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.titleAr)) {
+            opportunity.titleAr
+        } else {
+            autoTranslate(opportunity?.title ?: "")
+        }
+    } else {
+        if (opportunity != null && com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.title)) {
+            autoTranslate(opportunity.title)
+        } else {
+            opportunity?.title ?: ""
+        }
+    }
     val existingApp = remember(applications, opportunity) {
         applications.find { it.opportunityId == opportunity?.id }
     }

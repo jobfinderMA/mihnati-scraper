@@ -65,11 +65,15 @@ object AutoTranslationService {
             // 1. Load comprehensive pre-bundled official Moroccan dictionary from assets
             loadAssetDictionary(context)
 
-            // 2. Load disk cache
+            // 2. Clear old disk cache to purge stale bad translations
             val dir = File(context.filesDir, "mlkit_translations")
-            if (!dir.exists()) dir.mkdirs()
+            if (dir.exists()) {
+                val oldFile = File(dir, "bilingual_cache.tsv")
+                if (oldFile.exists()) oldFile.delete()
+            } else {
+                dir.mkdirs()
+            }
             cacheFile = File(dir, "bilingual_cache.tsv")
-            loadDiskCache()
 
             // 3. Trigger Google ML Kit on-device model download in background for unmapped dynamic text
             val conditions = DownloadConditions.Builder().build()

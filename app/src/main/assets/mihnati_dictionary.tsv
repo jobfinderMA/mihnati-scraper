@@ -69,6 +69,7 @@ Alertes Système Android	إشعارات نظام الأندرويد
 Alertes synchronisées avec emploi-public.ma et vos candidatures	إشعارات متزامنة مع التشغيل العمومي وترشيحاتك
 Annulation du concours	إلغاء المباراة
 Annulation du concours de recrutement d'	إلغاء مباراة توظيف
+Annulation du concours de recrutement d'un Administrateur 2ème grade - Echelle 11	إلغاء مباراة توظيف متصرف من الدرجة الثانية - السلم 11
 Annuler	إلغاء
 Années	السنوات
 Apparence & Mode Sombre	المظهر والوضع الليلي
@@ -88,15 +89,34 @@ Authentification officielle Google Play	توثيق رسمي عبر Google Play
 Avis PDF	إعلان PDF
 Avis de concours de recrutement	إعلان مباراة توظيف
 Avis de concours de recrutement d'	إعلان مباراة توظيف
+Avis de concours de recrutement d'un	إعلان مباراة توظيف
 Avis de concours de recrutement de	إعلان مباراة توظيف
+Avis de concours de recrutement de Adjoint technique 2ème grade	إعلان مباراة توظيف مساعد تقني من الدرجة الثانية
+Avis de concours de recrutement de Administrateur 2ème grade - Echelle 11	إعلان مباراة توظيف متصرف من الدرجة الثانية - السلم 11
+Avis de concours de recrutement de Ingénieur d'Etat 1er grade - Echelle 11	إعلان مباراة توظيف مهندس دولة من الدرجة الأولى - السلم 11
+Avis de concours de recrutement de Secrétaire juridique adjoint de 4ème grade	إعلان مباراة توظيف محرر قضائي من الدرجة الرابعة
+Avis de concours de recrutement de Technicien de 3ème grade - Echelle 9	إعلان مباراة توظيف تقني من الدرجة الثالثة - السلم 9
+Avis de concours de recrutement de Élèves officiers - Echelle 10	إعلان مباراة توظيف تلاميذ ضباط - السلم 10
+BAC + 2	بكالوريا + 2
+BAC + 3	بكالوريا + 3
+BAC + 5	بكالوريا + 5
+BAC + 5 / ماجستير / مهندس الدولة	بكالوريا + 5 / ماستر / مهندس دولة
+BAC+2	بكالوريا + 2
+BAC+3	بكالوريا + 3
+BAC+5	بكالوريا + 5
 BOÎTE À OUTILS CONCOURS 2026	حقيبة أدوات المباريات 2026
+Bac+2	بكالوريا + 2
 Bac+2 / DUT / BTS	باك + 2 / تقني متخصص
-Bac+2 / DUT / BTS / Licence	باك + 2 / تقني متخصص / إجازة
-Bac+2 / DUT / BTS / Technicien Spécialisé	باك + 2 / تقني متخصص
-Bac+3 / Licence	باك + 3 / إجازة
+Bac+2 / DUT / BTS / Licence	بكالوريا + 2 / دبلوم تقني / إجازة
+Bac+2 / DUT / BTS / Technicien Spécialisé	بكالوريا + 2 / تقني متخصص / DUT / BTS
+Bac+3	بكالوريا + 3
+Bac+3 / Bac+5 / Master / Licence	بكالوريا + 3 / بكالوريا + 5 / ماستر / إجازة
+Bac+3 / Licence	بكالوريا + 3 / إجازة
 Bac+3 à Bac+5	باك + 3 إلى باك + 5
+Bac+5	بكالوريا + 5
+Bac+5 / Master	بكالوريا + 5 / ماستر
 Bac+5 / Master / Ingénieur	باك + 5 / ماستر / مهندس دولة
-Bac+5 / Master / Ingénieur d'État	باك + 5 / ماستر / مهندس دولة
+Bac+5 / Master / Ingénieur d'État	بكالوريا + 5 / ماستر / مهندس دولة
 Bac+5 Master / Ingénieur	باك + 5 ماستر / مهندس دولة
 Banque & Finance	البنوك والمالية
 Benslimane	بنسليمان
@@ -149,10 +169,16 @@ Compétences techniques & Domaines	الكفاءات التقنية والمجا�
 Concours	مباراة
 Concours :	مباراة :
 Concours National	مباراة وطنية
+Concours National • Administrateur 2ème grade	مباراة وطنية • متصرف من الدرجة الثانية
 Concours Publics	مباريات الوظيفة العمومية
 Concours de Recrutement	مباراة توظيف
 Concours de Recrutement :	مباراة توظيف :
-Concours de recrutement	مباراة توظيف
+Concours de recrutement	مباراة التوظيف
+Concours de recrutement Adjoint Administratif	مباراة توظيف مساعد إداري
+Concours de recrutement Adjoint Technique	مباراة توظيف مساعد تقني
+Concours de recrutement Administrateur	مباراة توظيف متصرف
+Concours de recrutement Ingénieur	مباراة توظيف مهندس
+Concours de recrutement Technicien	مباراة توظيف تقني
 Concours ouverts	مباريات مفتوحة
 Configuration Passerelle WhatsApp	إعداد بوابة الواتساب
 Configurer la passerelle Green-API	تهيئة بوابة Green-API
@@ -188,6 +214,9 @@ Date	التاريخ
 Date d'examen :	تاريخ الاختبار :
 Date de dépôt :	تاريخ الإيداع :
 Date de l'épreuve écrite	تاريخ إجراء الاختبار الكتابي
+Date du concours	تاريخ إجراء المباراة
+Dernier délai	آخر أجل
+Dernier délai de dépôt des candidatures	آخر أجل لإيداع الترشيحات
 Description du poste	الوصف الوظيفي
 Devoir de réserve	واجب التحفظ
 Diplômes & Formations	الشواهد والتكوينات
@@ -283,6 +312,7 @@ Grille indiciaire officielle du Royaume du Maroc	شبكة الأرقام الا�
 Grille officielle de correspondance entre vos diplômes d'études supérieures et les grades de recrutement au Maroc (Statut Général de la Fonction Publique).	الجدول الرسمي لمطابقة دبلومات التعليم العالي ودرجات التوظيف بالمغرب (النظام الأساسي العام للوظيفة العمومية).
 Guide des concours marocains	دليل المباريات المغربية
 Gérer	إدارة
+Haut Commissariat au Plan	المندوبية السامية للتخطيط
 Haut commissariat au plan	المندوبية السامية للتخطيط
 Heure	الوقت
 Hiérarchie	التسلسل الإداري
@@ -304,6 +334,9 @@ Invité	زائر
 Inwi	إنوي
 J-1	باقي يوم واحد
 J-10	باقي 10 أيام
+J-11	باقي 11 يوماً
+J-12	باقي 12 يوماً
+J-13	باقي 13 يوماً
 J-14	باقي 14 يوماً
 J-15	باقي 15 يوماً
 J-16	باقي 16 يوماً
@@ -316,6 +349,7 @@ J-5	باقي 5 أيام
 J-6	باقي 6 أيام
 J-7	باقي 7 أيام
 J-8	باقي 8 أيام
+J-9	باقي 9 أيام
 Janvier 2027	يناير 2027
 Kénitra	القنيطرة
 Lettre Motivation	رسالة التحفيز
@@ -339,6 +373,8 @@ Manasseb.com	مناصب دوت كوم
 Maroc	المملكة المغربية
 Maroc Telecom	اتصالات المغرب
 Marrakech	مراكش
+Master / Ingénieur d'État	ماستر / مهندس دولة
+Master / Ingénieur d'État (Échelle 11)	ماستر / مهندس دولة (السلم 11)
 Masters & Formations	ماستر وتدريب
 Masters & Stages	ماستر وتدريب
 Maîtrise linguistique	إتقان اللغات
@@ -363,6 +399,7 @@ Ministère de la Justice	وزارة العدل
 Ministère de la Santé	وزارة الصحة
 Ministère de la Santé et de la Protection Sociale	وزارة الصحة والحماية الاجتماعية
 Ministère de l’Agriculture, de la Pêche Maritime	وزارة الفلاحة والصيد البحري والتنمية القروية
+Ministère de l’Agriculture, de la Pêche maritime et de la Souveraineté alimentaire - Département de l’Agriculture	وزارة الفلاحة والصيد البحري والتنمية القروية والمياه والغابات - قطاع الفلاحة
 Ministère de l’intérieur	وزارة الداخلية
 Ministère ou Organisme	الوزارة أو المؤسسة
 Ministères, offices nationaux et collectivités	الوزارات، المكاتب الوطنية والجماعات الترابية
@@ -381,6 +418,7 @@ National / Rabat	وطني / الرباط
 Niveau hiérarchique minimum :	المستوى الإداري الأدنى :
 Nom complet	الاسم الكامل
 Nom et Prénom	الاسم والنسب
+Nombre de postes	عدد المناصب
 Non connecté	غير متصل
 Notes :	الملاحظات :
 Notes personnelles	ملاحظات شخصية
@@ -397,7 +435,7 @@ Numéro de dossier :	رقم الملف :
 OBSERVATOIRE DE L'EMPLOI PUBLIC 2026	مرصد الوظيفة العمومية 2026
 OCP Group	مجموعة المكتب الشريف للفوسفاط (OCP)
 Officiel & Vérifié	رسمي وموثق
-Officiel emploi-public.ma	بوابة التشغيل العمومي الرسمية
+Officiel emploi-public.ma	رسمي • التشغيل العمومي
 Offre validée	تم قبول الترشيح
 Offres Secteur Privé ciblées Bac+5	عروض القطاع الخاص لحاملي باك+5
 Opportunité introuvable	الفرصة غير متوفرة
@@ -462,11 +500,19 @@ Rappeler le devoir d'obéissance hiérarchique selon le Statut Général de la F
 Rappels des dates limites	تذكيرات بآخر الآجال
 Rechercher	بحث
 Rechercher concours, poste, ministère...	ابحث عن مباراة، وظيفة، وزارة...
+Recrutement	توظيف
+Recrutement Cadre Responsable d'exploitation	توظيف إطار مسؤول عن الاستغلال
+Recrutement Responsable Administratif et Financier	توظيف مسؤول إداري ومالي
+Recrutement Téléconseiller Clientèle	توظيف مستشار خدمة الزبناء عبر الهاتف
 Recrutement actif 2026	مباريات توظيف نشطة 2026
 Rejoignez la Direction des Systèmes d'Information pour concevoir les architectures microservices et portails digitaux clients B2C/B2B.	انضم إلى مديرية نظم المعلومات لتطوير بنيات الخدمات المصغرة والبوابات الرقمية للزبناء.
 Responsable Administratif et Financier	مسؤول إداري ومالي
 Responsable Recrutement & Marque Employeur	مسؤول التوظيف والعلامة التجارية للمشغل
 Restants	متبقية
+Restants 2j	متبقي يومان
+Restants 3j	متبقية 3 أيام
+Restants 4j	متبقية 4 أيام
+Restants 5j	متبقية 5 أيام
 Retenues sociales (CMR & AMO) :	الاقتطاعات الاجتماعية (التقاعد والتغطية الصحية) :
 Retour	رجوع
 Revue	المراجعة والتدقيق
@@ -503,6 +549,7 @@ Scraping...	جاري الجلب...
 Se Déconnecter	تسجيل الخروج
 Se Déconnecter de ce compte	تسجيل الخروج من هذا الحساب
 Secrétaire juridique	محرر قضائي
+Secrétaire juridique adjoint	محرر قضائي
 Secrétaire juridique adjoint de 4ème grade	محرر قضائي من الدرجة الرابعة
 Secteur Privé	القطاع الخاص
 Selon arrêté ministériel	حسب القرار الوزاري
@@ -513,6 +560,7 @@ Services Centraux et Directions Régionales	المصالح المركزية وا
 Services Déconcentrés	المصالح اللاممركزة
 Session & Démonstration	الجلسة والعرض التوضيحي
 Session vérifiée et synchronisée	جلسة موثقة ومتزامنة
+Settat	سطات
 Simulateur Salaire	محاكي الرواتب
 Simulateur de Salaire Public	محاكي رواتب الوظيفة العمومية
 Siège Social Rabat	المقر الاجتماعي بالرباط
@@ -533,6 +581,7 @@ Suppression de la légalisation de signature pour plusieurs actes, interdiction 
 Supprimer	حذف
 Sélectionnées selon votre profil	مختارة بناءً على ملفك
 Tanger	طنجة
+Tazzarine	تازارين
 Tech & Digital	التكنولوجيا والرقمنة
 Technicien	تقني
 Technicien 3ème grade	تقني من الدرجة الثالثة
@@ -588,10 +637,12 @@ Vérification de l'email	تأكيد البريد الإلكتروني
 Vérifié	موثق ومؤكد
 Vérifié ✓	موثق ✓
 WhatsApp 💬	واتساب 💬
+Zagora	زاكورة
 candidats	مترشحين
 convoqués	مدعوون
 diplômes	دبلومات
 dossiers actifs	ملفات نشطة
+emploi-public.ma	التشغيل العمومي
 finalisé avec succès	تم بنجاح
 j restants	أيام متبقية
 jours	أيام
@@ -632,53 +683,21 @@ restants	متبقية
 Établissement / Université	المؤسسة / الجامعة
 Étape +	تحديث المرحلة +
 Éthique	الأخلاقيات المهنية
-Dernier délai	آخر أجل
-Dernier délai de dépôt des candidatures	آخر أجل لإيداع الترشيحات
-Date du concours	تاريخ إجراء المباراة
-Régions du Maroc	جهات المملكة
-Nombre de postes	عدد المناصب
-Concours de recrutement	مباراة التوظيف
-Concours de recrutement	مباراة توظيف
-Concours de recrutement Technicien	مباراة توظيف تقني
-Concours de recrutement Administrateur	مباراة توظيف متصرف
-Concours de recrutement Adjoint Administratif	مباراة توظيف مساعد إداري
-Concours de recrutement Adjoint Technique	مباراة توظيف مساعد تقني
-Concours de recrutement Ingénieur	مباراة توظيف مهندس
-Concours de recrutement	مباريات التوظيف
-Cette Semaine	مباريات هذا الأسبوع
 ⏰ Date limite :	⏰ آخر أجل :
 ⏰ Mes Rappels	⏰ تذكيراتي
 ⏳ Délais Concours	⏳ آجال المباريات
 ● En direct	● بث مباشر
+✓ Accès ouvert par concours national (Décret n° 2-04-403 fixant le statut des cadres de l'État).	✓ ولوج متاح عبر مباراة وطنية (مرسوم رقم 2-04-403 بشأن النظام الأساسي لأطر الدولة).
 ✓ Connectée	✓ متصلة
 ✓ Parfait match : Diplôme Bac+5 & spécialité informatique enregistrés sur votre CV Mihnati.	✓ تطابق تام: دبلوم باك+5 وتخصص المعلوميات مسجلان في سيرتك الذاتية بمهنتي.
+✓ Pour les diplômes d'écoles privées ou étrangères : Arrêté d'équivalence ministériel publié au B.O. obligatoire.	✓ بالنسبة لشواهد المدارس الخاصة أو الأجنبية: قرار المعادلة الوزاري الصادر بالجريدة الرسمية إلزامي.
 🎓 Diplôme requis :	🎓 الدبلوم المطلوب :
 🎓 Diplômes éligibles :	🎓 الدبلومات المؤهلة :
 🎙️ Écrits & Oraux	🎙️ الكتابي والشفوي
 💰 Salaire net indicatif :	💰 الراتب الصافي التقديري :
 📂 Mes Dossiers	📂 ملفاتي
-📅 Date d'épreuve :	📅 تاريخ الاختبار :
 📅 Date d'épreuve :	📅 تاريخ إجراء الاختبار :
 📋 Listes Écrit & Oral	📋 لوائح الكتابي والشفوي
 📍 Centres :	📍 المراكز :
 📝 Créer un compte	📝 إنشاء حساب
 🔑 Se connecter	🔑 تسجيل الدخول
-📅 Date d'épreuve :	📅 تاريخ إجراء الاختبار :
-📅 Date d'épreuve :	📅 تاريخ إجراء الاختبار :
-Concours de recrutement	مباريات التوظيف
-Concours de recrutement	مباراة التوظيف
-Échelle 11	سلم 11
-Échelle 10	سلم 10
-Échelle 9	سلم 9
-Échelle 8	سلم 8
-Échelle 11	السلم 11
-Échelle 10	السلم 10
-Échelle 9	السلم 9
-Échelle 8	السلم 8
-Nombre de postes	عدد المناصب
-Dernier délai	آخر أجل
-Date du concours	تاريخ إجراء المباراة
-Régions du Maroc	جهات المملكة
-✓ Accès ouvert par concours national (Décret n° 2-04-403 fixant le statut des cadres de l'État).	✓ ولوج متاح عبر مباراة وطنية (مرسوم رقم 2-04-403 بشأن النظام الأساسي لأطر الدولة).
-✓ Pour les diplômes d'écoles privées ou étrangères : Arrêté d'équivalence ministériel publié au B.O. obligatoire.	✓ بالنسبة لشواهد المدارس الخاصة أو الأجنبية: قرار المعادلة الوزاري الصادر بالجريدة الرسمية إلزامي.
-Lettre de Motivation Mihnati	رسالة التحفيز مهنتي

@@ -841,8 +841,34 @@ fun CleanOpportunityCard(
 ) {
     val currentLang by com.mihnati.app.ui.theme.LanguageManager.currentLanguage.collectAsState()
     val isArabic = currentLang == com.mihnati.app.ui.theme.AppLanguage.ARABIC
-    val orgDisplayName = if (isArabic && opportunity.organizationAr.isNotBlank()) opportunity.organizationAr else autoTranslate(opportunity.organization)
-    val titleDisplayName = if (isArabic && opportunity.titleAr.isNotBlank()) opportunity.titleAr else autoTranslate(opportunity.title)
+
+    val orgDisplayName = if (isArabic) {
+        if (opportunity.organizationAr.isNotBlank() && com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.organizationAr)) {
+            opportunity.organizationAr
+        } else {
+            autoTranslate(opportunity.organization)
+        }
+    } else {
+        if (com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.organization)) {
+            autoTranslate(opportunity.organization)
+        } else {
+            opportunity.organization
+        }
+    }
+
+    val titleDisplayName = if (isArabic) {
+        if (opportunity.titleAr.isNotBlank() && com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.titleAr)) {
+            opportunity.titleAr
+        } else {
+            autoTranslate(opportunity.title)
+        }
+    } else {
+        if (com.mihnati.app.translation.AutoTranslationService.isTextArabic(opportunity.title)) {
+            autoTranslate(opportunity.title)
+        } else {
+            opportunity.title
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -914,7 +940,7 @@ fun CleanOpportunityCard(
                             modifier = Modifier.padding(top = 2.dp)
                         ) {
                             Text(
-                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "🌐 Manasseb.com" else "🏛️ Emploi-Public",
+                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "🌐 " + autoTranslate("Manasseb.com") else "🏛️ " + autoTranslate("Emploi-Public"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontSize = 10.sp,
                                     color = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) Secondary else Primary,
@@ -1044,9 +1070,9 @@ fun CleanOpportunityCard(
                 val isUrgent = opportunity.deadlineDaysRemaining <= 4
                 TagBadge(
                     text = if (isUrgent) {
-                        "J-${opportunity.deadlineDaysRemaining}"
+                        autoTranslate("J-${opportunity.deadlineDaysRemaining}")
                     } else {
-                        "${opportunity.deadlineDaysRemaining} ${autoTranslate("j restants")}"
+                        "${opportunity.deadlineDaysRemaining} " + autoTranslate("jours restants")
                     },
                     backgroundColor = if (isUrgent) ErrorContainer else TertiaryFixed,
                     textColor = if (isUrgent) OnErrorContainer else OnTertiaryFixed
