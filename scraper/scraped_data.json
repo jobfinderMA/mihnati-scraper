@@ -1,5 +1,5 @@
 {
-  "last_sync": "2026-11-03T19:42:42.352276",
+  "last_sync": "2026-11-03T20:37:05.605201",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
   "concours_count": 22,
   "convocations_count": 12,
@@ -427,6 +427,18 @@
   ],
   "convocations": [
     {
+      "id": "manasseb-conv-42569",
+      "concours_id": "manasseb-42569",
+      "type": "RESULTAT",
+      "title": "Concours Technicien 4ème grade (Échelle 8) (RESULTAT)",
+      "administration": "Administration Publique",
+      "exam_date": "Novembre 2026",
+      "exam_center": "Maroc",
+      "candidates_count": 50,
+      "pdf_url": "https://www.manasseb.com/%d9%86%d8%aa%d8%a7%d8%a6%d8%ac-%d8%a7%d9%84%d9%85%d8%b3%d8%b1%d8%ad-%d8%a7%d9%84%d9%88%d8%b7%d9%86%d9%8a-%d9%85%d8%ad%d9%85%d8%af-%d8%a7%d9%84%d8%ae%d8%a7%d9%85%d8%b3-%d9%85%d8%a8%d8%a7%d8%b1/",
+      "source": "manasseb.com"
+    },
+    {
       "id": "manasseb-conv-42568",
       "concours_id": "manasseb-42568",
       "type": "ORAL",
@@ -460,18 +472,6 @@
       "exam_center": "Maroc",
       "candidates_count": 25,
       "pdf_url": "https://www.manasseb.com/%d9%86%d8%aa%d8%a7%d8%a6%d8%ac-%d9%88%d9%83%d8%a7%d9%84%d8%a9-%d8%a7%d9%84%d8%ad%d9%88%d8%b6-%d8%a7%d9%84%d9%85%d8%a7%d8%a6%d9%8a-%d9%84%d8%af%d8%b1%d8%b9%d8%a9-%d9%88%d8%a7%d8%af-%d9%86%d9%88%d9%86/",
-      "source": "manasseb.com"
-    },
-    {
-      "id": "manasseb-conv-42516",
-      "concours_id": "manasseb-42516",
-      "type": "RESULTAT",
-      "title": "Concours Technicien 3ème grade (Échelle 9) (RESULTAT)",
-      "administration": "Administration Publique",
-      "exam_date": "Novembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%aa%d8%b1%d8%b4%d8%ad%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d8%a5%d9%82%d9%84%d9%8a%d9%85-%d8%b4%d9%8a%d8%b4%d8%a7%d9%88-3/",
       "source": "manasseb.com"
     },
     {
