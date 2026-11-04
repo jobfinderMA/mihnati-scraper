@@ -7,6 +7,7 @@ import android.provider.CalendarContract
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -91,6 +92,7 @@ fun OpportunityDetailScreen(
     var showChecklistDialog by remember { mutableStateOf(false) }
     var showDirectApplySheet by remember { mutableStateOf(false) }
     var showUploadDocSheet by remember { mutableStateOf(false) }
+    var showPdfExportSheet by remember { mutableStateOf(false) }
     var selectedCategoryToUpload by remember { mutableStateOf(DocumentCategory.CV) }
 
     if (opportunity == null) {
@@ -879,6 +881,157 @@ fun OpportunityDetailScreen(
                         }
                     }
                 }
+
+                // 7. Smart 48h / 24h Native Deadline Alarms Card (Feature B)
+                val isAlarmActive = remember(opportunity.id) {
+                    mutableStateOf(com.mihnati.app.notifications.ConcoursAlarmScheduler.isAlarmActive(context, opportunity.id))
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(SecondaryContainer.copy(alpha = 0.45f))
+                        .border(1.dp, Secondary.copy(alpha = 0.35f), RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(38.dp)
+                                        .clip(CircleShape)
+                                        .background(Secondary),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("⏰", fontSize = 18.sp)
+                                }
+                                Column {
+                                    Text(
+                                        text = autoTranslate("Rappels de Cloture (J-2 & J-1)"),
+                                        style = MaterialTheme.typography.titleSmall.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = OnSecondaryContainer
+                                        )
+                                    )
+                                    Text(
+                                        text = autoTranslate("Alertes directes 48h et 24h avant la fermeture"),
+                                        style = MaterialTheme.typography.bodySmall.copy(
+                                            color = OnSecondaryContainer.copy(alpha = 0.85f),
+                                            fontSize = 11.sp
+                                        )
+                                    )
+                                }
+                            }
+
+                            Switch(
+                                checked = isAlarmActive.value,
+                                onCheckedChange = { checked ->
+                                    isAlarmActive.value = checked
+                                    if (checked) {
+                                        com.mihnati.app.notifications.ConcoursAlarmScheduler.scheduleDeadlineAlarms(context, opportunity)
+                                        Toast.makeText(context, "Rappels 48h & 24h programmes avec succes ⏰", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        com.mihnati.app.notifications.ConcoursAlarmScheduler.cancelDeadlineAlarms(context, opportunity.id)
+                                        Toast.makeText(context, "Rappels desactives", Toast.LENGTH_SHORT).show()
+                                    }
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    checkedTrackColor = Secondary,
+                                    uncheckedThumbColor = Outline,
+                                    uncheckedTrackColor = SurfaceContainerHigh
+                                )
+                            )
+                        }
+
+                        if (isAlarmActive.value) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "🔔 " + autoTranslate("Alarmes actives sur votre appareil (100% hors-ligne)"),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        color = Secondary,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                )
+                                TextButton(
+                                    onClick = {
+                                        com.mihnati.app.notifications.ConcoursAlarmScheduler.scheduleQuickTestAlarm(context, opportunity, delaySeconds = 3)
+                                        Toast.makeText(context, "Alarme test programmee dans 3s !", Toast.LENGTH_SHORT).show()
+                                    },
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                                ) {
+                                    Text(
+                                        text = autoTranslate("Tester l'alarme (3s)"),
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = Primary
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 8. One-Click Dossier PDF Callout (Feature C)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(PrimaryContainer.copy(alpha = 0.4f))
+                        .border(1.dp, Primary.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Text("📄", fontSize = 20.sp)
+                            Column {
+                                Text(
+                                    text = autoTranslate("Dossier de Candidature Officiel (PDF)"),
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = OnPrimaryContainer
+                                    )
+                                )
+                                Text(
+                                    text = autoTranslate("Demande manuscrite adressee a Monsieur le Ministre + CV normalise"),
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = OnPrimaryContainer.copy(alpha = 0.85f),
+                                        fontSize = 11.sp
+                                    )
+                                )
+                            }
+                        }
+
+                        Button(
+                            onClick = { showPdfExportSheet = true },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Primary)
+                        ) {
+                            Icon(imageVector = Icons.Default.PictureAsPdf, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(autoTranslate("Generer le Dossier PDF Officiel"))
+                        }
+                    }
+                }
             }
         }
 
@@ -915,6 +1068,24 @@ fun OpportunityDetailScreen(
                         imageVector = if (opportunity.isBookmarked) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
                         contentDescription = "Favoris",
                         tint = if (opportunity.isBookmarked) Error else OnSurface,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                // One-click Official Dossier PDF generator button
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(SecondaryContainer.copy(alpha = 0.5f))
+                        .border(1.dp, Secondary.copy(alpha = 0.35f), RoundedCornerShape(14.dp))
+                        .clickable { showPdfExportSheet = true },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PictureAsPdf,
+                        contentDescription = "Dossier PDF",
+                        tint = Secondary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -995,6 +1166,13 @@ fun OpportunityDetailScreen(
     if (showChecklistDialog) {
         ConcoursChecklistDialog(
             onDismiss = { showChecklistDialog = false }
+        )
+    }
+
+    if (showPdfExportSheet) {
+        com.mihnati.app.ui.components.OfficialPdfExportBottomSheet(
+            targetOpportunity = opportunity,
+            onDismiss = { showPdfExportSheet = false }
         )
     }
 }

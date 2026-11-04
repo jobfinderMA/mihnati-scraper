@@ -75,6 +75,7 @@ fun HomeScreen(
     var showMotivationLetter by remember { mutableStateOf(false) }
     var showDiplomaEligibility by remember { mutableStateOf(false) }
     var showOralExamPrep by remember { mutableStateOf(false) }
+    var showPdfExport by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         com.mihnati.app.data.repository.EmploiPublicRepository.triggerLiveSync()
@@ -379,6 +380,37 @@ fun HomeScreen(
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSurfaceVariant
+                                )
+                            )
+                        }
+                    }
+                }
+
+                // Tool 6: Official PDF Application Dossier Exporter (Feature C)
+                item {
+                    Box(
+                        modifier = Modifier
+                            .width(135.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(SecondaryContainer.copy(alpha = 0.6f))
+                            .border(1.dp, Secondary.copy(alpha = 0.35f), RoundedCornerShape(16.dp))
+                            .clickable { showPdfExport = true }
+                            .padding(12.dp)
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text("🖨️", fontSize = 18.sp)
+                            Text(
+                                text = AppStrings.pdfExportTitle,
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = OnSecondaryContainer
+                                )
+                            )
+                            Text(
+                                text = AppStrings.pdfExportSubtitle,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 10.sp,
+                                    color = OnSecondaryContainer.copy(alpha = 0.8f)
                                 )
                             )
                         }
@@ -927,6 +959,13 @@ fun HomeScreen(
     if (showOralExamPrep) {
         OralExamPrepBottomSheet(
             onDismiss = { showOralExamPrep = false }
+        )
+    }
+
+    if (showPdfExport) {
+        com.mihnati.app.ui.components.OfficialPdfExportBottomSheet(
+            targetOpportunity = urgentOpportunity,
+            onDismiss = { showPdfExport = false }
         )
     }
 }
