@@ -89,6 +89,7 @@ fun GoogleSignInDialog(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var resendCooldown by remember { mutableStateOf(45) }
     var showGatewayConfigDialog by remember { mutableStateOf(false) }
+    var pendingUserAccount by remember { mutableStateOf<UserAccount?>(null) }
 
     // ==========================================
     // 1. REAL GOOGLE PLAY SERVICES ACCOUNT PICKER
@@ -744,17 +745,26 @@ fun GoogleSignInDialog(
                                             errorMessage = err.localizedMessage ?: "Échec de l'envoi du code de vérification."
                                         }
                                     } else {
-                                        // REAL FIREBASE LOGIN
+                                        // REAL FIREBASE LOGIN WITH 2FA VERIFICATION
                                         val logResult = CloudServiceManager.getService().loginUser(
                                             email = cleanEmail,
                                             passwordHash = passwordInput
                                         )
 
                                         logResult.onSuccess { acc ->
-                                            MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
-                                            MihnatiRepository.applyAuthenticatedAccount(acc)
-                                            Toast.makeText(context, "Bienvenue ${acc.displayName} !", Toast.LENGTH_SHORT).show()
-                                            onDismiss()
+                                            // Password verified against database! Now dispatch 2FA OTP
+                                            pendingUserAccount = acc
+                                            val otpResult = EmailOtpManager.generateAndSendOtp(
+                                                context = context,
+                                                email = cleanEmail,
+                                                candidateName = acc.displayName
+                                            )
+                                            otpResult.onSuccess {
+                                                authStep = 1
+                                                Toast.makeText(context, "Mot de passe vérifié ! Code 2FA envoyé.", Toast.LENGTH_LONG).show()
+                                            }.onFailure { err ->
+                                                errorMessage = err.localizedMessage ?: "Échec de l'envoi du code 2FA."
+                                            }
                                         }.onFailure { err ->
                                             errorMessage = when (err) {
                                                 is FirebaseAuthInvalidUserException ->
@@ -783,7 +793,7 @@ fun GoogleSignInDialog(
                                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    if (isPasswordRegisterMode) autoTranslate("Vérifier mon email & Créer mon compte ➔") else autoTranslate("Se Connecter (Firebase)"),
+                                    if (isPasswordRegisterMode) autoTranslate("Vérifier mon email & Créer mon compte ➔") else autoTranslate("Vérifier les identifiants & Continuer (2FA) ➔"),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp
                                 )
@@ -839,7 +849,11 @@ fun GoogleSignInDialog(
                                 color = Primary
                             )
                             Text(
-                                text = autoTranslate("Un code de confirmation à 6 chiffres a été envoyé pour vérifier que votre adresse email est réelle."),
+                                text = if (pendingUserAccount != null) {
+                                    autoTranslate("Un code de sécurité à 6 chiffres a été envoyé à votre adresse pour valider votre connexion.")
+                                } else {
+                                    autoTranslate("Un code de confirmation à 6 chiffres a été envoyé pour vérifier que votre adresse email est réelle.")
+                                },
                                 fontSize = 11.sp,
                                 color = OnSurfaceVariant,
                                 textAlign = TextAlign.Center
@@ -918,22 +932,32 @@ fun GoogleSignInDialog(
                                     coroutineScope.launch {
                                         val verifyResult = EmailOtpManager.verifyOtp(emailInput, input)
                                         verifyResult.onSuccess {
-                                            val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
-                                                context = context,
-                                                email = emailInput.trim(),
-                                                displayName = nameInput.trim().ifEmpty { emailInput.substringBefore("@") }
-                                            )
-                                            accResult.onSuccess { acc ->
-                                                MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
-                                                MihnatiRepository.applyAuthenticatedAccount(acc)
-                                                CloudServiceManager.getService().registerUser(
-                                                    email = acc.email,
-                                                    passwordHash = passwordInput.ifBlank { "email_otp_verified" },
-                                                    displayName = acc.displayName,
-                                                    cin = "CNIE"
-                                                )
-                                                Toast.makeText(context, "Compte créé et vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                            val pending = pendingUserAccount
+                                            if (pending != null) {
+                                                // LOGIN 2FA VERIFIED!
+                                                MihnatiSecurityVault.saveAuthenticatedSession(context, pending)
+                                                MihnatiRepository.applyAuthenticatedAccount(pending)
+                                                Toast.makeText(context, "Connexion 2FA réussie : Bienvenue ${pending.displayName} !", Toast.LENGTH_LONG).show()
                                                 onDismiss()
+                                            } else {
+                                                // REGISTRATION VERIFIED!
+                                                val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
+                                                    context = context,
+                                                    email = emailInput.trim(),
+                                                    displayName = nameInput.trim().ifEmpty { emailInput.substringBefore("@") }
+                                                )
+                                                accResult.onSuccess { acc ->
+                                                    MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
+                                                    MihnatiRepository.applyAuthenticatedAccount(acc)
+                                                    CloudServiceManager.getService().registerUser(
+                                                        email = acc.email,
+                                                        passwordHash = passwordInput.ifBlank { "email_otp_verified" },
+                                                        displayName = acc.displayName,
+                                                        cin = "CNIE"
+                                                    )
+                                                    Toast.makeText(context, "Compte créé et vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                                    onDismiss()
+                                                }
                                             }
                                         }.onFailure { err ->
                                             errorMessage = err.message ?: "Code de confirmation invalide."
@@ -962,6 +986,7 @@ fun GoogleSignInDialog(
                             onClick = {
                                 authStep = 0
                                 otpInput = ""
+                                pendingUserAccount = null
                                 errorMessage = null
                             }
                         ) {
@@ -1006,22 +1031,32 @@ fun GoogleSignInDialog(
                             coroutineScope.launch {
                                 val verifyResult = EmailOtpManager.verifyOtp(emailInput, otpInput)
                                 verifyResult.onSuccess {
-                                    val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
-                                        context = context,
-                                        email = emailInput.trim(),
-                                        displayName = nameInput.trim().ifEmpty { emailInput.substringBefore("@") }
-                                    )
-                                    accResult.onSuccess { acc ->
-                                        MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
-                                        MihnatiRepository.applyAuthenticatedAccount(acc)
-                                        CloudServiceManager.getService().registerUser(
-                                            email = acc.email,
-                                            passwordHash = passwordInput.ifBlank { "email_otp_verified" },
-                                            displayName = acc.displayName,
-                                            cin = "CNIE"
-                                        )
-                                        Toast.makeText(context, "Compte créé et vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                    val pending = pendingUserAccount
+                                    if (pending != null) {
+                                        // LOGIN 2FA VERIFIED!
+                                        MihnatiSecurityVault.saveAuthenticatedSession(context, pending)
+                                        MihnatiRepository.applyAuthenticatedAccount(pending)
+                                        Toast.makeText(context, "Connexion 2FA réussie : Bienvenue ${pending.displayName} !", Toast.LENGTH_LONG).show()
                                         onDismiss()
+                                    } else {
+                                        // REGISTRATION VERIFIED!
+                                        val accResult = MihnatiSecurityVault.registerOrSignInWithEmailOtp(
+                                            context = context,
+                                            email = emailInput.trim(),
+                                            displayName = nameInput.trim().ifEmpty { emailInput.substringBefore("@") }
+                                        )
+                                        accResult.onSuccess { acc ->
+                                            MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
+                                            MihnatiRepository.applyAuthenticatedAccount(acc)
+                                            CloudServiceManager.getService().registerUser(
+                                                email = acc.email,
+                                                passwordHash = passwordInput.ifBlank { "email_otp_verified" },
+                                                displayName = acc.displayName,
+                                                cin = "CNIE"
+                                            )
+                                            Toast.makeText(context, "Compte créé et vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                            onDismiss()
+                                        }
                                     }
                                 }.onFailure { err ->
                                     errorMessage = err.message ?: "Code de confirmation invalide."
@@ -1039,7 +1074,11 @@ fun GoogleSignInDialog(
                         } else {
                             Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(autoTranslate("Confirmer & Activer mon compte"), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text(
+                                if (pendingUserAccount != null) autoTranslate("Confirmer le code & Se connecter") else autoTranslate("Confirmer & Activer mon compte"),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
                         }
                     }
 
