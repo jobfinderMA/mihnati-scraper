@@ -1,8 +1,8 @@
 {
-  "last_sync": "2026-11-04T20:41:28.147090",
+  "last_sync": "2026-11-04T21:40:42.691645",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
-  "concours_count": 23,
-  "convocations_count": 8,
+  "concours_count": 21,
+  "convocations_count": 7,
   "concours": [
     {
       "id": "ep-e0775437",
@@ -385,63 +385,31 @@
       "oral_list_url": "",
       "source": "manasseb.com",
       "is_weekly_special": true
-    },
-    {
-      "id": "manasseb-42553",
-      "title": "Recrutement Téléconseiller Clientèle",
-      "title_ar": "مباراة توظيف مستشار الهاتف",
-      "grade": "Échelle 11",
-      "echelle": "11",
-      "administration": "Atlas On Line (Royal Air Maroc)",
-      "administration_ar": "أطلس أون لاين / الخطوط الملكية المغربية",
-      "speciality": "Administration & Métiers",
-      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 30,
-      "deadline": "Novembre 2026",
-      "exam_date": "",
-      "publication_date": "2026-11-03",
-      "reference_code": "MANASSEB-42553",
-      "submission_url": "https://www.manasseb.com/%d8%a3%d8%b7%d9%84%d8%b3-%d8%a7%d9%88%d9%86-%d9%84%d8%a7%d9%8a%d9%86-%d8%a7%d9%84%d8%ae%d8%b7%d9%88%d8%b7-%d8%a7%d9%84%d9%85%d9%84%d9%83%d9%8a%d8%a9-%d8%a7%d9%84%d9%85%d8%ba%d8%b1%d8%a8%d9%8a%d8%a9-7/",
-      "detail_url": "https://www.manasseb.com/%d8%a3%d8%b7%d9%84%d8%b3-%d8%a7%d9%88%d9%86-%d9%84%d8%a7%d9%8a%d9%86-%d8%a7%d9%84%d8%ae%d8%b7%d9%88%d8%b7-%d8%a7%d9%84%d9%85%d9%84%d9%83%d9%8a%d8%a9-%d8%a7%d9%84%d9%85%d8%ba%d8%b1%d8%a8%d9%8a%d8%a9-7/",
-      "written_list_url": "",
-      "oral_list_url": "",
-      "source": "manasseb.com",
-      "is_weekly_special": true
-    },
-    {
-      "id": "manasseb-42538",
-      "title": "Recrutement Responsable Administratif et Financier",
-      "title_ar": "توظيف مسؤول إداري ومالي",
-      "grade": "Échelle 11",
-      "echelle": "11",
-      "administration": "Société de Développement Local (SDL) Marrakech",
-      "administration_ar": "شركة التنمية المحلية مراكش مسافر",
-      "speciality": "Administration & Métiers",
-      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 1,
-      "deadline": "Novembre 2026",
-      "exam_date": "",
-      "publication_date": "2026-11-03",
-      "reference_code": "MANASSEB-42538",
-      "submission_url": "https://www.manasseb.com/%d8%b4%d8%b1%d9%83%d8%a9-%d8%a7%d9%84%d8%aa%d9%86%d9%85%d9%8a%d8%a9-%d8%a7%d9%84%d9%85%d8%ad%d9%84%d9%8a%d8%a9-%d9%85%d8%b1%d8%a7%d9%83%d8%b4-%d9%85%d8%b3%d8%a7%d9%81%d8%b1-%d9%85%d8%a8%d8%a7%d8%b1-4/",
-      "detail_url": "https://www.manasseb.com/%d8%b4%d8%b1%d9%83%d8%a9-%d8%a7%d9%84%d8%aa%d9%86%d9%85%d9%8a%d8%a9-%d8%a7%d9%84%d9%85%d8%ad%d9%84%d9%8a%d8%a9-%d9%85%d8%b1%d8%a7%d9%83%d8%b4-%d9%85%d8%b3%d8%a7%d9%81%d8%b1-%d9%85%d8%a8%d8%a7%d8%b1-4/",
-      "written_list_url": "",
-      "oral_list_url": "",
-      "source": "manasseb.com",
-      "is_weekly_special": true
     }
   ],
   "convocations": [
     {
-      "id": "manasseb-conv-42569",
-      "concours_id": "manasseb-42569",
+      "id": "manasseb-conv-42622",
+      "concours_id": "manasseb-42622",
       "type": "RESULTAT",
-      "title": "Concours Technicien 4ème grade (Échelle 8) (RESULTAT)",
+      "title": "Concours Ingénieur d'État 1er grade (Échelle 11) (RESULTAT)",
       "administration": "Administration Publique",
       "exam_date": "Novembre 2026",
       "exam_center": "Maroc",
       "candidates_count": 50,
-      "pdf_url": "https://www.manasseb.com/%d9%86%d8%aa%d8%a7%d8%a6%d8%ac-%d8%a7%d9%84%d9%85%d8%b3%d8%b1%d8%ad-%d8%a7%d9%84%d9%88%d8%b7%d9%86%d9%8a-%d9%85%d8%ad%d9%85%d8%af-%d8%a7%d9%84%d8%ae%d8%a7%d9%85%d8%b3-%d9%85%d8%a8%d8%a7%d8%b1/",
+      "pdf_url": "https://www.manasseb.com/%d9%86%d8%aa%d8%a7%d8%a6%d8%ac-%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%af%d8%a7%d8%ae%d9%84%d9%8a%d8%a9-%d8%b9%d9%85%d8%a7%d9%84%d8%a9-%d8%a5%d9%82%d9%84%d9%8a%d9%85-%d8%b7%d8%a7%d8%b7%d8%a7/",
+      "source": "manasseb.com"
+    },
+    {
+      "id": "manasseb-conv-42620",
+      "concours_id": "manasseb-42620",
+      "type": "ORAL",
+      "title": "Concours Technicien 3ème grade (Échelle 9) (ORAL)",
+      "administration": "Université Sidi Mohamed Ben Abdellah - Fès",
+      "exam_date": "Novembre 2026",
+      "exam_center": "Maroc",
+      "candidates_count": 25,
+      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-13/",
       "source": "manasseb.com"
     },
     {
@@ -454,30 +422,6 @@
       "exam_center": "Maroc",
       "candidates_count": 50,
       "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-6/",
-      "source": "manasseb.com"
-    },
-    {
-      "id": "manasseb-conv-42565",
-      "concours_id": "manasseb-42565",
-      "type": "ORAL",
-      "title": "Concours de Recrutement (ORAL)",
-      "administration": "Université Sidi Mohamed Ben Abdellah - Fès",
-      "exam_date": "Novembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-12/",
-      "source": "manasseb.com"
-    },
-    {
-      "id": "manasseb-conv-42517",
-      "concours_id": "manasseb-42517",
-      "type": "RESULTAT",
-      "title": "Concours Technicien 4ème grade (Échelle 8) (RESULTAT)",
-      "administration": "Agence du Bassin Hydraulique de Drâa Oued Noun",
-      "exam_date": "Novembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%86%d8%aa%d8%a7%d8%a6%d8%ac-%d9%88%d9%83%d8%a7%d9%84%d8%a9-%d8%a7%d9%84%d8%ad%d9%88%d8%b6-%d8%a7%d9%84%d9%85%d8%a7%d8%a6%d9%8a-%d9%84%d8%af%d8%b1%d8%b9%d8%a9-%d9%88%d8%a7%d8%af-%d9%86%d9%88%d9%86/",
       "source": "manasseb.com"
     },
     {
