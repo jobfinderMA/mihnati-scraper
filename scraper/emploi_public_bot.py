@@ -658,7 +658,25 @@ def main():
     parser = argparse.ArgumentParser(description='Emploi-Public.ma Hourly Scraper Bot')
     parser.add_argument('--run-now', '--once', dest='run_now', action='store_true', help='Execute scrape immediately and exit')
     parser.add_argument('--hourly', action='store_true', help='Start continuous hourly scheduler daemon')
+    parser.add_argument('--test-whatsapp', type=str, metavar='PHONE', help='Dispatch an immediate test WhatsApp alert with PDF to PHONE (e.g. +212612345678)')
     args = parser.parse_args()
+    
+    if args.test_whatsapp:
+        os.environ['WHATSAPP_ADMIN_OR_TEST_PHONE'] = args.test_whatsapp
+        test_conv = {
+            'id': 'test-conv-01',
+            'concours_id': 'mef-admin-2026',
+            'type': 'ECRIT',
+            'title': "Concours National • Administrateur 2ème grade (120 postes)",
+            'administration': "Ministère de l'Économie et des Finances",
+            'exam_date': "15 Novembre 2026 à 08:30",
+            'exam_center': "Rabat (Faculté des Sciences Juridiques Souissi)",
+            'pdf_url': "https://www.emploi-public.ma/upload/concours/144317d0-c3d5-470a-8d5f-9ba77b0dc752.pdf"
+        }
+        logger.info(f"Dispatching test WhatsApp alert to {args.test_whatsapp}...")
+        dispatch_whatsapp_notification(test_conv)
+        logger.info("Test dispatch routine executed.")
+        return
     
     # Run initial extraction on startup
     logger.info("Executing initial scrape extraction on startup...")
