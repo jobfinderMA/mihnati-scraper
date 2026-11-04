@@ -29,6 +29,12 @@ jobs:
           pip install -r scraper/requirements.txt
 
       - name: 🚀 Run Emploi-Public Scraper Bot
+        env:
+          GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
+          GREEN_API_TOKEN: ${{ secrets.GREEN_API_TOKEN }}
+          WHATSAPP_ADMIN_OR_TEST_PHONE: ${{ secrets.WHATSAPP_ADMIN_OR_TEST_PHONE }}
+          WHATSAPP_GATEWAY_URL: ${{ secrets.WHATSAPP_GATEWAY_URL }}
+          WHATSAPP_API_KEY: ${{ secrets.WHATSAPP_API_KEY }}
         run: |
           python scraper/emploi_public_bot.py --once
 
