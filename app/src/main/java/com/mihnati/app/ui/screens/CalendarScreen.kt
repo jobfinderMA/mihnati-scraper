@@ -405,9 +405,9 @@ fun CalendarEventCard(
                 ) {
                     TagBadge(
                         text = if (event.daysRemaining <= 3) {
-                            "J-${event.daysRemaining} URGENT"
+                            autoTranslate("J-${event.daysRemaining} URGENT")
                         } else {
-                            "J-${event.daysRemaining} ${autoTranslate("restants")}"
+                            autoTranslate("J-${event.daysRemaining} restants")
                         },
                         backgroundColor = if (event.daysRemaining <= 3) ErrorContainer else TertiaryFixed,
                         textColor = if (event.daysRemaining <= 3) OnErrorContainer else OnTertiaryFixed,
@@ -489,7 +489,7 @@ fun CalendarEventCard(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = "${event.date} à ${event.time}",
+                            text = autoTranslate("${event.date} à ${event.time}"),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = OnSurface,
                                 fontWeight = FontWeight.SemiBold

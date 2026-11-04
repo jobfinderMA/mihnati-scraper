@@ -1072,7 +1072,7 @@ fun CleanOpportunityCard(
                     text = if (isUrgent) {
                         autoTranslate("J-${opportunity.deadlineDaysRemaining}")
                     } else {
-                        "${opportunity.deadlineDaysRemaining} " + autoTranslate("jours restants")
+                        autoTranslate("${opportunity.deadlineDaysRemaining} jours restants")
                     },
                     backgroundColor = if (isUrgent) ErrorContainer else TertiaryFixed,
                     textColor = if (isUrgent) OnErrorContainer else OnTertiaryFixed
@@ -1081,7 +1081,7 @@ fun CleanOpportunityCard(
                 // Written Exam Date Badge if available
                 if (opportunity.examDate.isNotBlank()) {
                     TagBadge(
-                        text = "📅 " + autoTranslate("Écrit :") + " " + opportunity.examDate,
+                        text = "📅 " + autoTranslate("Écrit :") + " " + autoTranslate(opportunity.examDate),
                         backgroundColor = SecondaryContainer.copy(alpha = 0.5f),
                         textColor = OnSecondaryContainer
                     )

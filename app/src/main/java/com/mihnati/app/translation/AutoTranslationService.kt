@@ -90,7 +90,7 @@ object AutoTranslationService {
             val frList = mutableListOf<String>()
             val arList = mutableListOf<String>()
 
-            context.assets.open("mihnati_dictionary.tsv").bufferedReader().useLines { lines ->
+            context.assets.open("mihnati_dictionary.tsv").bufferedReader(Charsets.UTF_8).useLines { lines ->
                 lines.forEach { line ->
                     val parts = line.split("\t")
                     if (parts.size >= 2) {
@@ -100,6 +100,7 @@ object AutoTranslationService {
                             frToArDict[fr] = ar
                             arToFrDict[ar] = fr
                             frToArDict[fr.lowercase()] = ar
+                            frToArDict[fr.uppercase()] = ar
                             arToFrDict[normalizeArabic(ar)] = fr
                             frList.add(fr)
                             arList.add(ar)
@@ -149,6 +150,15 @@ object AutoTranslationService {
                 file.appendText("$direction\t$source\t$translated\n")
             } catch (_: Exception) {}
         }
+    }
+
+    fun hasLatin(text: String): Boolean {
+        for (char in text) {
+            if ((char in 'A'..'Z') || (char in 'a'..'z') || (char in '\u00C0'..'\u00FF')) {
+                return true
+            }
+        }
+        return false
     }
 
     fun isTextArabic(text: String): Boolean {
@@ -207,13 +217,71 @@ object AutoTranslationService {
                 }
             }
 
-            // Patterns like J-X (countdown) and X% match
-            val jMatch = Regex("J-(\\d+)").find(decomposed)
+            // Patterns like J-X (countdown with optional URGENT)
+            val jMatch = Regex("J-(\\d+)(\\s*URGENT)?", RegexOption.IGNORE_CASE).find(decomposed)
             if (jMatch != null) {
-                val days = jMatch.groupValues[1]
-                decomposed = decomposed.replace(jMatch.value, "\u0628\u0627\u0642\u064A $days \u0623\u064A\u0627\u0645") 
+                val days = jMatch.groupValues[1].toIntOrNull() ?: 1
+                val isUrgent = jMatch.groupValues[2].isNotBlank()
+                val dayStr = when (days) {
+                    1 -> "\u064A\u0648\u0645 \u0648\u0627\u062D\u062F"
+                    2 -> "\u064A\u0648\u0645\u0627\u0646"
+                    in 3..10 -> "$days \u0623\u064A\u0627\u0645"
+                    else -> "$days \u064A\u0648\u0645\u0627\u064B"
+                }
+                val resultBadge = if (isUrgent) "\u0639\u0627\u062C\u0644 (\u0628\u0627\u0642\u064A $dayStr)" else "\u0628\u0627\u0642\u064A $dayStr"
+                decomposed = decomposed.replace(jMatch.value, resultBadge)
                 replacedAny = true
             }
+
+            // Patterns like Restants Xj or  Xj
+            val restMatch = Regex("(Restants?|\\u0645\\u062a\\u0628\\u0642\\u064a\\u0629)\\s*(\\d+)j", RegexOption.IGNORE_CASE).find(decomposed)
+            if (restMatch != null) {
+                val days = restMatch.groupValues[2].toIntOrNull() ?: 1
+                val dayStr = when (days) {
+                    1 -> "\u0628\u0627\u0642\u064A \u064A\u0648\u0645 \u0648\u0627\u062D\u062F"
+                    2 -> "\u0628\u0627\u0642\u064A \u064A\u0648\u0645\u0627\u0646"
+                    in 3..10 -> "\u0628\u0627\u0642\u064A $days \u0623\u064A\u0627\u0645"
+                    else -> "\u0628\u0627\u0642\u064A $days \u064A\u0648\u0645\u0627\u064B"
+                }
+                decomposed = decomposed.replace(restMatch.value, dayStr)
+                replacedAny = true
+            }
+
+            // Patterns like "(\d+)j" standalone
+            val jStandalone = Regex("\\b(\\d+)j\\b", RegexOption.IGNORE_CASE).find(decomposed)
+            if (jStandalone != null) {
+                val days = jStandalone.groupValues[1].toIntOrNull() ?: 1
+                val dayStr = when (days) {
+                    1 -> "\u064A\u0648\u0645 \u0648\u0627\u062D\u062F"
+                    2 -> "\u064A\u0648\u0645\u0627\u0646"
+                    in 3..10 -> "$days \u0623\u064A\u0627\u0645"
+                    else -> "$days \u064A\u0648\u0645\u0627\u064B"
+                }
+                decomposed = decomposed.replace(jStandalone.value, dayStr)
+                replacedAny = true
+            }
+
+            // Time pattern "à HH:mm" -> "  HH:mm"
+            val timeMatch = Regex("\\b\\u00E0\\s*(\\d{1,2}:\\d{2})", RegexOption.IGNORE_CASE).find(decomposed)
+            if (timeMatch != null) {
+                decomposed = decomposed.replace(timeMatch.value, "\u0639\u0644\u0649 \u0627\u0644\u0633\u0627\u0639\u0629 ${timeMatch.groupValues[1]}")
+                replacedAny = true
+            }
+
+            // Post count pattern "(X postes)"
+            val postMatch = Regex("\\((\\d+)\\s*postes?\\)", RegexOption.IGNORE_CASE).find(decomposed)
+            if (postMatch != null) {
+                val posts = postMatch.groupValues[1].toIntOrNull() ?: 1
+                val postStr = when (posts) {
+                    1 -> "(\u0645\u0646\u0635\u0628 \u0648\u0627\u062D\u062F)"
+                    2 -> "(\u0645\u0646\u0635\u0628\u0627\u0646)"
+                    in 3..10 -> "($posts \u0645\u0646\u0627\u0635\u0628)"
+                    else -> "($posts \u0645\u0646\u0635\u0628\u0627\u064B)"
+                }
+                decomposed = decomposed.replace(postMatch.value, postStr)
+                replacedAny = true
+            }
+
             val matchPercent = Regex("(\\d+)%\\s*match", RegexOption.IGNORE_CASE).find(decomposed)
             if (matchPercent != null) {
                 val pct = matchPercent.groupValues[1]
@@ -340,7 +408,7 @@ fun autoTranslate(text: String): String {
     if (text.isBlank()) return text
 
     if (isArabic) {
-        if (AutoTranslationService.isTextArabic(text)) return text
+        if (!AutoTranslationService.hasLatin(text) && AutoTranslationService.isTextArabic(text)) return text
 
         val cached = AutoTranslationService.getArabic(text)
         if (cached != null) return cached

@@ -602,7 +602,7 @@ fun ApplicationItemCard(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     TagBadge(
-                        text = application.sectorType.label,
+                        text = autoTranslate(application.sectorType.label),
                         backgroundColor = if (application.isAdmitted) SecondaryContainer else PrimaryFixed,
                         textColor = if (application.isAdmitted) OnSecondaryContainer else OnPrimaryFixed
                     )
@@ -654,7 +654,7 @@ fun ApplicationItemCard(
                     )
                     Column {
                         Text(
-                            text = application.statusHighlightTitle,
+                            text = autoTranslate(application.statusHighlightTitle),
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = when {
@@ -666,7 +666,7 @@ fun ApplicationItemCard(
                             )
                         )
                         Text(
-                            text = application.statusHighlightDetail,
+                            text = autoTranslate(application.statusHighlightDetail),
                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                         )
                     }
@@ -695,7 +695,7 @@ fun ApplicationItemCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = "${autoTranslate("Notes :")} ${application.candidateNotes}",
+                        text = "${autoTranslate("Notes :")} ${autoTranslate(application.candidateNotes)}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurfaceVariant,
                             fontSize = 11.sp
@@ -715,14 +715,14 @@ fun ApplicationItemCard(
             ) {
                 Column {
                     Text(
-                        text = "Réf: ${application.referenceNumber}",
+                        text = "${autoTranslate("Réf :")} ${application.referenceNumber}",
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = Outline,
                             fontSize = 11.sp
                         )
                     )
                     Text(
-                        text = "${autoTranslate("Déposé le")} ${application.submittedDate}",
+                        text = "${autoTranslate("Déposé le")} ${autoTranslate(application.submittedDate)}",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = OnSurface,
                             fontWeight = FontWeight.SemiBold

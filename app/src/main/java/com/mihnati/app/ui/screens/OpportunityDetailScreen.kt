@@ -215,7 +215,7 @@ fun OpportunityDetailScreen(
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = "Réf: ${opportunity.reference}",
+                                text = "${autoTranslate("Réf :")} ${opportunity.reference}",
                                 style = MaterialTheme.typography.labelSmall.copy(color = Color.White)
                             )
                         }
@@ -253,7 +253,7 @@ fun OpportunityDetailScreen(
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
                             Text(
-                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "Source : Manasseb.com" else "Officiel emploi-public.ma",
+                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) autoTranslate("Source : Manasseb.com") else autoTranslate("Officiel emploi-public.ma"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Color.White)
                             )
                         }
@@ -327,7 +327,7 @@ fun OpportunityDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         TagBadge(
-                            text = opportunity.sectorType.label,
+                            text = autoTranslate(opportunity.sectorType.label),
                             backgroundColor = SurfaceContainerHigh,
                             textColor = Primary,
                             icon = Icons.Default.Apartment
@@ -395,7 +395,7 @@ fun OpportunityDetailScreen(
                                     )
                                 )
                                 Text(
-                                    text = opportunity.deadline,
+                                    text = autoTranslate(opportunity.deadline),
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         color = OnSurface,
                                         fontWeight = FontWeight.Bold
@@ -428,7 +428,7 @@ fun OpportunityDetailScreen(
                                 modifier = Modifier.size(14.dp)
                             )
                             Text(
-                                text = "J-${opportunity.deadlineDaysRemaining}",
+                                text = autoTranslate("J-${opportunity.deadlineDaysRemaining}"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     color = Tertiary,
                                     fontWeight = FontWeight.Bold
@@ -479,7 +479,7 @@ fun OpportunityDetailScreen(
                                         )
                                     )
                                     Text(
-                                        text = opportunity.examDate,
+                                        text = autoTranslate(opportunity.examDate),
                                         style = MaterialTheme.typography.titleMedium.copy(
                                             color = OnSecondaryContainer,
                                             fontWeight = FontWeight.Bold
@@ -607,7 +607,7 @@ fun OpportunityDetailScreen(
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
-                                text = opportunity.field,
+                                text = autoTranslate(opportunity.field),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface,
@@ -636,7 +636,7 @@ fun OpportunityDetailScreen(
                                 style = MaterialTheme.typography.labelSmall.copy(color = Outline, fontSize = 10.sp)
                             )
                             Text(
-                                text = opportunity.experience,
+                                text = autoTranslate(opportunity.experience),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = OnSurface,
@@ -736,7 +736,7 @@ fun OpportunityDetailScreen(
                         )
                     )
                     Text(
-                        text = opportunity.description,
+                        text = autoTranslate(opportunity.description),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = OnSurfaceVariant,
                             lineHeight = 22.sp
@@ -779,14 +779,14 @@ fun OpportunityDetailScreen(
                                 }
                                 Column {
                                     Text(
-                                        text = mission.title,
+                                        text = autoTranslate(mission.title),
                                         style = MaterialTheme.typography.labelMedium.copy(
                                             fontWeight = FontWeight.Bold,
                                             color = OnSurface
                                         )
                                     )
                                     Text(
-                                        text = mission.description,
+                                        text = autoTranslate(mission.description),
                                         style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                                     )
                                 }
@@ -822,7 +822,7 @@ fun OpportunityDetailScreen(
                                 )
                             )
                             TagBadge(
-                                text = "${opportunity.requiredDocuments.size} Documents",
+                                text = "${opportunity.requiredDocuments.size} " + autoTranslate("Documents"),
                                 backgroundColor = SecondaryFixed,
                                 textColor = OnSecondaryFixed
                             )
@@ -858,14 +858,14 @@ fun OpportunityDetailScreen(
                                     }
                                     Column {
                                         Text(
-                                            text = doc.name,
+                                            text = autoTranslate(doc.name),
                                             style = MaterialTheme.typography.labelMedium.copy(
                                                 fontWeight = FontWeight.Bold,
                                                 color = OnSurface
                                             )
                                         )
                                         Text(
-                                            text = doc.detail,
+                                            text = autoTranslate(doc.detail),
                                             style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                                         )
                                     }

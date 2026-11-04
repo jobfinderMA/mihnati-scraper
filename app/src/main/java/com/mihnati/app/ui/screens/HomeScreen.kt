@@ -615,7 +615,7 @@ fun HomeScreen(
                             )
                         }
                         Text(
-                            text = urgentOpportunity.deadline,
+                            text = autoTranslate(urgentOpportunity.deadline),
                             style = MaterialTheme.typography.labelSmall.copy(
                                 color = PrimaryFixed,
                                 fontWeight = FontWeight.SemiBold
@@ -730,7 +730,7 @@ fun HomeScreen(
                 ) {
                     Column {
                         TagBadge(
-                            text = "${autoTranslate("Restants")} 2j",
+                            text = autoTranslate("Restants 2j"),
                             backgroundColor = ErrorContainer,
                             textColor = OnErrorContainer
                         )
@@ -772,7 +772,7 @@ fun HomeScreen(
                 ) {
                     Column {
                         TagBadge(
-                            text = "${autoTranslate("Restants")} 5j",
+                            text = autoTranslate("Restants 5j"),
                             backgroundColor = TertiaryFixed,
                             textColor = OnTertiaryFixed
                         )
