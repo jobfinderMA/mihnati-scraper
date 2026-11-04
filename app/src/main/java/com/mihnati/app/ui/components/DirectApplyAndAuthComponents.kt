@@ -630,7 +630,7 @@ fun GoogleSignInDialog(
                                             }
                                         }
                                     ) {
-                                        Text("Renvoyer le code", fontSize = 11.sp, color = Primary, fontWeight = FontWeight.SemiBold)
+                                        Text(autoTranslate("Renvoyer le code"), fontSize = 11.sp, color = Primary, fontWeight = FontWeight.SemiBold)
                                     }
                                 }
 
@@ -725,31 +725,23 @@ fun GoogleSignInDialog(
                                 errorMessage = null
                                 coroutineScope.launch {
                                     if (isPasswordRegisterMode) {
-                                        // REAL FIREBASE REGISTRATION
-                                        val regResult = CloudServiceManager.getService().registerUser(
+                                        // VERIFY EMAIL: Send 6-digit confirmation OTP to make sure email is real
+                                        val candidateDisplayName = nameInput.trim().ifEmpty { cleanEmail.substringBefore("@") }
+                                        val otpResult = EmailOtpManager.generateAndSendOtp(
+                                            context = context,
                                             email = cleanEmail,
-                                            passwordHash = passwordInput,
-                                            displayName = nameInput.trim().ifEmpty { cleanEmail.substringBefore("@") },
-                                            cin = "CNIE"
+                                            candidateName = candidateDisplayName
                                         )
 
-                                        regResult.onSuccess { acc ->
-                                            MihnatiSecurityVault.saveAuthenticatedSession(context, acc)
-                                            MihnatiRepository.applyAuthenticatedAccount(acc)
-                                            Toast.makeText(context, "Compte Firebase créé avec succès : ${acc.email} !", Toast.LENGTH_LONG).show()
-                                            onDismiss()
+                                        try {
+                                            CloudServiceManager.getService().sendPasswordlessSignInEmail(cleanEmail)
+                                        } catch (_: Exception) {}
+
+                                        otpResult.onSuccess {
+                                            authStep = 1
+                                            Toast.makeText(context, "Code de confirmation envoyé à : $cleanEmail", Toast.LENGTH_LONG).show()
                                         }.onFailure { err ->
-                                            errorMessage = when (err) {
-                                                is FirebaseAuthUserCollisionException ->
-                                                    "Un compte existe déjà avec cette adresse email. Veuillez vous connecter."
-                                                is FirebaseAuthWeakPasswordException ->
-                                                    "Mot de passe trop faible. Utilisez au moins 6 caractères avec chiffres."
-                                                is FirebaseAuthInvalidCredentialsException ->
-                                                    "Format d'email invalide selon les serveurs Firebase."
-                                                is FirebaseNetworkException ->
-                                                    "Erreur réseau Firebase. Vérifiez votre connexion internet."
-                                                else -> err.localizedMessage ?: "Échec de l'inscription sur le serveur."
-                                            }
+                                            errorMessage = err.localizedMessage ?: "Échec de l'envoi du code de vérification."
                                         }
                                     } else {
                                         // REAL FIREBASE LOGIN
@@ -791,7 +783,7 @@ fun GoogleSignInDialog(
                                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    if (isPasswordRegisterMode) "Créer mon compte (Firebase)" else "Se Connecter (Firebase)",
+                                    if (isPasswordRegisterMode) autoTranslate("Vérifier mon email & Créer mon compte ➔") else autoTranslate("Se Connecter (Firebase)"),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp
                                 )
@@ -836,7 +828,7 @@ fun GoogleSignInDialog(
                         ) {
                             Text("✉", fontSize = 28.sp)
                             Text(
-                                text = "Code et lien officiel Firebase envoyés à :",
+                                text = autoTranslate("Code de confirmation envoyé à :"),
                                 fontSize = 12.sp,
                                 color = OnSurfaceVariant
                             )
@@ -847,9 +839,10 @@ fun GoogleSignInDialog(
                                 color = Primary
                             )
                             Text(
-                                text = "Consultez votre boîte Gmail ou vos notifications",
+                                text = autoTranslate("Un code de confirmation à 6 chiffres a été envoyé pour vérifier que votre adresse email est réelle."),
                                 fontSize = 11.sp,
-                                color = OnSurfaceVariant
+                                color = OnSurfaceVariant,
+                                textAlign = TextAlign.Center
                             )
 
                             // Helper test pill with auto-fill
@@ -935,11 +928,11 @@ fun GoogleSignInDialog(
                                                 MihnatiRepository.applyAuthenticatedAccount(acc)
                                                 CloudServiceManager.getService().registerUser(
                                                     email = acc.email,
-                                                    passwordHash = "email_otp_verified",
+                                                    passwordHash = passwordInput.ifBlank { "email_otp_verified" },
                                                     displayName = acc.displayName,
                                                     cin = "CNIE"
                                                 )
-                                                Toast.makeText(context, "Compte Gmail vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(context, "Compte créé et vérifié avec succès !", Toast.LENGTH_SHORT).show()
                                                 onDismiss()
                                             }
                                         }.onFailure { err ->
@@ -950,7 +943,7 @@ fun GoogleSignInDialog(
                                 }
                             }
                         },
-                        label = { Text("Saisissez les 6 chiffres ici") },
+                        label = { Text(autoTranslate("Saisissez les 6 chiffres ici")) },
                         placeholder = { Text("ex: 849201") },
                         leadingIcon = { Icon(Icons.Default.Key, contentDescription = null) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -972,7 +965,7 @@ fun GoogleSignInDialog(
                                 errorMessage = null
                             }
                         ) {
-                            Text("← Modifier l'email", fontSize = 12.sp)
+                            Text(autoTranslate("Modifier l'email"), fontSize = 12.sp)
                         }
 
                         if (resendCooldown > 0) {
@@ -996,7 +989,7 @@ fun GoogleSignInDialog(
                                     }
                                 }
                             ) {
-                                Text("Renvoyer le code", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                Text(autoTranslate("Renvoyer le code"), fontWeight = FontWeight.Bold, fontSize = 12.sp)
                             }
                         }
                     }
@@ -1023,11 +1016,11 @@ fun GoogleSignInDialog(
                                         MihnatiRepository.applyAuthenticatedAccount(acc)
                                         CloudServiceManager.getService().registerUser(
                                             email = acc.email,
-                                            passwordHash = "email_otp_verified",
+                                            passwordHash = passwordInput.ifBlank { "email_otp_verified" },
                                             displayName = acc.displayName,
                                             cin = "CNIE"
                                         )
-                                        Toast.makeText(context, "Compte Gmail vérifié avec succès !", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Compte créé et vérifié avec succès !", Toast.LENGTH_SHORT).show()
                                         onDismiss()
                                     }
                                 }.onFailure { err ->
@@ -1046,8 +1039,29 @@ fun GoogleSignInDialog(
                         } else {
                             Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Confirmer & Activer mon compte", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text(autoTranslate("Confirmer & Activer mon compte"), fontWeight = FontWeight.Bold, fontSize = 14.sp)
                         }
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            try {
+                                val emailIntent = android.content.Intent(android.content.Intent.ACTION_MAIN).apply {
+                                    addCategory(android.content.Intent.CATEGORY_APP_EMAIL)
+                                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(emailIntent)
+                            } catch (_: Exception) {
+                                val mailToIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("mailto:"))
+                                context.startActivity(mailToIntent)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth().height(42.dp),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Icon(Icons.Default.Email, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(autoTranslate("Ouvrir l'application Gmail / Email"), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }
