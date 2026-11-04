@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-03T23:29:35.344029",
+  "last_sync": "2026-11-04T00:33:38.170044",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
-  "concours_count": 22,
-  "convocations_count": 12,
+  "concours_count": 23,
+  "convocations_count": 11,
   "concours": [
+    {
+      "id": "ep-089b0b6f",
+      "uuid": "089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "title": "Avis de concours de recrutement de Professeur de l'enseignement secondaire qualifié 2ème grade - Echelle 10",
+      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
+      "echelle": "Échelle 10",
+      "degree_required": "Bac+3 / Licence",
+      "posts_count": 10,
+      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/089b0b6f-62e2-4acf-bf7c-42d661636619"
+    },
     {
       "id": "ep-144317d0",
       "uuid": "144317d0-3827-46f6-94c3-a5fbd18b2c85",
@@ -556,18 +570,6 @@
       "exam_center": "Maroc",
       "candidates_count": 330,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/258ae7cf-4ace-405f-8c04-4eaa8649eb9d",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-a25bed63",
-      "concours_id": "ep-a25bed63",
-      "type": "ECRIT",
-      "title": "Publication de la liste des résultats pour le concours de recrutement d'un Ingénieur d'Etat 1er grade - Echelle 11",
-      "administration": "Ministère de l’intérieur -Province de Tata-",
-      "exam_date": "Limite de dépôt : 27 Septembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 330,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/a25bed63-cd17-4f71-abb9-60827ddb43c0",
       "source": "emploi-public.ma"
     }
   ]
