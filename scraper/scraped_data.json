@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-04T18:44:36.392633",
+  "last_sync": "2026-11-04T19:47:39.316247",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
   "concours_count": 23,
-  "convocations_count": 11,
+  "convocations_count": 8,
   "concours": [
+    {
+      "id": "ep-e0775437",
+      "uuid": "e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "title": "Avis de concours de recrutement de Infirmier de premier grade - Echelle 10",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Échelle 10",
+      "degree_required": "Bac+3 / Licence",
+      "posts_count": 10,
+      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/e0775437-60f2-4958-9306-7bfe8a1524f4"
+    },
     {
       "id": "ep-089b0b6f",
       "uuid": "089b0b6f-62e2-4acf-bf7c-42d661636619",
@@ -131,11 +145,11 @@
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0"
     },
     {
-      "id": "manasseb-42601",
+      "id": "manasseb-42603",
       "title": "Concours de Recrutement",
       "title_ar": "مباراة توظيف",
-      "grade": "Échelle 9",
-      "echelle": "9",
+      "grade": "Échelle 8",
+      "echelle": "8",
       "administration": "Administration Publique",
       "administration_ar": "الإدارة العمومية",
       "speciality": "Administration & Métiers",
@@ -144,9 +158,9 @@
       "deadline": "Novembre 2026",
       "exam_date": "",
       "publication_date": "2026-11-04",
-      "reference_code": "MANASSEB-42601",
-      "submission_url": "https://www.manasseb.com/%d9%85%d9%83%d8%aa%d8%a8-%d8%a7%d9%84%d8%aa%d9%83%d9%88%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d9%87%d9%86%d9%8a-%d9%88%d8%a5%d9%86%d8%b9%d8%a7%d8%b4-%d8%a7%d9%84%d8%b4%d8%ba%d9%84-%d9%85%d8%a8%d8%a7%d8%b1-24/",
-      "detail_url": "https://www.manasseb.com/%d9%85%d9%83%d8%aa%d8%a8-%d8%a7%d9%84%d8%aa%d9%83%d9%88%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d9%87%d9%86%d9%8a-%d9%88%d8%a5%d9%86%d8%b9%d8%a7%d8%b4-%d8%a7%d9%84%d8%b4%d8%ba%d9%84-%d9%85%d8%a8%d8%a7%d8%b1-24/",
+      "reference_code": "MANASSEB-42603",
+      "submission_url": "https://www.manasseb.com/%d9%85%d9%83%d8%aa%d8%a8-%d8%a7%d9%84%d8%aa%d9%83%d9%88%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d9%87%d9%86%d9%8a-%d9%88%d8%a5%d9%86%d8%b9%d8%a7%d8%b4-%d8%a7%d9%84%d8%b4%d8%ba%d9%84-%d9%85%d8%a8%d8%a7%d8%b1-25/",
+      "detail_url": "https://www.manasseb.com/%d9%85%d9%83%d8%aa%d8%a8-%d8%a7%d9%84%d8%aa%d9%83%d9%88%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d9%87%d9%86%d9%8a-%d9%88%d8%a5%d9%86%d8%b9%d8%a7%d8%b4-%d8%a7%d9%84%d8%b4%d8%ba%d9%84-%d9%85%d8%a8%d8%a7%d8%b1-25/",
       "written_list_url": "",
       "oral_list_url": "",
       "source": "manasseb.com",
@@ -415,28 +429,6 @@
       "oral_list_url": "",
       "source": "manasseb.com",
       "is_weekly_special": true
-    },
-    {
-      "id": "manasseb-42505",
-      "title": "Concours Technicien 3ème grade (Échelle 9)",
-      "title_ar": "مباراة تقني من الدرجة الثالثة (السلم 9)",
-      "grade": "Échelle 9",
-      "echelle": "9",
-      "administration": "Université Sultan Moulay Slimane - Béni Mellal",
-      "administration_ar": "جامعة السلطان مولاي سليمان - بني ملال",
-      "speciality": "Administration & Métiers",
-      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 1,
-      "deadline": "Novembre 2026",
-      "exam_date": "",
-      "publication_date": "2026-11-01",
-      "reference_code": "MANASSEB-42505",
-      "submission_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d8%b3%d9%84%d8%b7%d8%a7%d9%86-%d9%85%d9%88%d9%84%d8%a7%d9%8a-%d8%b3%d9%84%d9%8a%d9%85%d8%a7%d9%86-%d8%a8%d9%86%d9%8a-%d9%85%d9%84%d8%a7%d9%84-%d9%85-6/",
-      "detail_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d8%b3%d9%84%d8%b7%d8%a7%d9%86-%d9%85%d9%88%d9%84%d8%a7%d9%8a-%d8%b3%d9%84%d9%8a%d9%85%d8%a7%d9%86-%d8%a8%d9%86%d9%8a-%d9%85%d9%84%d8%a7%d9%84-%d9%85-6/",
-      "written_list_url": "",
-      "oral_list_url": "",
-      "source": "manasseb.com",
-      "is_weekly_special": true
     }
   ],
   "convocations": [
@@ -534,42 +526,6 @@
       "exam_center": "Maroc",
       "candidates_count": 330,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/0bcfe0ed-c273-4358-947a-76594b2f2dde",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-163393e4",
-      "concours_id": "ep-163393e4",
-      "type": "ECRIT",
-      "title": "Publication de la liste des résultats pour le concours de recrutement d'un Technicien de 3ème grade - Echelle 9",
-      "administration": "Ministère de la Famille, du Développement social et de l’Égalité",
-      "exam_date": "Limite de dépôt : 27 Septembre 2026\n                                                                                                                            - 16:30",
-      "exam_center": "Maroc",
-      "candidates_count": 270,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/163393e4-8773-494e-ba2d-ad108262c366",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-57d80740",
-      "concours_id": "ep-57d80740",
-      "type": "ECRIT",
-      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Technicien de 3ème grade - Echelle 9",
-      "administration": "Ministère de l’Emploi et du Dialogue social",
-      "exam_date": "Limite de dépôt : 25 Septembre 2026\n                                                                                                                            - 17:30",
-      "exam_center": "Maroc",
-      "candidates_count": 270,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/57d80740-6401-4401-88e8-1545790f97b6",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-258ae7cf",
-      "concours_id": "ep-258ae7cf",
-      "type": "ECRIT",
-      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Administrateur 2ème grade - Echelle 11",
-      "administration": "Ministère de l’Emploi et du Dialogue social",
-      "exam_date": "Limite de dépôt : 25 Septembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 330,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/258ae7cf-4ace-405f-8c04-4eaa8649eb9d",
       "source": "emploi-public.ma"
     }
   ]
