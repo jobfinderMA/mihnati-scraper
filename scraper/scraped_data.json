@@ -1,8 +1,8 @@
 {
-  "last_sync": "2026-11-05T16:57:15.186582",
+  "last_sync": "2026-11-05T17:49:34.680624",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
   "concours_count": 18,
-  "convocations_count": 6,
+  "convocations_count": 7,
   "concours": [
     {
       "id": "ep-e0775437",
@@ -176,7 +176,7 @@
       "administration_ar": "الإدارة العمومية",
       "speciality": "Administration & Métiers",
       "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 8360,
+      "posts_count": 5530,
       "deadline": "Novembre 2026",
       "exam_date": "",
       "publication_date": "2026-11-05",
@@ -323,15 +323,27 @@
   ],
   "convocations": [
     {
-      "id": "manasseb-conv-42674",
-      "concours_id": "manasseb-42674",
+      "id": "manasseb-conv-42676",
+      "concours_id": "manasseb-42676",
       "type": "RESULTAT",
       "title": "Concours de Recrutement (RESULTAT)",
       "administration": "Administration Publique",
       "exam_date": "Novembre 2026",
       "exam_center": "Maroc",
       "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%86%d8%aa%d8%a7%d8%a6%d8%ac-%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%af%d8%a7%d8%ae%d9%84%d9%8a%d8%a9-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81/",
+      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%aa%d8%b1%d8%b4%d8%ad%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d8%b1%d9%83%d8%b2-%d8%a7%d9%84%d9%88%d8%b7-3/",
+      "source": "manasseb.com"
+    },
+    {
+      "id": "manasseb-conv-42675",
+      "concours_id": "manasseb-42675",
+      "type": "ORAL",
+      "title": "Concours de Recrutement (ORAL)",
+      "administration": "Administration Publique",
+      "exam_date": "Novembre 2026",
+      "exam_center": "Maroc",
+      "candidates_count": 25,
+      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-14/",
       "source": "manasseb.com"
     },
     {
