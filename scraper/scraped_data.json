@@ -1,7 +1,7 @@
 {
-  "last_sync": "2026-11-05T17:49:34.680624",
+  "last_sync": "2026-11-05T18:40:49.801459",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
-  "concours_count": 18,
+  "concours_count": 17,
   "convocations_count": 7,
   "concours": [
     {
@@ -176,7 +176,7 @@
       "administration_ar": "الإدارة العمومية",
       "speciality": "Administration & Métiers",
       "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 5530,
+      "posts_count": 594,
       "deadline": "Novembre 2026",
       "exam_date": "",
       "publication_date": "2026-11-05",
@@ -297,41 +297,19 @@
       "oral_list_url": "",
       "source": "manasseb.com",
       "is_weekly_special": true
-    },
-    {
-      "id": "manasseb-42587",
-      "title": "Concours Administrateur 2ème grade (Échelle 11)",
-      "title_ar": "مباراة متصرف من الدرجة الثانية (السلم 11)",
-      "grade": "Échelle 11",
-      "echelle": "11",
-      "administration": "Université Mohammed V - Rabat",
-      "administration_ar": "جامعة محمد الخامس - الرباط",
-      "speciality": "Administration & Métiers",
-      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 1,
-      "deadline": "Novembre 2026",
-      "exam_date": "",
-      "publication_date": "2026-11-04",
-      "reference_code": "MANASSEB-42587",
-      "submission_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d9%85%d8%ad%d9%85%d8%af-%d8%a7%d9%84%d8%ae%d8%a7%d9%85%d8%b3-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d9%85%d8%aa-2/",
-      "detail_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d9%85%d8%ad%d9%85%d8%af-%d8%a7%d9%84%d8%ae%d8%a7%d9%85%d8%b3-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d9%85%d8%aa-2/",
-      "written_list_url": "",
-      "oral_list_url": "",
-      "source": "manasseb.com",
-      "is_weekly_special": true
     }
   ],
   "convocations": [
     {
-      "id": "manasseb-conv-42676",
-      "concours_id": "manasseb-42676",
+      "id": "manasseb-conv-42678",
+      "concours_id": "manasseb-42678",
       "type": "RESULTAT",
       "title": "Concours de Recrutement (RESULTAT)",
       "administration": "Administration Publique",
       "exam_date": "Novembre 2026",
       "exam_center": "Maroc",
       "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%aa%d8%b1%d8%b4%d8%ad%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d8%b1%d9%83%d8%b2-%d8%a7%d9%84%d9%88%d8%b7-3/",
+      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%aa%d8%b1%d8%b4%d8%ad%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%85%d8%af%d9%8a%d9%88%d9%86%d8%a9-%d8%ae%d8%af%d9%85%d8%a7/",
       "source": "manasseb.com"
     },
     {
