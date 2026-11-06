@@ -1,8 +1,8 @@
 {
-  "last_sync": "2026-11-06T06:54:38.565260",
+  "last_sync": "2026-11-06T08:06:51.966701",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
   "concours_count": 16,
-  "convocations_count": 7,
+  "convocations_count": 6,
   "concours": [
     {
       "id": "ep-e0775437",
@@ -145,6 +145,28 @@
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0"
     },
     {
+      "id": "manasseb-42729",
+      "title": "Concours de Recrutement",
+      "title_ar": "مباراة توظيف",
+      "grade": "Échelle 11",
+      "echelle": "11",
+      "administration": "Administration Publique",
+      "administration_ar": "الإدارة العمومية",
+      "speciality": "Administration & Métiers",
+      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
+      "posts_count": 594,
+      "deadline": "Novembre 2026",
+      "exam_date": "",
+      "publication_date": "2026-11-06",
+      "reference_code": "MANASSEB-42729",
+      "submission_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d9%81%d9%84%d8%a7%d8%ad%d8%a9-%d9%88%d8%a7%d9%84%d8%b5%d9%8a%d8%af-%d8%a7%d9%84%d8%a8%d8%ad%d8%b1%d9%8a-%d9%88%d8%a7%d9%84%d8%b3%d9%8a%d8%a7%d8%af%d8%a9-2/",
+      "detail_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d9%81%d9%84%d8%a7%d8%ad%d8%a9-%d9%88%d8%a7%d9%84%d8%b5%d9%8a%d8%af-%d8%a7%d9%84%d8%a8%d8%ad%d8%b1%d9%8a-%d9%88%d8%a7%d9%84%d8%b3%d9%8a%d8%a7%d8%af%d8%a9-2/",
+      "written_list_url": "",
+      "oral_list_url": "",
+      "source": "manasseb.com",
+      "is_weekly_special": true
+    },
+    {
       "id": "manasseb-42656",
       "title": "Concours Administrateur 3ème grade (Échelle 10)",
       "title_ar": "مباراة متصرف من الدرجة الثالثة (السلم 10)",
@@ -161,28 +183,6 @@
       "reference_code": "MANASSEB-42656",
       "submission_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d8%ad%d8%b3%d9%86-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%8a-%d8%a7%d9%84%d8%af%d8%a7%d8%b1%d8%a7%d9%84%d8%a8%d9%8a%d8%b6%d8%a7%d8%a1-%d9%85%d8%a8%d8%a7%d8%b1-9/",
       "detail_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d8%ad%d8%b3%d9%86-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%8a-%d8%a7%d9%84%d8%af%d8%a7%d8%b1%d8%a7%d9%84%d8%a8%d9%8a%d8%b6%d8%a7%d8%a1-%d9%85%d8%a8%d8%a7%d8%b1-9/",
-      "written_list_url": "",
-      "oral_list_url": "",
-      "source": "manasseb.com",
-      "is_weekly_special": true
-    },
-    {
-      "id": "manasseb-42648",
-      "title": "Concours de Recrutement",
-      "title_ar": "مباراة توظيف",
-      "grade": "Échelle 11",
-      "echelle": "11",
-      "administration": "Administration Publique",
-      "administration_ar": "الإدارة العمومية",
-      "speciality": "Administration & Métiers",
-      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 594,
-      "deadline": "Novembre 2026",
-      "exam_date": "",
-      "publication_date": "2026-11-05",
-      "reference_code": "MANASSEB-42648",
-      "submission_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%b4%d8%b9%d9%8a%d8%a8-%d8%a7%d9%84%d8%af%d9%83%d8%a7%d9%84%d9%8a-%d8%a7%d9%84%d8%ac%d8%af%d9%8a%d8%af%d8%a9-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7-4/",
-      "detail_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%b4%d8%b9%d9%8a%d8%a8-%d8%a7%d9%84%d8%af%d9%83%d8%a7%d9%84%d9%8a-%d8%a7%d9%84%d8%ac%d8%af%d9%8a%d8%af%d8%a9-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7-4/",
       "written_list_url": "",
       "oral_list_url": "",
       "source": "manasseb.com",
@@ -300,18 +300,6 @@
       "exam_center": "Maroc",
       "candidates_count": 25,
       "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%aa%d8%b1%d8%b4%d8%ad%d9%8a%d9%86-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d8%a7%d9%84%d9%88%d9%83%d8%a7%d9%84%d8%a9-%d8%a7%d9%84%d8%ad-12/",
-      "source": "manasseb.com"
-    },
-    {
-      "id": "manasseb-conv-42620",
-      "concours_id": "manasseb-42620",
-      "type": "ORAL",
-      "title": "Concours Technicien 3ème grade (Échelle 9) (ORAL)",
-      "administration": "Université Sidi Mohamed Ben Abdellah - Fès",
-      "exam_date": "Novembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-13/",
       "source": "manasseb.com"
     },
     {
