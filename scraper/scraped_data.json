@@ -1,7 +1,7 @@
 {
-  "last_sync": "2026-11-06T17:39:32.139457",
+  "last_sync": "2026-11-06T18:40:00.643343",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
-  "concours_count": 18,
+  "concours_count": 19,
   "convocations_count": 4,
   "concours": [
     {
@@ -143,6 +143,28 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0"
+    },
+    {
+      "id": "manasseb-42734",
+      "title": "Recrutement Cadre Responsable d'exploitation",
+      "title_ar": "توظيف مسؤول",
+      "grade": "Échelle 11",
+      "echelle": "11",
+      "administration": "Administration Publique",
+      "administration_ar": "الإدارة العمومية",
+      "speciality": "Administration & Métiers",
+      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
+      "posts_count": 1,
+      "deadline": "Novembre 2026",
+      "exam_date": "",
+      "publication_date": "2026-11-06",
+      "reference_code": "MANASSEB-42734",
+      "submission_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%af%d8%a7%d8%ae%d9%84%d9%8a%d8%a9-%d8%b9%d9%85%d8%a7%d9%84%d8%a9-%d8%a5%d9%82%d9%84%d9%8a%d9%85-%d8%a7%d9%84%d8%ac%d8%af%d9%8a%d8%af%d8%a9-%d9%81%d8%aa-2/",
+      "detail_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%af%d8%a7%d8%ae%d9%84%d9%8a%d8%a9-%d8%b9%d9%85%d8%a7%d9%84%d8%a9-%d8%a5%d9%82%d9%84%d9%8a%d9%85-%d8%a7%d9%84%d8%ac%d8%af%d9%8a%d8%af%d8%a9-%d9%81%d8%aa-2/",
+      "written_list_url": "",
+      "oral_list_url": "",
+      "source": "manasseb.com",
+      "is_weekly_special": true
     },
     {
       "id": "manasseb-42711",
