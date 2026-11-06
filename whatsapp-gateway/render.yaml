@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: mihnati-whatsapp-gateway
+    env: node
+    plan: free
+    rootDir: whatsapp-gateway
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: API_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000

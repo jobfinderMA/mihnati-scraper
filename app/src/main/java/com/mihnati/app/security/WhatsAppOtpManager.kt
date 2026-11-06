@@ -55,6 +55,10 @@ object WhatsAppOtpManager {
         private set
     var configuredToken: String? = null
         private set
+    var configuredCustomUrl: String? = null
+        private set
+    var configuredCustomApiKey: String? = null
+        private set
 
     fun loadGatewayConfig(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -62,16 +66,24 @@ object WhatsAppOtpManager {
         val token = prefs.getString(KEY_GREEN_API_TOKEN, null)
         val customUrl = prefs.getString(KEY_CUSTOM_GATEWAY_URL, null)
 
+        val customKey = prefs.getString("custom_gateway_api_key", null)
         configuredInstanceId = id
         configuredToken = token
+        configuredCustomUrl = customUrl
+        configuredCustomApiKey = customKey
 
         if (!id.isNullOrEmpty() && !token.isNullOrEmpty()) {
             externalWhatsAppGatewayUrl = "https://api.green-api.com/waInstance$id/sendMessage/$token"
             externalWhatsAppApiKey = token
             Log.i(TAG, "Green-API Gateway initialized with instance: $id")
         } else if (!customUrl.isNullOrEmpty()) {
-            externalWhatsAppGatewayUrl = customUrl
-            Log.i(TAG, "Custom Gateway initialized: $customUrl")
+            externalWhatsAppGatewayUrl = if (customUrl.endsWith("/send-text") || customUrl.endsWith("/sendMessage") || customUrl.endsWith("/send-otp")) {
+                customUrl
+            } else {
+                "${customUrl.removeSuffix("/")}/send-text"
+            }
+            externalWhatsAppApiKey = customKey
+            Log.i(TAG, "Custom Gateway initialized: $externalWhatsAppGatewayUrl")
         }
     }
 
@@ -88,6 +100,30 @@ object WhatsAppOtpManager {
         externalWhatsAppGatewayUrl = "https://api.green-api.com/waInstance$cleanId/sendMessage/$cleanToken"
         externalWhatsAppApiKey = cleanToken
         Log.i(TAG, "Green-API Gateway updated: instance $cleanId")
+    }
+
+    fun saveCustomGatewayConfig(context: Context, gatewayUrl: String, apiKey: String) {
+        val cleanUrl = gatewayUrl.trim().removeSuffix("/")
+        val cleanKey = apiKey.trim()
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+            .putString(KEY_CUSTOM_GATEWAY_URL, cleanUrl)
+            .putString("custom_gateway_api_key", cleanKey)
+            .remove(KEY_GREEN_API_ID)
+            .remove(KEY_GREEN_API_TOKEN)
+            .apply()
+
+        configuredInstanceId = null
+        configuredToken = null
+        configuredCustomUrl = cleanUrl
+        configuredCustomApiKey = cleanKey
+
+        externalWhatsAppGatewayUrl = if (cleanUrl.endsWith("/send-text") || cleanUrl.endsWith("/sendMessage") || cleanUrl.endsWith("/send-otp")) {
+            cleanUrl
+        } else {
+            "$cleanUrl/send-text"
+        }
+        externalWhatsAppApiKey = cleanKey.ifEmpty { null }
+        Log.i(TAG, "Custom Cloud Gateway updated: $externalWhatsAppGatewayUrl")
     }
 
     fun isGatewayConfigured(): Boolean {
@@ -319,6 +355,19 @@ object WhatsAppOtpManager {
                     } catch (e: Exception) {
                         Log.w(TAG, "Green-API sendFileByUrl failed: ${e.message}")
                     }
+                } else if (!gatewayUrl.isNullOrEmpty() && (pdfUrl.contains("pdf", ignoreCase = true) || pdfUrl.startsWith("http"))) {
+                    try {
+                        sendPdfViaCustomGateway(
+                            gatewayUrl = gatewayUrl,
+                            apiKey = externalWhatsAppApiKey,
+                            phone = normalized,
+                            pdfUrl = pdfUrl,
+                            fileName = "Convocation_${stageType}.pdf",
+                            caption = "📄 Liste officielle $stageHeader - $ministry"
+                        )
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Custom Gateway send-pdf failed: ${e.message}")
+                    }
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "Failed sending WhatsApp webhook: ${e.message}")
@@ -417,6 +466,46 @@ object WhatsAppOtpManager {
         OutputStreamWriter(conn.outputStream).use { it.write(jsonPayload) }
         val code = conn.responseCode
         Log.d(TAG, "Green-API sendFileByUrl response code: $code")
+        conn.disconnect()
+    }
+
+    private fun sendPdfViaCustomGateway(
+        gatewayUrl: String,
+        apiKey: String?,
+        phone: String,
+        pdfUrl: String,
+        fileName: String,
+        caption: String
+    ) {
+        val baseUrl = if (gatewayUrl.endsWith("/send-text") || gatewayUrl.endsWith("/send-otp") || gatewayUrl.endsWith("/sendMessage")) {
+            gatewayUrl.substringBeforeLast("/")
+        } else {
+            gatewayUrl.removeSuffix("/")
+        }
+        val targetUrl = "$baseUrl/send-pdf"
+        val url = URL(targetUrl)
+        val conn = url.openConnection() as HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type", "application/json")
+        if (!apiKey.isNullOrEmpty()) {
+            conn.setRequestProperty("Authorization", "Bearer $apiKey")
+            conn.setRequestProperty("x-api-key", apiKey)
+        }
+        conn.doOutput = true
+
+        val cleanPhone = phone.replace("+", "").replace(" ", "")
+        val jsonPayload = """
+            {
+              "phone": "$cleanPhone",
+              "pdfUrl": "$pdfUrl",
+              "fileName": "$fileName",
+              "caption": ${jsonEscape(caption)}
+            }
+        """.trimIndent()
+
+        OutputStreamWriter(conn.outputStream).use { it.write(jsonPayload) }
+        val code = conn.responseCode
+        Log.d(TAG, "Custom Gateway send-pdf response code: $code")
         conn.disconnect()
     }
 

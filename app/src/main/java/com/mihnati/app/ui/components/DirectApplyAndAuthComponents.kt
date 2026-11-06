@@ -1122,7 +1122,7 @@ fun GoogleSignInDialog(
 }
 
 /**
- * Universal Dialog to configure and test the WhatsApp Gateway (Green-API)
+ * Universal Dialog to configure and test the WhatsApp Gateway (Cloud 24/7 or Green-API)
  */
 @Composable
 fun WhatsAppGatewayConfigDialog(
@@ -1130,6 +1130,9 @@ fun WhatsAppGatewayConfigDialog(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    var selectedTab by remember { mutableStateOf(if (WhatsAppOtpManager.configuredInstanceId != null) 1 else 0) }
+    var customUrlInput by remember { mutableStateOf(WhatsAppOtpManager.configuredCustomUrl ?: "") }
+    var customKeyInput by remember { mutableStateOf(WhatsAppOtpManager.configuredCustomApiKey ?: "") }
     var instanceIdInput by remember { mutableStateOf(WhatsAppOtpManager.configuredInstanceId ?: "") }
     var tokenInput by remember { mutableStateOf(WhatsAppOtpManager.configuredToken ?: "") }
     var testPhoneInput by remember { mutableStateOf(MihnatiSecurityVault.getUserPhoneNumber(context).ifEmpty { "0612345678" }) }
@@ -1140,37 +1143,84 @@ fun WhatsAppGatewayConfigDialog(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("💬", fontSize = 22.sp)
-                Text("Passerelle WhatsApp & Green-API", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(autoTranslate("Passerelle WhatsApp 24/7"), fontWeight = FontWeight.Bold, fontSize = 16.sp)
             }
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(
-                    text = "Configurez votre instance Green-API gratuite pour envoyer automatiquement les codes SMS-free et les PDF de convocations (Écrit / Oral / Admis).",
-                    fontSize = 12.sp,
-                    color = OnSurfaceVariant,
-                    lineHeight = 16.sp
-                )
+                TabRow(
+                    selectedTabIndex = selectedTab,
+                    containerColor = SurfaceContainerLow,
+                    contentColor = Primary,
+                    modifier = Modifier.clip(RoundedCornerShape(8.dp))
+                ) {
+                    Tab(
+                        selected = selectedTab == 0,
+                        onClick = { selectedTab = 0 },
+                        text = { Text("Cloud Illimité ⚡", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+                    )
+                    Tab(
+                        selected = selectedTab == 1,
+                        onClick = { selectedTab = 1 },
+                        text = { Text("Green-API 🌐", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+                    )
+                }
 
-                OutlinedTextField(
-                    value = instanceIdInput,
-                    onValueChange = { instanceIdInput = it.trim() },
-                    label = { Text("ID Instance (ex: 1101823456)") },
-                    placeholder = { Text("1101823456") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
-                )
+                if (selectedTab == 0) {
+                    Text(
+                        text = "Connectez votre passerelle cloud Baileys / Render pour envoyer des codes 2FA et des convocations PDF 24/7 de façon illimitée et 100% gratuite.",
+                        fontSize = 11.5.sp,
+                        color = OnSurfaceVariant,
+                        lineHeight = 15.sp
+                    )
 
-                OutlinedTextField(
-                    value = tokenInput,
-                    onValueChange = { tokenInput = it.trim() },
-                    label = { Text("Token API (ex: 7a8b9c...)") },
-                    placeholder = { Text("Token d'accès Green-API") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
-                )
+                    OutlinedTextField(
+                        value = customUrlInput,
+                        onValueChange = { customUrlInput = it.trim() },
+                        label = { Text("URL Passerelle Cloud") },
+                        placeholder = { Text("https://mon-bot.onrender.com") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = customKeyInput,
+                        onValueChange = { customKeyInput = it.trim() },
+                        label = { Text("Clé Secrète API") },
+                        placeholder = { Text("mihnati_secret_gateway_2026") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                } else {
+                    Text(
+                        text = "Configurez votre instance Green-API pour envoyer automatiquement les codes et les PDF de convocations.",
+                        fontSize = 11.5.sp,
+                        color = OnSurfaceVariant,
+                        lineHeight = 15.sp
+                    )
+
+                    OutlinedTextField(
+                        value = instanceIdInput,
+                        onValueChange = { instanceIdInput = it.trim() },
+                        label = { Text("ID Instance (ex: 1101823456)") },
+                        placeholder = { Text("1101823456") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = tokenInput,
+                        onValueChange = { tokenInput = it.trim() },
+                        label = { Text("Token API (ex: 7a8b9c...)") },
+                        placeholder = { Text("Token d'accès Green-API") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                }
 
                 if (WhatsAppOtpManager.isGatewayConfigured()) {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = OutlineVariant.copy(alpha = 0.5f))
@@ -1222,14 +1272,21 @@ fun WhatsAppGatewayConfigDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    if (instanceIdInput.isNotBlank() && tokenInput.isNotBlank()) {
-                        WhatsAppOtpManager.saveGreenApiConfig(context, instanceIdInput, tokenInput)
-                        Toast.makeText(context, "Passerelle Green-API enregistrée !", Toast.LENGTH_SHORT).show()
+                    if (selectedTab == 0) {
+                        if (customUrlInput.isNotBlank()) {
+                            WhatsAppOtpManager.saveCustomGatewayConfig(context, customUrlInput, customKeyInput)
+                            Toast.makeText(context, "Passerelle Cloud enregistrée !", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        if (instanceIdInput.isNotBlank() && tokenInput.isNotBlank()) {
+                            WhatsAppOtpManager.saveGreenApiConfig(context, instanceIdInput, tokenInput)
+                            Toast.makeText(context, "Passerelle Green-API enregistrée !", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     onDismiss()
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366)),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366))
             ) {
                 Text("Enregistrer", fontWeight = FontWeight.Bold)
             }
