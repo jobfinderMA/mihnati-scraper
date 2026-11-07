@@ -1,5 +1,5 @@
 {
-  "last_sync": "2026-11-07T15:26:56.164776",
+  "last_sync": "2026-11-07T16:26:39.099756",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
   "concours_count": 23,
   "convocations_count": 4,
@@ -145,7 +145,7 @@
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0"
     },
     {
-      "id": "manasseb-42792",
+      "id": "manasseb-42794",
       "title": "Concours Technicien 3ème grade (Échelle 9)",
       "title_ar": "مباراة تقني من الدرجة الثالثة (السلم 9)",
       "grade": "Échelle 9",
@@ -158,9 +158,9 @@
       "deadline": "Novembre 2026",
       "exam_date": "",
       "publication_date": "2026-11-07",
-      "reference_code": "MANASSEB-42792",
-      "submission_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d9%82%d8%a7%d8%b6%d9%8a-%d8%b9%d9%8a%d8%a7%d8%b6-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%aa%d9%82-4/",
-      "detail_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d9%82%d8%a7%d8%b6%d9%8a-%d8%b9%d9%8a%d8%a7%d8%b6-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%aa%d9%82-4/",
+      "reference_code": "MANASSEB-42794",
+      "submission_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d9%82%d8%a7%d8%b6%d9%8a-%d8%b9%d9%8a%d8%a7%d8%b6-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%aa%d9%82-5/",
+      "detail_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d9%82%d8%a7%d8%b6%d9%8a-%d8%b9%d9%8a%d8%a7%d8%b6-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d8%aa%d9%82-5/",
       "written_list_url": "",
       "oral_list_url": "",
       "source": "manasseb.com",
