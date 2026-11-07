@@ -1,7 +1,7 @@
 {
-  "last_sync": "2026-11-07T10:30:49.682014",
+  "last_sync": "2026-11-07T11:24:46.662793",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
-  "concours_count": 22,
+  "concours_count": 23,
   "convocations_count": 4,
   "concours": [
     {
@@ -143,6 +143,28 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0"
+    },
+    {
+      "id": "manasseb-42784",
+      "title": "Concours Administrateur 2ème grade (Échelle 11)",
+      "title_ar": "مباراة متصرف من الدرجة الثانية (السلم 11)",
+      "grade": "Échelle 11",
+      "echelle": "11",
+      "administration": "Université Cadi Ayyad - Marrakech",
+      "administration_ar": "جامعة القاضي عياض - مراكش",
+      "speciality": "Administration & Métiers",
+      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
+      "posts_count": 1,
+      "deadline": "Novembre 2026",
+      "exam_date": "",
+      "publication_date": "2026-11-07",
+      "reference_code": "MANASSEB-42784",
+      "submission_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d9%82%d8%a7%d8%b6%d9%8a-%d8%b9%d9%8a%d8%a7%d8%b6-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d9%85%d8%aa/",
+      "detail_url": "https://www.manasseb.com/%d8%ac%d8%a7%d9%85%d8%b9%d8%a9-%d8%a7%d9%84%d9%82%d8%a7%d8%b6%d9%8a-%d8%b9%d9%8a%d8%a7%d8%b6-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d9%88%d8%b8%d9%8a%d9%81-%d9%85%d8%aa/",
+      "written_list_url": "",
+      "oral_list_url": "",
+      "source": "manasseb.com",
+      "is_weekly_special": true
     },
     {
       "id": "manasseb-42782",
