@@ -1268,7 +1268,13 @@ fun OpportunityDetailScreen(
                         .clickable {
                             MihnatiRepository.toggleBookmark(opportunity.id)
                             val state = !opportunity.isBookmarked
-                            Toast.makeText(context, if (state) "Offre ajoutée aux favoris" else "Offre retirée des favoris", Toast.LENGTH_SHORT).show()
+                            if (state) {
+                                com.mihnati.app.notifications.ConcoursAlarmScheduler.scheduleDeadlineAlarms(context, opportunity)
+                                Toast.makeText(context, "Offre ajoutee aux favoris & Rappels J-2/J-1 actives", Toast.LENGTH_SHORT).show()
+                            } else {
+                                com.mihnati.app.notifications.ConcoursAlarmScheduler.cancelDeadlineAlarms(context, opportunity.id)
+                                Toast.makeText(context, "Offre retiree des favoris", Toast.LENGTH_SHORT).show()
+                            }
                         },
                     contentAlignment = Alignment.Center
                 ) {

@@ -242,15 +242,124 @@ object MihnatiNotificationHelper {
         NotificationManagerCompat.from(context).notify((1000..9999).random(), notification)
     }
 
+    fun showDeadlineReminder(
+        context: Context,
+        concoursId: String,
+        title: String,
+        administration: String,
+        deadline: String,
+        daysRemaining: Int
+    ) {
+        if (!hasNotificationPermission(context)) return
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra(EXTRA_OPPORTUNITY_ID, concoursId)
+            putExtra(EXTRA_TARGET_TAB, "Opportunites")
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            (concoursId + "DEADLINE_$daysRemaining").hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val isFinalDay = daysRemaining <= 1
+        val notifTitle = if (isFinalDay) "DERNIER JOUR (J-1) : Cloture demain !" else "Rappel J-2 : Cloture dans 48 heures !"
+        val notifBody = "Le concours $title ($administration) se cloture le $deadline. Ne tardez pas a deposer votre dossier !"
+
+        val builder = NotificationCompat.Builder(context, CHANNEL_DEADLINES)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(notifTitle)
+            .setContentText("$administration - Cloture : $deadline")
+            .setStyle(NotificationCompat.BigTextStyle().bigText("$notifBody\n\nAdministration : $administration\nDate limite : $deadline"))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setColor(if (isFinalDay) 0xFFD32F2F.toInt() else 0xFFF57C00.toInt())
+            .addAction(0, "Consulter l'Avis PDF & Postuler", pendingIntent)
+
+        NotificationManagerCompat.from(context).notify((concoursId + "DEADLINE").hashCode(), builder.build())
+    }
+
+    fun showConvocationPublishedNotification(
+        context: Context,
+        concoursId: String,
+        title: String,
+        administration: String,
+        listTypeLabel: String,
+        candidatesCount: Int,
+        examDate: String,
+        pdfUrl: String
+    ) {
+        if (!hasNotificationPermission(context)) return
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra(EXTRA_OPPORTUNITY_ID, concoursId)
+            putExtra(EXTRA_TARGET_TAB, "Candidatures")
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            (concoursId + "CONVOCATION").hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notifTitle = "Nouvelle Liste Convoques : $listTypeLabel"
+        val notifBody = "$administration vient de publier la liste officielle ($candidatesCount candidats convoques).\nDate d'epreuve : $examDate"
+
+        val builder = NotificationCompat.Builder(context, CHANNEL_CONVOCATIONS)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(notifTitle)
+            .setContentText("$administration - $candidatesCount convoques")
+            .setStyle(NotificationCompat.BigTextStyle().bigText("$notifBody\n\nConsultez la liste et verifiez votre convocation dans Mihnati."))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_EVENT)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setColor(0xFF006C4A.toInt())
+            .addAction(0, "Verifier la Liste (PDF)", pendingIntent)
+
+        NotificationManagerCompat.from(context).notify((concoursId + "CONVOCATION").hashCode(), builder.build())
+    }
+
     fun showTestNotification(context: Context) {
         showConcoursAlert(
             context = context,
             notificationId = 1001,
             concoursId = "mef-admin-2026",
-            title = "Administrateur 2ème grade - Échelle 11",
-            administration = "Ministère de l'Économie et des Finances",
+            title = "Administrateur 2eme grade - Echelle 11",
+            administration = "Ministere de l'Economie et des Finances",
             postsCount = 120,
             deadline = "15 Novembre 2026 (16:30)"
+        )
+    }
+
+    fun showTestDeadlineNotification(context: Context) {
+        showDeadlineReminder(
+            context = context,
+            concoursId = "mef-admin-2026",
+            title = "Administrateur 2eme grade (Echelle 11)",
+            administration = "Ministere de l'Economie et des Finances",
+            deadline = "15 Novembre 2026 a 16:30",
+            daysRemaining = 1
+        )
+    }
+
+    fun showTestConvocationNotification(context: Context) {
+        showConvocationPublishedNotification(
+            context = context,
+            concoursId = "mef-admin-2026",
+            title = "Administrateurs 2eme grade",
+            administration = "Ministere de l'Economie et des Finances",
+            listTypeLabel = "Epreuve Orale",
+            candidatesCount = 284,
+            examDate = "20 Novembre au 03 Decembre 2026",
+            pdfUrl = "https://www.finances.gov.ma/Docs/Liste_Oral_Admin_2026.pdf"
         )
     }
 

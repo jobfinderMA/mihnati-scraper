@@ -105,45 +105,73 @@ fun NotificationsSheet(
                 modifier = Modifier.padding(bottom = 4.dp)
             )
 
-            // Android System Push Notifications Banner & Test Action
+            // Android System Push Notifications Banner & Test Actions
             val context = androidx.compose.ui.platform.LocalContext.current
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 6.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = SecondaryContainer.copy(alpha = 0.35f),
+                shape = RoundedCornerShape(14.dp),
+                color = SecondaryContainer.copy(alpha = 0.3f),
                 border = androidx.compose.foundation.BorderStroke(1.dp, Secondary.copy(alpha = 0.25f))
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text(text = "🔔", fontSize = 14.sp)
+                            Text(text = "🔔", fontSize = 16.sp)
                             Text(
-                                text = autoTranslate("Alertes Système Android"),
+                                text = autoTranslate("Rappels Délais & Convocations"),
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, color = OnSecondaryContainer)
                             )
                         }
                         Text(
-                            text = autoTranslate("Actives 24/7 en arrière-plan (WorkManager Cloud)"),
-                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, color = OnSurfaceVariant)
+                            text = autoTranslate("Actif 24/7"),
+                            style = MaterialTheme.typography.labelSmall.copy(color = Secondary, fontWeight = FontWeight.Bold)
                         )
                     }
-                    Button(
-                        onClick = {
-                            com.mihnati.app.notifications.MihnatiNotificationHelper.showTestNotification(context)
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Primary),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
-                        shape = RoundedCornerShape(8.dp)
+                    Text(
+                        text = autoTranslate("Alertes automatiques 48h et 24h avant clôture des candidatures, et notification immédiate dès publication des listes de convoqués."),
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, color = OnSurfaceVariant)
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(text = autoTranslate("Tester 📲"), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                        Button(
+                            onClick = {
+                                com.mihnati.app.notifications.MihnatiNotificationHelper.showTestDeadlineNotification(context)
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = Primary),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Icon(imageVector = Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(14.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = autoTranslate("Tester Rappel J-1"), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                        }
+                        Button(
+                            onClick = {
+                                com.mihnati.app.notifications.MihnatiNotificationHelper.showTestConvocationNotification(context)
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = Secondary),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Icon(imageVector = Icons.Default.Description, contentDescription = null, modifier = Modifier.size(14.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = autoTranslate("Tester Convocation"), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                        }
                     }
                 }
             }

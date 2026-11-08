@@ -28,6 +28,7 @@ import com.mihnati.app.data.model.Opportunity
 import com.mihnati.app.data.model.SectorType
 import com.mihnati.app.data.repository.MihnatiRepository
 import com.mihnati.app.ui.components.ConcoursChecklistDialog
+import com.mihnati.app.ui.components.AdvancedFilterBottomSheet
 import com.mihnati.app.ui.components.DiplomaEligibilityBottomSheet
 import com.mihnati.app.ui.components.SalarySimulatorBottomSheet
 import com.mihnati.app.ui.components.TagBadge
@@ -50,6 +51,16 @@ fun OpportunitiesScreen(
     var selectedSource by remember { mutableStateOf<String?>(null) }
     var isLevelTrayExpanded by remember { mutableStateOf(false) }
     var selectedSort by remember { mutableStateOf("Échéance proche") }
+    var selectedEchelle by remember { mutableStateOf<Int?>(null) }
+    var selectedRegion by remember { mutableStateOf("Toutes les régions") }
+    var selectedPostsRange by remember { mutableStateOf("Tous volumes") }
+    var showAdvancedFilterSheet by remember { mutableStateOf(false) }
+
+    val activeAdvancedFilterCount = (if (selectedEchelle != null) 1 else 0) +
+            (if (selectedLevel != "Tous niveaux") 1 else 0) +
+            (if (selectedRegion != "Toutes les régions") 1 else 0) +
+            (if (selectedPostsRange != "Tous volumes") 1 else 0) +
+            (if (selectedSort != "Échéance proche") 1 else 0)
 
     // Dialog & Sheet States
     var showSalarySimulator by remember { mutableStateOf(false) }
@@ -79,7 +90,10 @@ fun OpportunitiesScreen(
         onlyUrgent,
         onlyWeeklySpecial,
         selectedSource,
-        selectedSort
+        selectedSort,
+        selectedEchelle,
+        selectedRegion,
+        selectedPostsRange
     ) {
         var list = opportunities
 
@@ -125,8 +139,44 @@ fun OpportunitiesScreen(
             }
         }
 
+        if (selectedEchelle != null) {
+            val targetStr1 = "chelle $selectedEchelle"
+            val targetStr2 = "grade"
+            list = list.filter { opp ->
+                opp.title.contains(targetStr1, ignoreCase = true) ||
+                opp.salary.contains(targetStr1, ignoreCase = true) ||
+                opp.field.contains(targetStr1, ignoreCase = true) ||
+                opp.degreeRequired.contains(targetStr1, ignoreCase = true) ||
+                opp.description.contains(targetStr1, ignoreCase = true) ||
+                (selectedEchelle == 11 && (opp.degreeRequired.contains("Master", ignoreCase = true) || opp.degreeRequired.contains("Ing", ignoreCase = true))) ||
+                (selectedEchelle == 10 && (opp.degreeRequired.contains("Licence", ignoreCase = true) || opp.title.contains("Infirmier", ignoreCase = true))) ||
+                (selectedEchelle == 9 && (opp.degreeRequired.contains("DUT", ignoreCase = true) || opp.degreeRequired.contains("BTS", ignoreCase = true) || opp.title.contains("3eme", ignoreCase = true)))
+            }
+        }
+
+        if (selectedRegion != "Toutes les régions") {
+            val shortRegion = selectedRegion.split("-").firstOrNull()?.trim() ?: selectedRegion
+            list = list.filter { opp ->
+                opp.location.contains(shortRegion, ignoreCase = true) ||
+                opp.location.contains("National", ignoreCase = true) ||
+                opp.organization.contains(shortRegion, ignoreCase = true)
+            }
+        }
+
+        if (selectedPostsRange != "Tous volumes") {
+            list = list.filter { opp ->
+                when {
+                    selectedPostsRange.contains("+50") -> opp.postsCount >= 50
+                    selectedPostsRange.contains("10") -> opp.postsCount in 10..49
+                    selectedPostsRange.contains("1") -> opp.postsCount in 1..9
+                    else -> true
+                }
+            }
+        }
+
         when (selectedSort) {
             "Échéance proche" -> list.sortedBy { it.deadlineDaysRemaining }
+            "Nombre de postes" -> list.sortedByDescending { it.postsCount }
             "Pertinence profil" -> list.sortedByDescending { it.matchPercentage }
             else -> list
         }
@@ -187,6 +237,84 @@ fun OpportunitiesScreen(
                             )
                         }
                     }
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(if (activeAdvancedFilterCount > 0) Primary else SurfaceContainerHigh)
+                            .clickable { showAdvancedFilterSheet = true }
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Tune,
+                                contentDescription = "Filtres",
+                                tint = if (activeAdvancedFilterCount > 0) Color.White else Primary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = autoTranslate("Filtres"),
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (activeAdvancedFilterCount > 0) Color.White else OnSurface
+                                )
+                            )
+                            if (activeAdvancedFilterCount > 0) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(18.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.White),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "$activeAdvancedFilterCount",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = Primary,
+                                            fontSize = 10.sp
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Active Filters Summary Bar
+        if (activeAdvancedFilterCount > 0) {
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${filteredOpportunities.size} ${autoTranslate("concours trouvés")}",
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Primary
+                        )
+                    )
+                    Text(
+                        text = autoTranslate("Effacer filtres"),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = Error,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.clickable {
+                            selectedEchelle = null
+                            selectedLevel = "Tous niveaux"
+                            selectedRegion = "Toutes les régions"
+                            selectedPostsRange = "Tous volumes"
+                            selectedSort = "Échéance proche"
+                        }
+                    )
                 }
             }
         }
@@ -768,6 +896,31 @@ fun OpportunitiesScreen(
     if (showDiplomaEligibility) {
         DiplomaEligibilityBottomSheet(
             onDismiss = { showDiplomaEligibility = false }
+        )
+    }
+
+    if (showAdvancedFilterSheet) {
+        AdvancedFilterBottomSheet(
+            initialEchelle = selectedEchelle,
+            initialLevel = selectedLevel,
+            initialRegion = selectedRegion,
+            initialPostsRange = selectedPostsRange,
+            initialSort = selectedSort,
+            onApplyFilters = { echelle, level, region, postsRange, sort ->
+                selectedEchelle = echelle
+                selectedLevel = level
+                selectedRegion = region
+                selectedPostsRange = postsRange
+                selectedSort = sort
+            },
+            onResetFilters = {
+                selectedEchelle = null
+                selectedLevel = "Tous niveaux"
+                selectedRegion = "Toutes les régions"
+                selectedPostsRange = "Tous volumes"
+                selectedSort = "Échéance proche"
+            },
+            onDismiss = { showAdvancedFilterSheet = false }
         )
     }
 }
