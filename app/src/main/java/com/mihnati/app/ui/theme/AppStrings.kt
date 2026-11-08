@@ -45,8 +45,8 @@ object AppStrings {
     val diplomaCheckerSubtitle: String @Composable get() = autoTranslate("Échelle & Corps")
     val oralPrep: String @Composable get() = autoTranslate("Prépa Entretien")
     val oralPrepSubtitle: String @Composable get() = autoTranslate("Questions commissions")
-    val pdfExportTitle: String @Composable get() = autoTranslate("Dossier PDF A4")
-    val pdfExportSubtitle: String @Composable get() = autoTranslate("Demande & CV officiel")
+    val pdfExportTitle: String @Composable get() = autoTranslate("Avis & Listes PDF")
+    val pdfExportSubtitle: String @Composable get() = autoTranslate("Avis officiels & Convocations")
 
     // Observatory Stats
     val observatoryTitle: String @Composable get() = autoTranslate("OBSERVATOIRE DE L'EMPLOI PUBLIC 2026")

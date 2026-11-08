@@ -58,7 +58,8 @@ data class Opportunity(
     val examDate: String = "",
     val postsCount: Int = 1,
     val titleAr: String = "",
-    val organizationAr: String = ""
+    val organizationAr: String = "",
+    val avisPdfUrl: String = ""
 )
 
 data class Application(

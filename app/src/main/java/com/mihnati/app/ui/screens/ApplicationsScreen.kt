@@ -33,6 +33,7 @@ import com.mihnati.app.data.repository.MihnatiRepository
 import com.mihnati.app.ui.components.ApplicationStepper
 import com.mihnati.app.ui.components.DemoDataBanner
 import com.mihnati.app.ui.components.TagBadge
+import com.mihnati.app.ui.components.openOfficialPdf
 import com.mihnati.app.ui.theme.*
 import com.mihnati.app.translation.autoTranslate
 
@@ -431,14 +432,18 @@ fun ApplicationsScreen(
                 }
             },
             confirmButton = {
+                val matchingExam = examLists.find { it.concoursId == app.opportunityId || it.administration.contains(app.organization.take(8), ignoreCase = true) }
+                val examPdfUrl = matchingExam?.pdfDownloadUrl ?: "https://www.emploi-public.ma/upload/concours/Liste_Convoques_${app.referenceNumber}.pdf"
                 Button(
                     onClick = {
-                        Toast.makeText(context, "Convocation téléchargée en PDF", Toast.LENGTH_SHORT).show()
+                        openOfficialPdf(context, examPdfUrl, "Liste Convoqués")
                         showConvocationDialog = null
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = PrimaryContainer)
                 ) {
-                    Text(autoTranslate("Télécharger PDF"))
+                    Icon(imageVector = Icons.Default.Description, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(autoTranslate("Télécharger Liste PDF"))
                 }
             },
             dismissButton = {

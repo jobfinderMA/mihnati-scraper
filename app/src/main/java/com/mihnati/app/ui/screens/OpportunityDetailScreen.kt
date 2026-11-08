@@ -33,6 +33,9 @@ import androidx.compose.ui.unit.sp
 import com.mihnati.app.data.model.DocumentCategory
 import com.mihnati.app.data.model.Opportunity
 import com.mihnati.app.data.model.SectorType
+import com.mihnati.app.data.repository.EmploiPublicRepository
+import com.mihnati.app.ui.components.openOfficialPdf
+import com.mihnati.app.ui.components.shareOfficialPdf
 import com.mihnati.app.data.repository.MihnatiRepository
 import com.mihnati.app.ui.components.ConcoursChecklistDialog
 import com.mihnati.app.ui.components.DirectApplicationBottomSheet
@@ -53,6 +56,29 @@ fun OpportunityDetailScreen(
     val applications by MihnatiRepository.applications.collectAsState()
     val userProfile by MihnatiRepository.userProfile.collectAsState()
     val opportunity = opportunities.find { it.id == opportunityId } ?: opportunities.firstOrNull()
+    val examLists by EmploiPublicRepository.examLists.collectAsState()
+
+    val effectiveAvisPdfUrl = remember(opportunity) {
+        when {
+            opportunity == null -> "https://www.emploi-public.ma"
+            opportunity.avisPdfUrl.isNotBlank() -> opportunity.avisPdfUrl
+            opportunity.sourceUrl.endsWith(".pdf", ignoreCase = true) -> opportunity.sourceUrl
+            else -> "https://www.emploi-public.ma/upload/concours/${opportunity.reference.ifEmpty { "Avis_Officiel" }}.pdf"
+        }
+    }
+
+    val matchingExamLists = remember(opportunity, examLists) {
+        if (opportunity == null) examLists.take(2)
+        else {
+            examLists.filter { list ->
+                list.concoursId == opportunity.id ||
+                list.administration.contains(opportunity.organization.take(8), ignoreCase = true) ||
+                opportunity.organization.contains(list.administration.take(8), ignoreCase = true)
+            }.ifEmpty {
+                examLists.take(2)
+            }
+        }
+    }
     val currentLang by com.mihnati.app.ui.theme.LanguageManager.currentLanguage.collectAsState()
     val isArabic = currentLang == com.mihnati.app.ui.theme.AppLanguage.ARABIC
     val orgDisplayName = if (isArabic) {
@@ -987,48 +1013,230 @@ fun OpportunityDetailScreen(
                     }
                 }
 
-                // 8. One-Click Dossier PDF Callout (Feature C)
-                Box(
+                // 8. Official Government Documents & Candidate Lists (PDF) (Options 1 & 2)
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(PrimaryContainer.copy(alpha = 0.4f))
-                        .border(1.dp, Primary.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
-                        .padding(16.dp)
+                        .clip(RoundedCornerShape(18.dp)),
+                    colors = CardDefaults.cardColors(containerColor = SurfaceContainerLowest),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(
+                        modifier = Modifier.padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        // Section Header
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("📄", fontSize = 20.sp)
-                            Column {
-                                Text(
-                                    text = autoTranslate("Dossier de Candidature Officiel (PDF)"),
-                                    style = MaterialTheme.typography.titleSmall.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        color = OnPrimaryContainer
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(38.dp)
+                                        .clip(CircleShape)
+                                        .background(PrimaryContainer),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("📜", fontSize = 18.sp)
+                                }
+                                Column {
+                                    Text(
+                                        text = autoTranslate("Documents Officiels de la Fonction Publique"),
+                                        style = MaterialTheme.typography.titleSmall.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = OnSurface
+                                        )
                                     )
-                                )
+                                    Text(
+                                        text = autoTranslate("Portail officiel emploi-public.ma"),
+                                        style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.sp)
+                                    )
+                                }
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(SecondaryContainer.copy(alpha = 0.6f))
+                                    .padding(horizontal = 8.dp, vertical = 3.dp)
+                            ) {
                                 Text(
-                                    text = autoTranslate("Demande manuscrite adressee a Monsieur le Ministre + CV normalise"),
-                                    style = MaterialTheme.typography.bodySmall.copy(
-                                        color = OnPrimaryContainer.copy(alpha = 0.85f),
+                                    text = autoTranslate("Certifié"),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = OnSecondaryContainer,
                                         fontSize = 11.sp
                                     )
                                 )
                             }
                         }
 
-                        Button(
-                            onClick = { showPdfExportSheet = true },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Primary)
-                        ) {
-                            Icon(imageVector = Icons.Default.PictureAsPdf, contentDescription = null, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(autoTranslate("Generer le Dossier PDF Officiel"))
+                        HorizontalDivider(color = SurfaceContainerHigh)
+
+                        // 1. OPTION 1: Avis de Concours Officiel (PDF)
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PictureAsPdf,
+                                    contentDescription = null,
+                                    tint = Primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = autoTranslate("1. Avis de Concours Officiel (PDF)"),
+                                    style = MaterialTheme.typography.labelLarge.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = Primary
+                                    )
+                                )
+                            }
+
+                            Text(
+                                text = autoTranslate("Arrêté ministériel officiel portant ouverture du concours, nombre de postes (${opportunity.postsCount}), barème et conditions de candidature."),
+                                style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Button(
+                                    onClick = {
+                                        openOfficialPdf(context, effectiveAvisPdfUrl, opportunity.title)
+                                    },
+                                    modifier = Modifier.weight(1.4f),
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Primary)
+                                ) {
+                                    Icon(imageVector = Icons.Default.FileDownload, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = autoTranslate("Consulter l'Avis PDF"),
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                    )
+                                }
+
+                                OutlinedButton(
+                                    onClick = {
+                                        shareOfficialPdf(context, opportunity.title, effectiveAvisPdfUrl)
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Icon(imageVector = Icons.Default.Share, contentDescription = null, modifier = Modifier.size(14.dp))
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = autoTranslate("Partager"),
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                }
+                            }
+                        }
+
+                        HorizontalDivider(color = SurfaceContainerHigh)
+
+                        // 2. OPTION 2: Listes Officielles des Candidats (PDF)
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.FormatListNumbered,
+                                    contentDescription = null,
+                                    tint = Secondary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = autoTranslate("2. Listes Officielles des Candidats (PDF)"),
+                                    style = MaterialTheme.typography.labelLarge.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = Secondary
+                                    )
+                                )
+                            }
+
+                            Text(
+                                text = autoTranslate("Listes des convoqués aux épreuves écrites, orales et résultats définitifs d'admission."),
+                                style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
+                            )
+
+                            matchingExamLists.forEach { exam ->
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(SurfaceContainerLow)
+                                        .padding(12.dp)
+                                ) {
+                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .clip(RoundedCornerShape(6.dp))
+                                                    .background(Color(exam.listType.badgeColorHex).copy(alpha = 0.15f))
+                                                    .padding(horizontal = 8.dp, vertical = 3.dp)
+                                            ) {
+                                                Text(
+                                                    text = autoTranslate(exam.listType.labelFr),
+                                                    style = MaterialTheme.typography.labelSmall.copy(
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = Color(exam.listType.badgeColorHex),
+                                                        fontSize = 11.sp
+                                                    )
+                                                )
+                                            }
+
+                                            Text(
+                                                text = "📋 ${exam.candidatesCount} ${autoTranslate("convoqués")}",
+                                                style = MaterialTheme.typography.labelSmall.copy(
+                                                    color = Secondary,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            )
+                                        }
+
+                                        Text(
+                                            text = autoTranslate(exam.titleFr),
+                                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                                        )
+
+                                        Text(
+                                            text = "📅 ${exam.examDate} • 📍 ${exam.examCenters.take(2).joinToString(", ")}",
+                                            style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.sp)
+                                        )
+
+                                        Button(
+                                            onClick = {
+                                                openOfficialPdf(context, exam.pdfDownloadUrl, exam.titleFr)
+                                            },
+                                            modifier = Modifier.fillMaxWidth(),
+                                            shape = RoundedCornerShape(8.dp),
+                                            colors = ButtonDefaults.buttonColors(containerColor = Primary.copy(alpha = 0.9f)),
+                                            contentPadding = PaddingValues(vertical = 6.dp)
+                                        ) {
+                                            Icon(imageVector = Icons.Default.Description, contentDescription = null, modifier = Modifier.size(14.dp))
+                                            Spacer(modifier = Modifier.width(6.dp))
+                                            Text(
+                                                text = autoTranslate("Télécharger la Liste Officielle (PDF)"),
+                                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

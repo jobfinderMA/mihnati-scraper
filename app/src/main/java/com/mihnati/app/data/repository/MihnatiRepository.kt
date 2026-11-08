@@ -90,7 +90,8 @@ object MihnatiRepository {
                 RequiredDocument("Demande de candidature", "Formulaire emploi-public.ma")
             ),
             isDemoData = true,
-            sourceUrl = "https://www.emploi-public.ma"
+            sourceUrl = "https://www.emploi-public.ma",
+            avisPdfUrl = "https://www.emploi-public.ma/upload/concours/MEF_Admin_2026.pdf"
         ),
         Opportunity(
             id = "inwi-fullstack-2026",
@@ -144,7 +145,8 @@ object MihnatiRepository {
             eligibleSchools = listOf("ENSIAS", "INPT", "FSJES", "ISCAE", "ENCG"),
             keySkills = listOf("Bases de données SQL", "Sécurité des transactions", "Droit fiscal marocain"),
             isDemoData = true,
-            sourceUrl = "https://www.emploi-public.ma"
+            sourceUrl = "https://www.emploi-public.ma",
+            avisPdfUrl = "https://www.emploi-public.ma/upload/concours/MEF_Admin_2026.pdf"
         ),
         Opportunity(
             id = "capgemini-bi-2026",
@@ -677,7 +679,8 @@ object MihnatiRepository {
                             isWeeklySpecial = c.isWeeklySpecial,
                             examDate = c.examDate ?: "",
                             postsCount = c.numPosts,
-                            isDemoData = false
+                            isDemoData = false,
+                            avisPdfUrl = c.avisPdfUrl
                         )
                     )
                 }
