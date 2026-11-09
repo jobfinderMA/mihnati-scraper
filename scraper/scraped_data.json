@@ -1,7 +1,7 @@
 {
-  "last_sync": "2026-11-09T08:56:09.813352",
+  "last_sync": "2026-11-09T09:51:02.721110",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
-  "concours_count": 20,
+  "concours_count": 19,
   "convocations_count": 4,
   "concours": [
     {
@@ -341,41 +341,19 @@
       "oral_list_url": "",
       "source": "manasseb.com",
       "is_weekly_special": true
-    },
-    {
-      "id": "manasseb-42703",
-      "title": "Concours Technicien 4ème grade (Échelle 8)",
-      "title_ar": "مباراة تقني من الدرجة الرابعة (السلم 8)",
-      "grade": "Échelle 8",
-      "echelle": "8",
-      "administration": "Administration Publique",
-      "administration_ar": "الإدارة العمومية",
-      "speciality": "Administration & Métiers",
-      "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 1,
-      "deadline": "Novembre 2026",
-      "exam_date": "",
-      "publication_date": "2026-11-06",
-      "reference_code": "MANASSEB-42703",
-      "submission_url": "https://www.manasseb.com/%d8%a5%d9%82%d9%84%d9%8a%d9%85-%d8%ac%d8%b1%d8%b3%d9%8a%d9%81-%d8%a3%d9%88%d9%84%d8%a7%d8%af-%d8%a8%d9%88%d8%b1%d9%8a%d9%85%d8%a9-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa/",
-      "detail_url": "https://www.manasseb.com/%d8%a5%d9%82%d9%84%d9%8a%d9%85-%d8%ac%d8%b1%d8%b3%d9%8a%d9%81-%d8%a3%d9%88%d9%84%d8%a7%d8%af-%d8%a8%d9%88%d8%b1%d9%8a%d9%85%d8%a9-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa/",
-      "written_list_url": "",
-      "oral_list_url": "",
-      "source": "manasseb.com",
-      "is_weekly_special": true
     }
   ],
   "convocations": [
     {
-      "id": "manasseb-conv-42823",
-      "concours_id": "manasseb-42823",
+      "id": "manasseb-conv-42824",
+      "concours_id": "manasseb-42824",
       "type": "ORAL",
       "title": "Concours de Recrutement (ORAL)",
       "administration": "Administration Publique",
       "exam_date": "Novembre 2026",
       "exam_center": "Maroc",
-      "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d9%85%d8%af%d9%8a%d9%88%d9%86-2/",
+      "candidates_count": 50,
+      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d8%b4%d8%b1%d9%83%d8%a9-%d8%a7/",
       "source": "manasseb.com"
     },
     {
