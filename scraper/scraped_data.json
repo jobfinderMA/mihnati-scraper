@@ -1,5 +1,5 @@
 {
-  "last_sync": "2026-11-09T07:03:50.841642",
+  "last_sync": "2026-11-09T08:56:09.813352",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
   "concours_count": 20,
   "convocations_count": 4,
@@ -176,7 +176,7 @@
       "administration_ar": "الإدارة العمومية",
       "speciality": "Administration & Métiers",
       "degree_required": "Bac+3 / Bac+5 / Master / Licence",
-      "posts_count": 3,
+      "posts_count": 1,
       "deadline": "Novembre 2026",
       "exam_date": "",
       "publication_date": "2026-11-07",
@@ -367,6 +367,18 @@
   ],
   "convocations": [
     {
+      "id": "manasseb-conv-42823",
+      "concours_id": "manasseb-42823",
+      "type": "ORAL",
+      "title": "Concours de Recrutement (ORAL)",
+      "administration": "Administration Publique",
+      "exam_date": "Novembre 2026",
+      "exam_center": "Maroc",
+      "candidates_count": 25,
+      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d9%85%d8%af%d9%8a%d9%88%d9%86-2/",
+      "source": "manasseb.com"
+    },
+    {
       "id": "manasseb-conv-42813",
       "concours_id": "manasseb-42813",
       "type": "RESULTAT",
@@ -376,18 +388,6 @@
       "exam_center": "Maroc",
       "candidates_count": 25,
       "pdf_url": "https://www.manasseb.com/%d9%86%d8%aa%d8%a7%d8%a6%d8%ac-%d8%a7%d9%84%d9%88%d9%83%d8%a7%d9%84%d8%a9-%d8%a7%d9%84%d8%ad%d8%b6%d8%b1%d9%8a%d8%a9-%d9%84%d8%ae%d9%86%d9%8a%d9%81%d8%b1%d8%a9-%d9%85%d8%a8%d8%a7%d8%b1%d9%8a%d8%a7/",
-      "source": "manasseb.com"
-    },
-    {
-      "id": "manasseb-conv-42812",
-      "concours_id": "manasseb-42812",
-      "type": "ORAL",
-      "title": "Concours Technicien 3ème grade (Échelle 9) (ORAL)",
-      "administration": "Administration Publique",
-      "exam_date": "Novembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 25,
-      "pdf_url": "https://www.manasseb.com/%d9%84%d8%a7%d8%a6%d8%ad%d8%a9-%d8%a7%d9%84%d9%85%d8%af%d8%b9%d9%88%d9%8a%d9%86-%d9%84%d9%84%d8%a7%d8%ae%d8%aa%d8%a8%d8%a7%d8%b1-%d8%a7%d9%84%d8%b4%d9%81%d9%88%d9%8a-%d8%a5%d9%82%d9%84%d9%8a%d9%85-4/",
       "source": "manasseb.com"
     },
     {
