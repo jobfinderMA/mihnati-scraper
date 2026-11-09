@@ -1,9 +1,51 @@
 {
-  "last_sync": "2026-11-09T18:41:26.586648",
+  "last_sync": "2026-11-09T19:46:16.754601",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
-  "concours_count": 18,
-  "convocations_count": 5,
+  "concours_count": 21,
+  "convocations_count": 4,
   "concours": [
+    {
+      "id": "ep-96a8aed2",
+      "uuid": "96a8aed2-a1e6-438f-bf45-556e8168bbcf",
+      "title": "Avis de concours de recrutement de Spécialiste social 2ème grade",
+      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
+      "echelle": "Statut Fonction Publique",
+      "degree_required": "Selon arrêté ministériel",
+      "posts_count": 1000,
+      "deadline": "Limite de dépôt : 25 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/96a8aed2-a1e6-438f-bf45-556e8168bbcf",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/96a8aed2-a1e6-438f-bf45-556e8168bbcf",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/96a8aed2-a1e6-438f-bf45-556e8168bbcf",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/96a8aed2-a1e6-438f-bf45-556e8168bbcf"
+    },
+    {
+      "id": "ep-635d1ad9",
+      "uuid": "635d1ad9-b421-4ef4-b5ef-6cf021ba412a",
+      "title": "Avis de concours de recrutement de Spécialiste d'économie et administration 2ème grade",
+      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
+      "echelle": "Statut Fonction Publique",
+      "degree_required": "Selon arrêté ministériel",
+      "posts_count": 559,
+      "deadline": "Limite de dépôt : 25 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/635d1ad9-b421-4ef4-b5ef-6cf021ba412a",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/635d1ad9-b421-4ef4-b5ef-6cf021ba412a",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/635d1ad9-b421-4ef4-b5ef-6cf021ba412a",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/635d1ad9-b421-4ef4-b5ef-6cf021ba412a"
+    },
+    {
+      "id": "ep-b4147b79",
+      "uuid": "b4147b79-25b9-4344-a801-20220a6b5cd4",
+      "title": "Avis de concours de recrutement de Spécialiste pédagogique 2ème grade",
+      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
+      "echelle": "Statut Fonction Publique",
+      "degree_required": "Selon arrêté ministériel",
+      "posts_count": 200,
+      "deadline": "Limite de dépôt : 25 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/b4147b79-25b9-4344-a801-20220a6b5cd4",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/b4147b79-25b9-4344-a801-20220a6b5cd4",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/b4147b79-25b9-4344-a801-20220a6b5cd4",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/b4147b79-25b9-4344-a801-20220a6b5cd4"
+    },
     {
       "id": "ep-0ce1c9ce",
       "uuid": "0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640",
@@ -376,18 +418,6 @@
       "exam_center": "Maroc",
       "candidates_count": 330,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/bd7d21e6-ce27-4590-9ae0-ba4755897c51",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-78213ebc",
-      "concours_id": "ep-78213ebc",
-      "type": "ECRIT",
-      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Ingénieur d'Etat 1er grade - Echelle 11",
-      "administration": "Ministère de l’intérieur -Direction Générale de la Protection Civile-",
-      "exam_date": "Limite de dépôt : 5 Octobre 2026\n                                                                                                                            - 16:30",
-      "exam_center": "Maroc",
-      "candidates_count": 330,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/78213ebc-6540-4ee1-8732-f5b9d4219945",
       "source": "emploi-public.ma"
     }
   ]
