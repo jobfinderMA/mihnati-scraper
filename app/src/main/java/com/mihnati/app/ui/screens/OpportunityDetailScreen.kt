@@ -1112,13 +1112,14 @@ fun OpportunityDetailScreen(
                             ) {
                                 Button(
                                     onClick = {
-                                        openOfficialPdf(context, effectiveAvisPdfUrl, opportunity.title)
+                                        val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateAvisPdf(context, opportunity)
+                                        activePdfViewer = file to opportunity.title
                                     },
                                     modifier = Modifier.weight(1.4f),
                                     shape = RoundedCornerShape(10.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = Primary)
                                 ) {
-                                    Icon(imageVector = Icons.Default.FileDownload, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Icon(imageVector = Icons.Default.PictureAsPdf, contentDescription = null, modifier = Modifier.size(16.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Text(
                                         text = autoTranslate("Consulter l'Avis PDF"),
@@ -1303,19 +1304,22 @@ fun OpportunityDetailScreen(
                     )
                 }
 
-                // One-click Official Dossier PDF generator button
+                // One-click Official Avis PDF viewer button
                 Box(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(14.dp))
                         .background(SecondaryContainer.copy(alpha = 0.5f))
                         .border(1.dp, Secondary.copy(alpha = 0.35f), RoundedCornerShape(14.dp))
-                        .clickable { showPdfExportSheet = true },
+                        .clickable {
+                            val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateAvisPdf(context, opportunity)
+                            activePdfViewer = file to opportunity.title
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.PictureAsPdf,
-                        contentDescription = "Dossier PDF",
+                        contentDescription = "Consulter Avis PDF",
                         tint = Secondary,
                         modifier = Modifier.size(24.dp)
                     )

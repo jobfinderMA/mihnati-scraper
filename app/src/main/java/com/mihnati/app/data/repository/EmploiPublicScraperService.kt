@@ -67,6 +67,7 @@ object EmploiPublicScraperService {
                     for (i in 0 until jsonArray.length()) {
                         val obj = jsonArray.getJSONObject(i)
                         val id = obj.optString("id", "ep-$i")
+                        val uuid = obj.optString("uuid", id.removePrefix("ep-"))
                         val title = obj.optString("title", "Concours de Recrutement")
                         val rawTitleAr = obj.optString("title_ar", "")
                         val titleAr = if (rawTitleAr.isNotBlank() && !rawTitleAr.equals("null", ignoreCase = true) && com.mihnati.app.translation.AutoTranslationService.isTextArabic(rawTitleAr)) rawTitleAr else ""
@@ -79,9 +80,11 @@ object EmploiPublicScraperService {
                         val examDate = obj.optString("exam_date", "").ifEmpty { null }
                         val degree = obj.optString("degree_required", "Bac+5 / Master")
                         val detailUrl = obj.optString("detail_url", "${BASE_URL_FR}concours-liste")
-                        val writtenListUrl = obj.optString("written_list_url", "")
+                        val reference = obj.optString("reference", "EP-2026-${uuid.take(8).uppercase()}")
+                        val avisPdfUrl = obj.optString("avis_pdf_url", "https://www.emploi-public.ma/fr/concours/download/arrete/$uuid")
                         val source = "emploi-public.ma"
                         val isWeeklySpecial = obj.optBoolean("is_weekly_special", false)
+                        val location = obj.optString("location", "Rabat, Casablanca & Régions")
 
                         val echelle = when {
                             title.contains("11") || title.contains("Ingénieur") || title.contains("Administrateur 2") -> 11
@@ -102,7 +105,7 @@ object EmploiPublicScraperService {
                         scrapedList.add(
                             EmploiPublicConcours(
                                 id = id,
-                                reference = "EP-2026-${id.removePrefix("ep-").take(8).uppercase()}",
+                                reference = reference,
                                 titleAr = titleAr,
                                 titleFr = title,
                                 administrationAr = adminAr,
@@ -113,12 +116,12 @@ object EmploiPublicScraperService {
                                 diplomaRequired = degree,
                                 specialties = listOf("Filières scientifiques", "Gestion & Finance", "Droit & Juridique", "Technologie"),
                                 numPosts = posts,
-                                publishDate = "Octobre / Novembre 2026",
+                                publishDate = "Novembre 2026",
                                 deadlineDate = cleanDeadline,
-                                deadlineDaysRemaining = if (cleanDeadline.contains("Novembre", ignoreCase = true)) 4 else 8,
+                                deadlineDaysRemaining = if (cleanDeadline.contains("Novembre", ignoreCase = true)) 12 else 8,
                                 examDate = examDate,
-                                location = "Rabat, Casablanca & Régions",
-                                avisPdfUrl = writtenListUrl.ifEmpty { detailUrl },
+                                location = location,
+                                avisPdfUrl = avisPdfUrl,
                                 detailsUrl = detailUrl,
                                 source = source,
                                 isWeeklySpecial = isWeeklySpecial
@@ -274,63 +277,6 @@ object EmploiPublicScraperService {
                                 source = source
                             )
                         )
-                    }
-                }
-
-                // 1.2 Supplement with concours convocations
-                val jsonArray = root.optJSONArray("concours")
-                if (jsonArray != null && jsonArray.length() > 0) {
-                    var listIdx = 1
-                    for (i in 0 until minOf(jsonArray.length(), 8)) {
-                        val obj = jsonArray.getJSONObject(i)
-                        val id = obj.optString("id", "ep-$i")
-                        val title = obj.optString("title", "Concours")
-                        val admin = obj.optString("administration", "Administration Publique")
-                        val writtenListUrl = obj.optString("written_list_url", "")
-                        val oralListUrl = obj.optString("oral_list_url", "")
-                        val source = obj.optString("source", "emploi-public.ma")
-
-                        lists.add(
-                            ConcoursExamList(
-                                id = "list-cloud-ecrit-$listIdx",
-                                concoursId = id,
-                                titleAr = "Liste des convoqués à l'écrit - $title",
-                                titleFr = "Liste des candidats convoqués à l'épreuve écrite - $title",
-                                administration = admin,
-                                grade = title,
-                                echelle = 11,
-                                listType = ExamListType.ECRIT,
-                                candidatesCount = 120 + (i * 15),
-                                examDate = "Novembre / Décembre 2026",
-                                examCenters = listOf("Rabat", "Casablanca", "Fès", "Marrakech"),
-                                pdfDownloadUrl = writtenListUrl.ifEmpty { "https://www.emploi-public.ma" },
-                                publishDate = "Novembre 2026",
-                                source = source
-                            )
-                        )
-                        listIdx++
-
-                        if (i % 2 == 0) {
-                            lists.add(
-                                ConcoursExamList(
-                                    id = "list-cloud-oral-$listIdx",
-                                    concoursId = id,
-                                    titleAr = "Liste des convoqués à l'oral - $title",
-                                    titleFr = "Liste des candidats admissibles pour l'épreuve orale - $title",
-                                    administration = admin,
-                                    grade = title,
-                                    echelle = 11,
-                                    listType = ExamListType.ORAL,
-                                    candidatesCount = 35 + (i * 4),
-                                    examDate = "Décembre 2026",
-                                    examCenters = listOf("Siège Central Rabat"),
-                                    pdfDownloadUrl = oralListUrl.ifEmpty { "https://www.emploi-public.ma" },
-                                    publishDate = "Novembre 2026",
-                                    source = source
-                                )
-                            )
-                            listIdx++
-                        }
                     }
                 }
             }

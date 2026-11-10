@@ -61,39 +61,6 @@ object MihnatiRepository {
             sourceUrl = "https://www.ocpgroup.ma/careers"
         ),
         Opportunity(
-            id = "mef-admin-2026",
-            title = "Concours National • Administrateur 2ème grade",
-            organization = "Ministère de l'Économie et des Finances",
-            location = "Rabat & Directions Régionales",
-            sectorType = SectorType.PUBLIC,
-            reference = "MEF-CONCOURS-2026-120",
-            deadline = "15 Novembre 2026",
-            deadlineDaysRemaining = 3,
-            matchPercentage = 96,
-            degreeRequired = "Master / Ingénieur d'État (Échelle 11)",
-            field = "Informatique, Économie, Gestion",
-            experience = "Concours Ouvert",
-            salary = "Grille Fonction Publique Échelle 11",
-            contractType = "Fonction Publique (120 Postes)",
-            isUrgent = true,
-            isNew = false,
-            description = "Recrutement national par voie de concours de 120 Administrateurs 2ème grade pour les services centraux et extérieurs du Ministère de l'Économie et des Finances.",
-            missions = listOf(
-                MissionItem("Supervision des systèmes financiers", "Participer à la digitalisation des flux de trésorerie de l'État."),
-                MissionItem("Pilotage budgétaire", "Audit et analyse de conformité des dépenses publiques.")
-            ),
-            eligibleSchools = listOf("Universités marocaines", "Grandes Écoles d'Ingénieurs", "ISCAE", "ENCG"),
-            keySkills = listOf("Gestion Publique", "Systèmes d'Information", "Audit Financier", "Droit Administratif"),
-            requiredDocuments = listOf(
-                RequiredDocument("Copie CIN", "Recto-verso légalisée"),
-                RequiredDocument("Diplôme ou équivalence", "Arrêté d'équivalence pour diplômes étrangers"),
-                RequiredDocument("Demande de candidature", "Formulaire emploi-public.ma")
-            ),
-            isDemoData = true,
-            sourceUrl = "https://www.emploi-public.ma",
-            avisPdfUrl = "https://www.emploi-public.ma/upload/concours/MEF_Admin_2026.pdf"
-        ),
-        Opportunity(
             id = "inwi-fullstack-2026",
             title = "Développeur Full Stack Java / Angular",
             organization = "Inwi",
@@ -119,34 +86,6 @@ object MihnatiRepository {
             keySkills = listOf("Java / Spring Boot", "Angular / TypeScript", "Docker", "GitLab CI/CD"),
             isDemoData = true,
             sourceUrl = "https://inwi.ma/recrutement"
-        ),
-        Opportunity(
-            id = "dgi-admin-2026",
-            title = "Concours: 80 Administrateurs 2ème Grade",
-            organization = "DGI Maroc",
-            location = "Rabat & Directions Régionales",
-            sectorType = SectorType.PUBLIC,
-            reference = "DGI-REC-2026-80",
-            deadline = "18 Novembre 2026",
-            deadlineDaysRemaining = 6,
-            matchPercentage = 94,
-            degreeRequired = "Bac+5 Master / Ingénieur",
-            field = "Informatique, Économie, Droit",
-            experience = "Concours National",
-            salary = "Échelle 11 + Primes DGI",
-            contractType = "Fonction Publique (80 Postes)",
-            isUrgent = true,
-            isNew = false,
-            description = "Recrutement national par voie de concours écrit et oral pour l'encadrement des services fiscaux et de la transformation numérique de l'administration fiscale.",
-            missions = listOf(
-                MissionItem("Transformation Numérique Fiscale", "Modernisation des portails SIMPL et déclarations télé-fisc."),
-                MissionItem("Contrôle et conformité", "Audit informatique des systèmes de facturation.")
-            ),
-            eligibleSchools = listOf("ENSIAS", "INPT", "FSJES", "ISCAE", "ENCG"),
-            keySkills = listOf("Bases de données SQL", "Sécurité des transactions", "Droit fiscal marocain"),
-            isDemoData = true,
-            sourceUrl = "https://www.emploi-public.ma",
-            avisPdfUrl = "https://www.emploi-public.ma/upload/concours/MEF_Admin_2026.pdf"
         ),
         Opportunity(
             id = "capgemini-bi-2026",
@@ -228,33 +167,6 @@ object MihnatiRepository {
             keySkills = listOf("Deep Learning", "Traitement du Signal", "NLP", "Mathématiques appliquées"),
             isDemoData = true,
             sourceUrl = "http://www.univh2c.ma"
-        ),
-        Opportunity(
-            id = "douanes-inspecteur-2026",
-            title = "Concours Inspecteur des Douanes",
-            organization = "Douanes & Impôts Indirects (ADII)",
-            location = "Rabat, Casablanca, Tanger Med",
-            sectorType = SectorType.PUBLIC,
-            reference = "ADII-CONCOURS-2026",
-            deadline = "08 Novembre 2026",
-            deadlineDaysRemaining = 2,
-            matchPercentage = 88,
-            degreeRequired = "Bac+2 / DUT / BTS / Licence",
-            field = "Économie, Informatique, Douane",
-            experience = "Concours",
-            salary = "Échelle 9 à 10 + Primes ADII",
-            contractType = "Fonction Publique",
-            isUrgent = true,
-            isNew = false,
-            description = "Concours pour le recrutement d'inspecteurs et d'officiers des douanes marocaines pour la surveillance des frontières et le contrôle des flux.",
-            missions = listOf(
-                MissionItem("Contrôle documentaire", "Vérification des déclarations en douane."),
-                MissionItem("Surveillance des flux", "Opérations aux ports et aéroports.")
-            ),
-            eligibleSchools = listOf("EST, BTS, Facultés des Sciences et Droit"),
-            keySkills = listOf("Réglementation douanière", "Gestion logistique", "Système BADR"),
-            isDemoData = true,
-            sourceUrl = "https://www.douane.gov.ma"
         ),
         Opportunity(
             id = "bourse-cnrst-2026",
@@ -630,22 +542,40 @@ object MihnatiRepository {
 
     fun mergeScrapedConcours(scrapedList: List<com.mihnati.app.data.model.EmploiPublicConcours>) {
         _opportunities.update { existing ->
-            val seenKeys = mutableSetOf<String>()
+            val seenIds = mutableSetOf<String>()
+            val seenSignatures = mutableSetOf<String>()
             val deduplicated = mutableListOf<Opportunity>()
 
-            // 1. Process and strictly deduplicate scraped opportunities
-            for (c in scrapedList) {
-                val cleanAdmin = c.administrationFr.lowercase().replace("universite", "").replace("ministere", "").replace("de", "").replace("l'", "").trim()
-                val cleanTitle = c.titleFr.lowercase().replace("concours", "").replace("recrutement", "").replace("avis", "").replace("de", "").trim()
-                val normKey = "${cleanAdmin.take(15)}_${cleanTitle.take(15)}_${c.echelle}"
+            fun makeSignature(org: String, title: String): String {
+                val cleanOrg = org.lowercase()
+                    .replace("ministère", "")
+                    .replace("de l'", "")
+                    .replace("de la", "")
+                    .replace("du", "")
+                    .replace("des", "")
+                    .replace(Regex("[^a-z0-9]"), "")
+                    .take(20)
+                val cleanTitle = title.lowercase()
+                    .replace("avis de concours de recrutement", "")
+                    .replace("concours national", "")
+                    .replace("concours", "")
+                    .replace("recrutement", "")
+                    .replace(Regex("[^a-z0-9]"), "")
+                    .take(25)
+                return "${cleanOrg}_${cleanTitle}"
+            }
 
-                if (!seenKeys.contains(normKey)) {
-                    seenKeys.add(normKey)
+            // 1. Process and strictly deduplicate scraped opportunities from emploi-public.ma
+            for (c in scrapedList) {
+                val sig = makeSignature(c.administrationFr, c.titleFr)
+                if (!seenIds.contains(c.id) && !seenSignatures.contains(sig)) {
+                    seenIds.add(c.id)
+                    seenSignatures.add(sig)
                     val displaySourceName = "Emploi-Public"
                     deduplicated.add(
                         Opportunity(
                             id = c.id,
-                            title = if (c.titleFr.contains("poste", ignoreCase = true)) c.titleFr else "${c.titleFr} (${c.numPosts} postes)",
+                            title = c.titleFr,
                             titleAr = c.titleAr,
                             organization = c.administrationFr,
                             organizationAr = c.administrationAr,
@@ -657,10 +587,10 @@ object MihnatiRepository {
                             matchPercentage = if (c.echelle == 11) 96 else 88,
                             degreeRequired = c.diplomaRequired,
                             field = c.grade,
-                            experience = "Sans expérience requise",
-                            salary = "Grille indiciaire officielle (Échelle ${c.echelle})",
-                            contractType = "Concours National",
-                            description = "${c.titleFr}. Recrutement dans les services de l'administration marocaine. Diplôme requis : ${c.diplomaRequired}.",
+                            experience = "Concours National Ouvert",
+                            salary = "Statut Fonction Publique (Échelle ${c.echelle})",
+                            contractType = "Fonction Publique (${c.numPosts} postes)",
+                            description = "${c.titleFr}. Recrutement officiel au sein des services de l'administration marocaine via le portail emploi-public.ma. Diplôme requis : ${c.diplomaRequired}.",
                             requiredDocuments = listOf(
                                 RequiredDocument("Demande manuscrite", "Adressée à Monsieur le Ministre / Directeur", isReady = true),
                                 RequiredDocument("Copie certifiée CIN", "Carte Nationale d'Identité électronique", isReady = true),
@@ -682,13 +612,13 @@ object MihnatiRepository {
                 }
             }
 
-            // 2. Append non-duplicate existing opportunities
+            // 2. Append non-public existing opportunities (private sector & formation only), strictly deduplicated
             for (item in existing) {
-                val cleanAdmin = item.organization.lowercase().replace("universite", "").replace("ministere", "").replace("de", "").replace("l'", "").trim()
-                val cleanTitle = item.title.lowercase().replace("concours", "").replace("recrutement", "").replace("avis", "").replace("de", "").trim()
-                val normKey = "${cleanAdmin.take(15)}_${cleanTitle.take(15)}"
-                if (!seenKeys.contains(normKey) && !item.id.startsWith("ep-") && !item.id.startsWith("manasseb-")) {
-                    seenKeys.add(normKey)
+                if (item.sectorType == SectorType.PUBLIC) continue // Only authentic scraped public opportunities
+                val sig = makeSignature(item.organization, item.title)
+                if (!seenIds.contains(item.id) && !seenSignatures.contains(sig)) {
+                    seenIds.add(item.id)
+                    seenSignatures.add(sig)
                     deduplicated.add(item)
                 }
             }

@@ -73,11 +73,12 @@ fun InAppPdfViewerDialog(
                 val count = renderer.pageCount
                 val bmpList = mutableListOf<Bitmap>()
 
-                for (i in 0 until count) {
+                val maxPagesToRender = minOf(count, 8)
+                for (i in 0 until maxPagesToRender) {
                     val page = renderer.openPage(i)
-                    // Render at 2x resolution for high-DPI clarity
-                    val width = page.width * 2
-                    val height = page.height * 2
+                    // Render at crisp 1.5x resolution for smooth performance and memory efficiency
+                    val width = (page.width * 1.5f).toInt()
+                    val height = (page.height * 1.5f).toInt()
                     val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                     val canvas = Canvas(bmp)
                     canvas.drawColor(AndroidColor.WHITE)
@@ -213,7 +214,7 @@ fun InAppPdfViewerDialog(
                         ) {
                             CircularProgressIndicator(color = Color.White)
                             Text(
-                                text = autoTranslate("Génération du document officiel..."),
+                                text = autoTranslate("Chargement du document PDF officiel..."),
                                 color = Color.White,
                                 style = MaterialTheme.typography.bodyMedium
                             )
