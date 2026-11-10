@@ -1056,3 +1056,54 @@ Actif 24/7	مفعّل 24/7
 Alertes automatiques 48h et 24h avant clôture des candidatures, et notification immédiate dès publication des listes de convoqués.	تنبيهات تلقائية قبل 48 ساعة و24 ساعة من إغلاق الترشيحات، وإشعار فوري عند نشر لوائح المدعوين.
 Tester Rappel J-1	تجربة تذكير J-1 ⏳
 Tester Convocation	تجربة استدعاء 📋
+
+Vérificateur de Convocations	مدقق الاستدعاءات واللوائح
+Recherche instantanée par CNIE ou Nom	بحث فوري برقم البطاقة الوطنية أو الاسم
+Recherche instantanée par N° CNIE ou Nom	بحث فوري برقم البطاقة الوطنية أو الاسم
+Entrez votre N° CNIE ou Nom...	أدخل رقم البطاقة الوطنية أو الاسم...
+Exemples :	أمثلة :
+convocation(s) officielle(s) trouvée(s) !	استدعاء رسمي تم العثور عليه !
+Candidat(e) :	المرشح(ة) :
+Date & Heure :	التاريخ والتوقيت :
+Centre d'examen :	مركز إجراء الاختبار :
+Salle / Table :	القاعة / رقم الطاولة :
+N° Convocation :	رقم الاستدعاء :
+Voir Liste PDF	معاينة اللائحة (PDF)
+Aucune convocation trouvée pour :	لم يتم العثور على أي استدعاء لـ :
+Conseils de vérification :	إرشادات وتوجيهات التحقق :
+Vérifiez la saisie de votre CNIE sans espaces (ex: BE892415).	تأكد من كتابة رقم البطاقة الوطنية دون مسافات (مثال: BE892415).
+Les listes de certains ministères sont publiées par spécialité ou par région.	لوائح بعض الوزارات تُنشر مقسمة حسب التخصص أو الجهة.
+Vous pouvez consulter la liste PDF complète pour une vérification manuelle.	يمكنك الاطلاع على اللائحة الرسمية الكاملة للتحقق اليدوي.
+Consulter la liste PDF complète	معاينة اللائحة الرسمية الكاملة (PDF)
+Vérification Rapide des Convocations	التحقق السريع من الاستدعاءات
+Saisissez votre numéro de CNIE ci-dessus pour vérifier instantanément si votre nom figure sur les listes officielles des épreuves écrites et orales.	أدخل رقم بطاقتك الوطنية أعلاه للتأكد الفوري من إدراج اسمك في اللوائح الرسمية للمباريات.
+Liste des convoqués à l'épreuve écrite	لائحة المدعوين لاجتياز الاختبار الكتابي
+Liste des convoqués à l'épreuve orale	لائحة المدعوين لاجتياز الاختبار الشفوي
+Résultats définitifs des admis	النتائج النهائية للمترشحين المقبولين
+Liste d'attente officielle	لائحة الانتظار الرسمية
+Présentation obligatoire de la CNIE originale et de la convocation imprimée 30 min avant le début de l'épreuve.	الحضور إلزامي بالبطاقة الوطنية الأصلية والاستدعاء مطبوعاً 30 دقيقة قبل موعد الاختبار.
+Entretien oral de 30 min devant le jury officiel. Munissez-vous des diplômes originaux et de 2 copies de la CNIE.	مقابلة شفوية لمدة 30 دقيقة أمام اللجنة الرسمية. يرجى إحضار أصول الدبلومات ونسختين من البطاقة الوطنية.
+Les candidats admis doivent déposer leur dossier de recrutement complet auprès de la DRH avant la date limite.	يتعين على المترشحين المقبولين إيداع ملف التوظيف الكامل لدى مديرية الموارد البشرية قبل انقضاء الأجل.
+Les candidats de la liste d'attente seront appelés par ordre de mérite en cas de désistement.	سيتم استدعاء مترشحي لائحة الانتظار حسب ترتيب الاستحقاق في حالة شغور منصب.
+Suis-je convoqué(e) ?	هل أنا مدعو لاجتياز المباراة ؟
+Suis-je convoqué ?	هل أنا مدعو للاختبار ؟
+Recherche CNIE & Nom	بحث بالبطاقة والاسم
+Suis-je convoqué(e) ? (Vérification CNIE)	هل أنا مدعو للاختبار ؟ (التحقق بالبطاقة الوطنية)
+Recherchez votre nom et N° de table dans les listes	ابحث عن اسمك ورقم طاولتك ضمن اللوائح الرسمية
+Suis-je convoqué(e) ? (Recherche par CNIE)	هل أنا مدعو للاختبار ؟ (بحث فوري بالبطاقة الوطنية)
+Vérifier instantanément avec votre CNIE	تحقق فوري برقم بطاقتك الوطنية
+Vérifier avec CNIE	تحقق بالبطاقة الوطنية
+Présentation obligatoire de la CNIE originale et de la convocation imprimée.	الحضور إلزامي بالبطاقة الوطنية الأصلية والاستدعاء مطبوعاً.
+Calculatrices non programmables autorisées. Fermeture des portes à 08h15.	يُسمح بالآلات الحاسبة غير القابلة للبرمجة. إغلاق الأبواب على الساعة 08:15.
+Partager la convocation	مشاركة الاستدعاء
+Convocation Officielle Mihnati	استدعاء رسمي مهنتي
+Épreuve ajoutée à votre agenda Mihnati !	تمت إضافة موعد الاختبار إلى مفكرتك في مهنتي !
+Faculté des Sciences Juridiques et Économiques Rabat-Souissi	كلية العلوم القانونية والاقتصادية الرباط-السويسي
+Faculté de Droit - Route d'El Jadida Casablanca	كلية الحقوق - طريق الجديدة الدار البيضاء
+Faculté des Sciences Kénitra	كلية العلوم القنيطرة
+Amphi 3 • Table N° 142	المدرج 3 • الطاولة رقم 142
+Amphi Ibn Battouta • Table N° 89	مدرج ابن بطوطة • الطاولة رقم 89
+Salle 12 • Table N° 45	القاعة 12 • الطاولة رقم 45
+25 Novembre 2026 - 08:30 précises	25 نونبر 2026 - 08:30 بالضبط
+28 Novembre 2026 - 08:00	28 نونبر 2026 - 08:00
+22 Novembre 2026 - 08:30	22 نونبر 2026 - 08:30

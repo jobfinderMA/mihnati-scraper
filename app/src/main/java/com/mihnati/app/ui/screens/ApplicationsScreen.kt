@@ -49,6 +49,7 @@ fun ApplicationsScreen(
     var activeSection by remember { mutableStateOf("dossiers") } // "dossiers" or "convocations"
     var selectedFilter by remember { mutableStateOf("all") }
     var showConvocationDialog by remember { mutableStateOf<Application?>(null) }
+    var showCnieFinderSheet by remember { mutableStateOf(false) }
     var showNotesDialog by remember { mutableStateOf<Application?>(null) }
     var currentNoteText by remember { mutableStateOf("") }
 
@@ -293,6 +294,44 @@ fun ApplicationsScreen(
             }
         } else {
             // Convocations & Listes Écrit / Oral Stack
+            item {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(14.dp))
+                        .clickable { showCnieFinderSheet = true },
+                    color = SecondaryContainer.copy(alpha = 0.45f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Secondary.copy(alpha = 0.35f))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("🔍", fontSize = 22.sp)
+                            Column {
+                                Text(
+                                    text = autoTranslate("Suis-je convoqué(e) ? (Vérification CNIE)"),
+                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold, color = OnSecondaryContainer)
+                                )
+                                Text(
+                                    text = autoTranslate("Recherchez votre nom et N° de table dans les listes"),
+                                    style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.sp)
+                                )
+                            }
+                        }
+                        Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = Secondary)
+                    }
+                }
+            }
+
             items(examLists, key = { it.id }) { exam ->
                 NativeExamListCard(
                     exam = exam,
@@ -455,6 +494,12 @@ fun ApplicationsScreen(
     }
 
     // Candidate Notes Dialog
+    if (showCnieFinderSheet) {
+        com.mihnati.app.ui.components.CnieConvocationFinderSheet(
+            onDismiss = { showCnieFinderSheet = false }
+        )
+    }
+
     if (showNotesDialog != null) {
         val app = showNotesDialog!!
         AlertDialog(

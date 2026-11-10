@@ -79,6 +79,7 @@ fun OfficialConcoursPdfBottomSheet(
 
     var activeTab by remember { mutableIntStateOf(0) } // 0: Avis Officiel PDF, 1: Listes Candidats PDF
     var selectedExamFilter by remember { mutableStateOf<ExamListType?>(null) }
+    var showCnieFinderSheet by remember { mutableStateOf(false) }
 
     val publicConcoursList = remember(allOpportunities) {
         allOpportunities.filter { it.sectorType == com.mihnati.app.data.model.SectorType.PUBLIC }
@@ -444,6 +445,43 @@ fun OfficialConcoursPdfBottomSheet(
             } else {
                 // TAB 2: Listes Officielles des Candidats (PDF)
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    // Quick CNIE Convocation Finder Callout
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .clickable { showCnieFinderSheet = true },
+                        color = SecondaryContainer.copy(alpha = 0.45f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Secondary.copy(alpha = 0.35f))
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("🔍", fontSize = 22.sp)
+                                Column {
+                                    Text(
+                                        text = autoTranslate("Suis-je convoqué(e) ?"),
+                                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold, color = OnSecondaryContainer)
+                                    )
+                                    Text(
+                                        text = autoTranslate("Recherche instantanée par N° CNIE ou Nom"),
+                                        style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant, fontSize = 11.sp)
+                                    )
+                                }
+                            }
+                            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = Secondary)
+                        }
+                    }
+
                     // Filter Chips: Tous, Écrit, Oral, Résultats
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
@@ -508,6 +546,13 @@ fun OfficialConcoursPdfBottomSheet(
                 }
             }
         }
+    }
+
+    if (showCnieFinderSheet) {
+        CnieConvocationFinderSheet(
+            targetConcoursId = selectedOpportunity?.id,
+            onDismiss = { showCnieFinderSheet = false }
+        )
     }
 }
 

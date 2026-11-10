@@ -72,3 +72,22 @@ data class ScraperSyncStatus(
     val isSuccess: Boolean = true,
     val message: String = "Portail officiel emploi-public.ma synchronisé"
 )
+
+data class CandidateConvocationRecord(
+    val id: String,
+    val concoursId: String,
+    val examListId: String,
+    val cnie: String,
+    val fullName: String,
+    val administration: String,
+    val grade: String,
+    val echelle: Int,
+    val listType: ExamListType,
+    val examDate: String,
+    val examTime: String,
+    val examCenter: String,
+    val roomOrTable: String,
+    val convocationNumber: String,
+    val officialPdfUrl: String,
+    val specialInstructions: String = "Présentation obligatoire de la CNIE originale et de la convocation imprimée."
+)

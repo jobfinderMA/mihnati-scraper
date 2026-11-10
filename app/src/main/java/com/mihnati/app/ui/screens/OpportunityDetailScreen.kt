@@ -119,6 +119,7 @@ fun OpportunityDetailScreen(
     var showDirectApplySheet by remember { mutableStateOf(false) }
     var showUploadDocSheet by remember { mutableStateOf(false) }
     var showPdfExportSheet by remember { mutableStateOf(false) }
+    var showCnieFinderSheet by remember { mutableStateOf(false) }
     var selectedCategoryToUpload by remember { mutableStateOf(DocumentCategory.CV) }
 
     if (opportunity == null) {
@@ -1169,6 +1170,20 @@ fun OpportunityDetailScreen(
                                 style = MaterialTheme.typography.bodySmall.copy(color = OnSurfaceVariant)
                             )
 
+                            Button(
+                                onClick = { showCnieFinderSheet = true },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Secondary)
+                            ) {
+                                Icon(imageVector = Icons.Default.Search, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = autoTranslate("Suis-je convoqué(e) ? (Recherche par CNIE)"),
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                            }
+
                             matchingExamLists.forEach { exam ->
                                 Box(
                                     modifier = Modifier
@@ -1387,6 +1402,13 @@ fun OpportunityDetailScreen(
         com.mihnati.app.ui.components.OfficialPdfExportBottomSheet(
             targetOpportunity = opportunity,
             onDismiss = { showPdfExportSheet = false }
+        )
+    }
+
+    if (showCnieFinderSheet) {
+        com.mihnati.app.ui.components.CnieConvocationFinderSheet(
+            targetConcoursId = opportunity?.id,
+            onDismiss = { showCnieFinderSheet = false }
         )
     }
 }

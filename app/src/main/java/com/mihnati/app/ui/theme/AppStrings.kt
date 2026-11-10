@@ -34,7 +34,7 @@ object AppStrings {
     
     // Tools Header & Cards
     val toolsHeader: String @Composable get() = autoTranslate("BOÎTE À OUTILS CONCOURS 2026")
-    val toolsCount: String @Composable get() = autoTranslate("6 outils")
+    val toolsCount: String @Composable get() = autoTranslate("7 outils")
     val salarySimulator: String @Composable get() = autoTranslate("Simulateur Salaire")
     val salarySubtitle: String @Composable get() = autoTranslate("Échelles 8 à 11")
     val contestFile: String @Composable get() = autoTranslate("Dossier Concours")
@@ -47,6 +47,8 @@ object AppStrings {
     val oralPrepSubtitle: String @Composable get() = autoTranslate("Questions commissions")
     val pdfExportTitle: String @Composable get() = autoTranslate("Avis & Listes PDF")
     val pdfExportSubtitle: String @Composable get() = autoTranslate("Avis officiels & Convocations")
+    val cnieFinderTitle: String @Composable get() = autoTranslate("Suis-je convoqué ?")
+    val cnieFinderSubtitle: String @Composable get() = autoTranslate("Recherche CNIE & Nom")
 
     // Observatory Stats
     val observatoryTitle: String @Composable get() = autoTranslate("OBSERVATOIRE DE L'EMPLOI PUBLIC 2026")

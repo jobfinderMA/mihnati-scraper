@@ -76,6 +76,7 @@ fun HomeScreen(
     var showDiplomaEligibility by remember { mutableStateOf(false) }
     var showOralExamPrep by remember { mutableStateOf(false) }
     var showPdfExport by remember { mutableStateOf(false) }
+    var showCnieFinder by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         com.mihnati.app.data.repository.EmploiPublicRepository.triggerLiveSync()
@@ -408,6 +409,37 @@ fun HomeScreen(
                             )
                             Text(
                                 text = AppStrings.pdfExportSubtitle,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 10.sp,
+                                    color = OnSecondaryContainer.copy(alpha = 0.8f)
+                                )
+                            )
+                        }
+                    }
+                }
+
+                // Tool 7: Instant CNIE Convocation Checker
+                item {
+                    Box(
+                        modifier = Modifier
+                            .width(135.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(SecondaryContainer.copy(alpha = 0.6f))
+                            .border(1.dp, Secondary.copy(alpha = 0.35f), RoundedCornerShape(16.dp))
+                            .clickable { showCnieFinder = true }
+                            .padding(12.dp)
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text("🔍", fontSize = 18.sp)
+                            Text(
+                                text = AppStrings.cnieFinderTitle,
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = OnSecondaryContainer
+                                )
+                            )
+                            Text(
+                                text = AppStrings.cnieFinderSubtitle,
                                 style = MaterialTheme.typography.bodySmall.copy(
                                     fontSize = 10.sp,
                                     color = OnSecondaryContainer.copy(alpha = 0.8f)
@@ -966,6 +998,12 @@ fun HomeScreen(
         com.mihnati.app.ui.components.OfficialPdfExportBottomSheet(
             targetOpportunity = urgentOpportunity,
             onDismiss = { showPdfExport = false }
+        )
+    }
+
+    if (showCnieFinder) {
+        com.mihnati.app.ui.components.CnieConvocationFinderSheet(
+            onDismiss = { showCnieFinder = false }
         )
     }
 }
