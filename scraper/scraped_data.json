@@ -1,5 +1,5 @@
 {
-  "last_sync": "2026-11-10T09:46:29.085873",
+  "last_sync": "2026-11-10T10:45:13.179395",
   "source": "https://www.emploi-public.ma + https://www.manasseb.com",
   "concours_count": 22,
   "convocations_count": 4,
@@ -187,7 +187,7 @@
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0"
     },
     {
-      "id": "manasseb-42832",
+      "id": "manasseb-42834",
       "title": "Concours de Recrutement",
       "title_ar": "مباراة توظيف",
       "grade": "Échelle 11",
@@ -200,9 +200,9 @@
       "deadline": "Novembre 2026",
       "exam_date": "",
       "publication_date": "2026-11-10",
-      "reference_code": "MANASSEB-42832",
-      "submission_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%aa%d8%b1%d8%a8%d9%8a%d8%a9-%d8%a7%d9%84%d9%88%d8%b7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84%d8%aa%d8%b9%d9%84%d9%8a%d9%85-%d8%a7%d9%84%d8%a3%d9%88%d9%84-7/",
-      "detail_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%aa%d8%b1%d8%a8%d9%8a%d8%a9-%d8%a7%d9%84%d9%88%d8%b7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84%d8%aa%d8%b9%d9%84%d9%8a%d9%85-%d8%a7%d9%84%d8%a3%d9%88%d9%84-7/",
+      "reference_code": "MANASSEB-42834",
+      "submission_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%aa%d8%b1%d8%a8%d9%8a%d8%a9-%d8%a7%d9%84%d9%88%d8%b7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84%d8%aa%d8%b9%d9%84%d9%8a%d9%85-%d8%a7%d9%84%d8%a3%d9%88%d9%84-8/",
+      "detail_url": "https://www.manasseb.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%aa%d8%b1%d8%a8%d9%8a%d8%a9-%d8%a7%d9%84%d9%88%d8%b7%d9%86%d9%8a%d8%a9-%d9%88%d8%a7%d9%84%d8%aa%d8%b9%d9%84%d9%8a%d9%85-%d8%a7%d9%84%d8%a3%d9%88%d9%84-8/",
       "written_list_url": "",
       "oral_list_url": "",
       "source": "manasseb.com",
