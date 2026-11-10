@@ -388,126 +388,9 @@ GRADE_TRANSLATION_MAP = {
     'مسؤول': ("Recrutement Cadre Responsable d'exploitation", 'توظيف مسؤول'),
 }
 
-def translate_manasseb_fields(raw_text):
-    admin_fr = "Administration Publique"
-    admin_ar = "الإدارة العمومية"
-    for k, (v_fr, v_ar) in ADMIN_TRANSLATION_MAP.items():
-        if k in raw_text:
-            admin_fr, admin_ar = v_fr, v_ar
-            break
-
-    title_fr = "Concours de Recrutement"
-    title_ar = "مباراة توظيف"
-    for k, (v_fr, v_ar) in GRADE_TRANSLATION_MAP.items():
-        if k in raw_text:
-            title_fr, title_ar = v_fr, v_ar
-            break
-            
-    return admin_fr, admin_ar, title_fr, title_ar
-
-def scrape_manasseb_posts(limit=35):
-    """
-    Scrapes latest opportunities and convocations from Manasseb.com
-    via the official WordPress REST API with clean bilingual titles.
-    """
-    logger.info(f"Fetching latest opportunities from Manasseb.com (limit={limit})...")
-    concours_list = []
-    convocations_list = []
-    
-    try:
-        url = f"https://www.manasseb.com/wp-json/wp/v2/posts?per_page={limit}"
-        resp = requests.get(url, headers=HEADERS, timeout=15, verify=False)
-        if resp.status_code != 200:
-            logger.warning(f"Manasseb API returned status code {resp.status_code}")
-            return [], []
-            
-        posts = resp.json()
-        logger.info(f"Retrieved {len(posts)} posts from Manasseb.com")
-        
-        for p in posts:
-            p_id = p.get('id', '')
-            raw_title = p.get('title', {}).get('rendered', '')
-            raw_title = BeautifulSoup(raw_title, 'html.parser').get_text().strip()
-            raw_title = re.sub(r'&#8211;', '-', raw_title)
-            raw_title = re.sub(r'&#8217;', "'", raw_title)
-            raw_title = re.sub(r'&amp;', '&', raw_title)
-            link = p.get('link', '')
-            c_html = p.get('content', {}).get('rendered', '')
-            pub_date = p.get('date', '')[:10]
-
-            admin_fr, admin_ar, title_fr, title_ar = translate_manasseb_fields(raw_title)
-
-            # Deadline extraction
-            dl_match = re.search(r'آخر أجل(?: لإيداع الترشيحات)?\s*:\s*([^<\n\r]+)', c_html)
-            deadline = dl_match.group(1).strip() if dl_match else "Novembre 2026"
-            deadline = re.sub(r'&#8211;', '-', deadline).strip()
-
-            # Exam date extraction
-            exam_match = re.search(r'تاريخ إجراء المباراة\s*:\s*([^<\n\r]+)', c_html)
-            exam_date = exam_match.group(1).strip() if exam_match else ""
-
-            # Posts count extraction
-            posts_match = re.search(r'عدد المناصب\s*:\s*(?:<[^>]+>|\s)*(\d+)', c_html)
-            posts_count = int(posts_match.group(1)) if posts_match else 1
-
-            # Échelle extraction
-            echelle = 11
-            if '11' in raw_title or 'السلم 11' in c_html: echelle = 11
-            elif '10' in raw_title or 'السلم 10' in c_html: echelle = 10
-            elif '9' in raw_title or 'السلم 9' in c_html: echelle = 9
-            elif '8' in raw_title or 'السلم 8' in c_html: echelle = 8
-
-            # Distinguish Convocations (Listes d'examen) from Concours
-            is_convocation = any(w in raw_title for w in [
-                'لائحة', 'لوائح', 'المدعوين', 'المرشحين', 'شفوي', 'كتابي', 'نتائج'
-            ])
-
-            if is_convocation:
-                conv_type = 'ORAL' if 'شفوي' in raw_title else ('ECRIT' if 'كتابي' in raw_title else 'RESULTAT')
-                convocations_list.append({
-                    'id': f"manasseb-conv-{p_id}",
-                    'concours_id': f"manasseb-{p_id}",
-                    'type': conv_type,
-                    'title': f"{title_fr} ({conv_type})",
-                    'administration': admin_fr,
-                    'exam_date': exam_date or deadline,
-                    'exam_center': "Maroc",
-                    'candidates_count': posts_count * 25,
-                    'pdf_url': link,
-                    'source': 'manasseb.com'
-                })
-            else:
-                concours_list.append({
-                    'id': f"manasseb-{p_id}",
-                    'title': title_fr,
-                    'title_ar': title_ar,
-                    'grade': f"Échelle {echelle}",
-                    'echelle': str(echelle),
-                    'administration': admin_fr,
-                    'administration_ar': admin_ar,
-                    'speciality': "Administration & Métiers",
-                    'degree_required': "Bac+3 / Bac+5 / Master / Licence",
-                    'posts_count': posts_count,
-                    'deadline': deadline,
-                    'exam_date': exam_date,
-                    'publication_date': pub_date,
-                    'reference_code': f"MANASSEB-{p_id}",
-                    'submission_url': link,
-                    'detail_url': link,
-                    'written_list_url': '',
-                    'oral_list_url': '',
-                    'source': 'manasseb.com',
-                    'is_weekly_special': True
-                })
-        logger.info(f"Successfully processed from Manasseb.com: {len(concours_list)} concours, {len(convocations_list)} convocations")
-    except Exception as e:
-        logger.error(f"Error scraping Manasseb.com: {e}", exc_info=True)
-        
-    return concours_list, convocations_list
-
 def deduplicate_concours_and_convocations(concours_list, convocations_list):
     """
-    Strict deduplication across all sources (Emploi-Public + Manasseb).
+    Strict deduplication across all Emploi-Public.ma records.
     Eliminates identical titles, merges duplicate vacancies, and cleans lists.
     """
     # 1. Filter out convocations that were misplaced in concours array
@@ -550,8 +433,7 @@ def deduplicate_concours_and_convocations(concours_list, convocations_list):
             existing['posts_count'] = max(existing.get('posts_count', 1), c.get('posts_count', 1))
             if not existing.get('exam_date') and c.get('exam_date'):
                 existing['exam_date'] = c.get('exam_date')
-            if 'manasseb' in c.get('source', '') and 'manasseb' not in existing.get('source', ''):
-                existing['source'] = 'emploi-public.ma + manasseb.com'
+
         else:
             seen_concours[key] = c
             deduped_concours.append(c)
@@ -608,7 +490,7 @@ def export_json(concours_list, convocations_list):
     """Exports structured data to JSON for Mihnati Android application sync."""
     data = {
         'last_sync': datetime.now().isoformat(),
-        'source': 'https://www.emploi-public.ma + https://www.manasseb.com',
+        'source': 'https://www.emploi-public.ma',
         'concours_count': len(concours_list),
         'convocations_count': len(convocations_list),
         'concours': concours_list,
@@ -640,10 +522,7 @@ def run_job():
         raw_concours = scrape_concours_list(max_pages=3)
         raw_convocations = scrape_convocations_and_results(raw_concours)
         
-        # Scrape Manasseb.com
-        manasseb_concours, manasseb_convocations = scrape_manasseb_posts(limit=30)
-        raw_concours.extend(manasseb_concours)
-        raw_convocations.extend(manasseb_convocations)
+
 
         # STRICT DEDUPLICATION AND CLEANING
         final_concours, final_convocations = deduplicate_concours_and_convocations(raw_concours, raw_convocations)

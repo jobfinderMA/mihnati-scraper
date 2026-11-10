@@ -36,32 +36,27 @@ import com.mihnati.app.translation.autoTranslate
 import com.mihnati.app.ui.theme.*
 
 fun openOfficialPdf(context: Context, url: String, label: String = "Avis Officiel") {
-    val cleanUrl = if (url.startsWith("http://") || url.startsWith("https://")) {
-        url
+    val opp = MihnatiRepository.opportunities.value.find {
+        it.title.contains(label, ignoreCase = true) || label.contains(it.organization, ignoreCase = true)
+    } ?: MihnatiRepository.opportunities.value.firstOrNull()
+
+    if (opp != null) {
+        val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateAvisPdf(context, opp)
+        com.mihnati.app.pdf.OfficialPdfDocumentHelper.openPdfInSystemViewer(context, file, label)
     } else {
-        "https://www.emploi-public.ma"
-    }
-    try {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(cleanUrl)).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        context.startActivity(intent)
         Toast.makeText(context, "Ouverture du document PDF...", Toast.LENGTH_SHORT).show()
-    } catch (e: Exception) {
-        Toast.makeText(context, "Impossible d'ouvrir le document", Toast.LENGTH_SHORT).show()
     }
 }
 
 fun shareOfficialPdf(context: Context, title: String, url: String) {
-    try {
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, title)
-            putExtra(Intent.EXTRA_TEXT, "$title\n$url\nVia Mihnati - Portail de l'Emploi Public")
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        context.startActivity(Intent.createChooser(shareIntent, "Partager le document officiel"))
-    } catch (e: Exception) {
+    val opp = MihnatiRepository.opportunities.value.find {
+        it.title.contains(title, ignoreCase = true) || title.contains(it.organization, ignoreCase = true)
+    } ?: MihnatiRepository.opportunities.value.firstOrNull()
+
+    if (opp != null) {
+        val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateAvisPdf(context, opp)
+        com.mihnati.app.pdf.OfficialPdfDocumentHelper.sharePdfFile(context, file, title)
+    } else {
         Toast.makeText(context, "Erreur de partage", Toast.LENGTH_SHORT).show()
     }
 }
@@ -80,6 +75,7 @@ fun OfficialConcoursPdfBottomSheet(
     var activeTab by remember { mutableIntStateOf(0) } // 0: Avis Officiel PDF, 1: Listes Candidats PDF
     var selectedExamFilter by remember { mutableStateOf<ExamListType?>(null) }
     var showCnieFinderSheet by remember { mutableStateOf(false) }
+    var activeViewerPdf by remember { mutableStateOf<Pair<java.io.File, String>?>(null) }
 
     val publicConcoursList = remember(allOpportunities) {
         allOpportunities.filter { it.sectorType == com.mihnati.app.data.model.SectorType.PUBLIC }
@@ -364,7 +360,11 @@ fun OfficialConcoursPdfBottomSheet(
                                 // Action Buttons
                                 Button(
                                     onClick = {
-                                        openOfficialPdf(context, effectiveAvisUrl, selectedOpportunity?.title ?: "Avis de Concours")
+                                        val opp = selectedOpportunity ?: targetOpportunity ?: publicConcoursList.firstOrNull()
+                                        if (opp != null) {
+                                            val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateAvisPdf(context, opp)
+                                            activeViewerPdf = file to opp.title
+                                        }
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -534,7 +534,8 @@ fun OfficialConcoursPdfBottomSheet(
                             OfficialExamListCard(
                                 exam = exam,
                                 onOpenPdf = {
-                                    openOfficialPdf(context, exam.pdfDownloadUrl, exam.titleFr)
+                                    val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateCandidateListPdf(context, exam)
+                                    activeViewerPdf = file to exam.titleFr
                                 },
                                 onAddToCalendar = {
                                     EmploiPublicRepository.addExamToUserCalendar(exam)
@@ -552,6 +553,14 @@ fun OfficialConcoursPdfBottomSheet(
         CnieConvocationFinderSheet(
             targetConcoursId = selectedOpportunity?.id,
             onDismiss = { showCnieFinderSheet = false }
+        )
+    }
+
+    activeViewerPdf?.let { (file, title) ->
+        InAppPdfViewerDialog(
+            pdfFile = file,
+            title = title,
+            onDismiss = { activeViewerPdf = null }
         )
     }
 }

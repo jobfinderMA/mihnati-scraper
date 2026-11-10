@@ -641,11 +641,7 @@ object MihnatiRepository {
 
                 if (!seenKeys.contains(normKey)) {
                     seenKeys.add(normKey)
-                    val displaySourceName = if (c.source.contains("manasseb", ignoreCase = true) || c.id.startsWith("manasseb")) {
-                        "Manasseb.com"
-                    } else {
-                        "Emploi-Public"
-                    }
+                    val displaySourceName = "Emploi-Public"
                     deduplicated.add(
                         Opportunity(
                             id = c.id,

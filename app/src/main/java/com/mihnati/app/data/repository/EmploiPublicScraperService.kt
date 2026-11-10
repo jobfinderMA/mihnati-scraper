@@ -57,7 +57,7 @@ object EmploiPublicScraperService {
     suspend fun fetchLiveConcours(): List<EmploiPublicConcours> = withContext(Dispatchers.IO) {
         val scrapedList = mutableListOf<EmploiPublicConcours>()
 
-        // 1. Try to fetch from local asset or Cloud CDN (with Manasseb + Emploi-Public data)
+        // 1. Try to fetch from local asset or Cloud CDN (Emploi-Public.ma official data)
         try {
             val jsonString = loadScrapedJson()
             if (!jsonString.isNullOrBlank()) {
@@ -80,8 +80,7 @@ object EmploiPublicScraperService {
                         val degree = obj.optString("degree_required", "Bac+5 / Master")
                         val detailUrl = obj.optString("detail_url", "${BASE_URL_FR}concours-liste")
                         val writtenListUrl = obj.optString("written_list_url", "")
-                        val rawSource = obj.optString("source", if (id.startsWith("manasseb")) "manasseb.com" else "emploi-public.ma")
-                        val source = if (rawSource.contains("manasseb", ignoreCase = true) || id.startsWith("manasseb")) "manasseb.com" else "emploi-public.ma"
+                        val source = "emploi-public.ma"
                         val isWeeklySpecial = obj.optBoolean("is_weekly_special", false)
 
                         val echelle = when {
@@ -103,7 +102,7 @@ object EmploiPublicScraperService {
                         scrapedList.add(
                             EmploiPublicConcours(
                                 id = id,
-                                reference = if (id.startsWith("manasseb")) "MNB-2026-${id.removePrefix("manasseb-").take(8).uppercase()}" else "EP-2026-${id.removePrefix("ep-").take(8).uppercase()}",
+                                reference = "EP-2026-${id.removePrefix("ep-").take(8).uppercase()}",
                                 titleAr = titleAr,
                                 titleFr = title,
                                 administrationAr = adminAr,
@@ -118,7 +117,7 @@ object EmploiPublicScraperService {
                                 deadlineDate = cleanDeadline,
                                 deadlineDaysRemaining = if (cleanDeadline.contains("Novembre", ignoreCase = true)) 4 else 8,
                                 examDate = examDate,
-                                location = if (source.contains("manasseb")) "Régions du Maroc" else "Rabat, Casablanca & Régions",
+                                location = "Rabat, Casablanca & Régions",
                                 avisPdfUrl = writtenListUrl.ifEmpty { detailUrl },
                                 detailsUrl = detailUrl,
                                 source = source,
@@ -233,13 +232,13 @@ object EmploiPublicScraperService {
     suspend fun fetchLiveExamLists(): List<ConcoursExamList> = withContext(Dispatchers.IO) {
         val lists = mutableListOf<ConcoursExamList>()
 
-        // 1. Generate live convocations from scraped data (including real Manasseb convocations)
+        // 1. Generate live convocations from scraped official data
         try {
             val jsonString = loadScrapedJson()
             if (!jsonString.isNullOrBlank()) {
                 val root = org.json.JSONObject(jsonString)
 
-                // 1.1 Read real convocations list from Manasseb & Emploi-Public
+                // 1.1 Read real convocations list from Emploi-Public.ma
                 val convArray = root.optJSONArray("convocations")
                 if (convArray != null && convArray.length() > 0) {
                     for (i in 0 until convArray.length()) {
@@ -252,8 +251,8 @@ object EmploiPublicScraperService {
                         val examDate = obj.optString("exam_date", "Novembre / Décembre 2026")
                         val center = obj.optString("exam_center", "Centre d'examen")
                         val candidates = obj.optInt("candidates_count", 120)
-                        val pdfUrl = obj.optString("pdf_url", "https://www.manasseb.com")
-                        val source = obj.optString("source", "manasseb.com")
+                        val pdfUrl = obj.optString("pdf_url", "https://www.emploi-public.ma")
+                        val source = obj.optString("source", "emploi-public.ma")
 
                         val listType = if (typeStr.equals("ORAL", ignoreCase = true)) ExamListType.ORAL else ExamListType.ECRIT
 

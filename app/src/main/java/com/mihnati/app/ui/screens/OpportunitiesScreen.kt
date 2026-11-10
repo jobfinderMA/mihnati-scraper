@@ -78,7 +78,6 @@ fun OpportunitiesScreen(
     val bookmarkedCount = remember(opportunities) { opportunities.count { it.isBookmarked } }
     val urgentCount = remember(opportunities) { opportunities.count { it.deadlineDaysRemaining <= 5 } }
     val weeklySpecialCount = remember(opportunities) { opportunities.count { it.isWeeklySpecial } }
-    val manassebCount = remember(opportunities) { opportunities.count { it.sourceName.contains("Manasseb", ignoreCase = true) } }
 
     // Filter logic
     val filteredOpportunities = remember(
@@ -431,27 +430,6 @@ fun OpportunitiesScreen(
                                 onlyFavorites = false
                                 onlyUrgent = false
                                 selectedSource = null
-                            }
-                        }
-                    )
-                }
-
-                // Tab "Manasseb.com"
-                item {
-                    val isManasseb = selectedSource == "Manasseb"
-                    FilterChipPill(
-                        label = "Manasseb.com",
-                        count = manassebCount,
-                        isSelected = isManasseb,
-                        emoji = "🌐",
-                        activeColor = Secondary,
-                        onClick = {
-                            selectedSource = if (isManasseb) null else "Manasseb"
-                            if (selectedSource != null) {
-                                selectedSector = null
-                                onlyFavorites = false
-                                onlyUrgent = false
-                                onlyWeeklySpecial = false
                             }
                         }
                     )
@@ -1093,10 +1071,10 @@ fun CleanOpportunityCard(
                             modifier = Modifier.padding(top = 2.dp)
                         ) {
                             Text(
-                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "🌐 " + autoTranslate("Manasseb.com") else "🏛️ " + autoTranslate("Emploi-Public"),
+                                text = "🏛️ " + autoTranslate("Emploi-Public"),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontSize = 10.sp,
-                                    color = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) Secondary else Primary,
+                                    color = Primary,
                                     fontWeight = FontWeight.SemiBold
                                 )
                             )

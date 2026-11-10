@@ -120,6 +120,7 @@ fun OpportunityDetailScreen(
     var showUploadDocSheet by remember { mutableStateOf(false) }
     var showPdfExportSheet by remember { mutableStateOf(false) }
     var showCnieFinderSheet by remember { mutableStateOf(false) }
+    var activePdfViewer by remember { mutableStateOf<Pair<java.io.File, String>?>(null) }
     var selectedCategoryToUpload by remember { mutableStateOf(DocumentCategory.CV) }
 
     if (opportunity == null) {
@@ -280,7 +281,7 @@ fun OpportunityDetailScreen(
                                 .padding(horizontal = 8.dp, vertical = 3.dp)
                         ) {
                             Text(
-                                text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) autoTranslate("Source : Manasseb.com") else autoTranslate("Officiel emploi-public.ma"),
+                                text = autoTranslate("Officiel emploi-public.ma"),
                                 style = MaterialTheme.typography.labelSmall.copy(color = Color.White)
                             )
                         }
@@ -360,7 +361,7 @@ fun OpportunityDetailScreen(
                             icon = Icons.Default.Apartment
                         )
                         TagBadge(
-                            text = if (opportunity.sourceName.contains("Manasseb", ignoreCase = true)) "🌐 Manasseb" else "🏛️ Emploi-Public",
+                            text = "🏛️ Emploi-Public",
                             backgroundColor = SecondaryContainer.copy(alpha = 0.6f),
                             textColor = OnSecondaryContainer
                         )
@@ -465,7 +466,7 @@ fun OpportunityDetailScreen(
                     }
                 }
 
-                // Written Exam Date Card (from Manasseb & Emploi-Public official notices)
+                // Written Exam Date Card (from Emploi-Public official notices)
                 if (opportunity.examDate.isNotBlank()) {
                     Box(
                         modifier = Modifier
@@ -1235,7 +1236,8 @@ fun OpportunityDetailScreen(
 
                                         Button(
                                             onClick = {
-                                                openOfficialPdf(context, exam.pdfDownloadUrl, exam.titleFr)
+                                                val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateCandidateListPdf(context, exam)
+                                                activePdfViewer = file to exam.titleFr
                                             },
                                             modifier = Modifier.fillMaxWidth(),
                                             shape = RoundedCornerShape(8.dp),
@@ -1409,6 +1411,14 @@ fun OpportunityDetailScreen(
         com.mihnati.app.ui.components.CnieConvocationFinderSheet(
             targetConcoursId = opportunity?.id,
             onDismiss = { showCnieFinderSheet = false }
+        )
+    }
+
+    activePdfViewer?.let { (file, title) ->
+        com.mihnati.app.ui.components.InAppPdfViewerDialog(
+            pdfFile = file,
+            title = title,
+            onDismiss = { activePdfViewer = null }
         )
     }
 }

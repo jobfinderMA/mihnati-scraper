@@ -52,6 +52,7 @@ fun CnieConvocationFinderSheet(
     var searchResults by remember {
         mutableStateOf(EmploiPublicRepository.searchCandidateConvocations(profileCnie, targetConcoursId))
     }
+    var activeViewerPdf by remember { mutableStateOf<Pair<java.io.File, String>?>(null) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -222,7 +223,8 @@ fun CnieConvocationFinderSheet(
                         ConvocationSlipCard(
                             record = record,
                             onOpenPdf = {
-                                openOfficialPdf(context, record.officialPdfUrl, record.grade)
+                                val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateConvocationSlipPdf(context, record)
+                                activeViewerPdf = file to "Convocation - ${record.fullName}"
                             },
                             onAddToCalendar = {
                                 val examList = EmploiPublicRepository.examLists.value.find { it.id == record.examListId }
@@ -294,7 +296,11 @@ fun CnieConvocationFinderSheet(
 
                         Button(
                             onClick = {
-                                openOfficialPdf(context, "https://www.emploi-public.ma", "Portail emploi-public.ma")
+                                val exam = EmploiPublicRepository.examLists.value.firstOrNull()
+                                if (exam != null) {
+                                    val file = com.mihnati.app.pdf.OfficialPdfDocumentHelper.getOrCreateCandidateListPdf(context, exam)
+                                    activeViewerPdf = file to "Liste Officielle des Candidats"
+                                }
                             },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
@@ -335,6 +341,14 @@ fun CnieConvocationFinderSheet(
                 }
             }
         }
+    }
+
+    activeViewerPdf?.let { (file, title) ->
+        InAppPdfViewerDialog(
+            pdfFile = file,
+            title = title,
+            onDismiss = { activeViewerPdf = null }
+        )
     }
 }
 
