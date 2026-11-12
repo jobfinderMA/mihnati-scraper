@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-12T16:50:35.730329",
+  "last_sync": "2026-11-12T17:44:08.674839",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 12,
-  "convocations_count": 2,
+  "concours_count": 13,
+  "convocations_count": 1,
   "concours": [
+    {
+      "id": "ep-bc216516",
+      "uuid": "bc216516-0478-4fb6-a857-a114988f6cb3",
+      "title": "Avis de concours de recrutement de Maître de conférences grade A - Echelle 11",
+      "administration": "Haut commissariat au plan",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 4 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/bc216516-0478-4fb6-a857-a114988f6cb3",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/bc216516-0478-4fb6-a857-a114988f6cb3",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/bc216516-0478-4fb6-a857-a114988f6cb3",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/bc216516-0478-4fb6-a857-a114988f6cb3"
+    },
     {
       "id": "ep-b2542f15",
       "uuid": "b2542f15-9180-4680-9a40-56cab838599c",
@@ -184,18 +198,6 @@
       "exam_center": "Maroc",
       "candidates_count": 300,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/0bc3b58e-cfd7-466e-9023-6faf53a94738",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-cdda2f24",
-      "concours_id": "ep-cdda2f24",
-      "type": "ECRIT",
-      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Adjoint technique 2ème grade",
-      "administration": "Ministère de la Famille, du Développement social et de l’Égalité",
-      "exam_date": "Limite de dépôt : 8 Novembre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 90,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/cdda2f24-9751-4129-85a7-220a7716847a",
       "source": "emploi-public.ma"
     }
   ]
