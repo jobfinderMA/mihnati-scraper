@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-12T09:48:38.576631",
+  "last_sync": "2026-11-12T10:51:19.162981",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 11,
-  "convocations_count": 3,
+  "concours_count": 12,
+  "convocations_count": 2,
   "concours": [
+    {
+      "id": "ep-c1856307",
+      "uuid": "c1856307-e18c-4053-8079-1efd4ebd63dd",
+      "title": "Avis de concours de recrutement de Surveillant pénitentiaire adjoint 2ème grade",
+      "administration": "Délégation générale à l'administration pénitentiaire et à la réinsertion",
+      "echelle": "Statut Fonction Publique",
+      "degree_required": "Selon arrêté ministériel",
+      "posts_count": 120,
+      "deadline": "Limite de dépôt : 26 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/c1856307-e18c-4053-8079-1efd4ebd63dd",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/c1856307-e18c-4053-8079-1efd4ebd63dd",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/c1856307-e18c-4053-8079-1efd4ebd63dd",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/c1856307-e18c-4053-8079-1efd4ebd63dd"
+    },
     {
       "id": "ep-03905d86",
       "uuid": "03905d86-bfa2-4e5f-9173-f46289658267",
@@ -182,18 +196,6 @@
       "exam_center": "Maroc",
       "candidates_count": 90,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/cdda2f24-9751-4129-85a7-220a7716847a",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-bd7d21e6",
-      "concours_id": "ep-bd7d21e6",
-      "type": "ORAL",
-      "title": "Publication de la liste des convoqués pour l'entretien oral du concours de recrutement d'un Ingénieur d'Etat 1er grade - Echelle 11",
-      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
-      "exam_date": "Limite de dépôt : 7 Octobre 2026\n                                                                                                                            - 16:30",
-      "exam_center": "Maroc",
-      "candidates_count": 330,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/bd7d21e6-ce27-4590-9ae0-ba4755897c51",
       "source": "emploi-public.ma"
     }
   ]
