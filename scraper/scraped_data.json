@@ -1,7 +1,7 @@
 {
-  "last_sync": "2026-11-12T14:07:43.252279",
+  "last_sync": "2026-11-12T15:48:40.371864",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 12,
+  "concours_count": 10,
   "convocations_count": 2,
   "concours": [
     {
@@ -115,34 +115,6 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/284c1fe0-0a78-4892-87df-3e083e6a65d2"
-    },
-    {
-      "id": "ep-e0775437",
-      "uuid": "e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "title": "Avis de concours de recrutement de Infirmier de premier grade - Echelle 10",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "echelle": "Échelle 10",
-      "degree_required": "Bac+3 / Licence",
-      "posts_count": 10,
-      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/e0775437-60f2-4958-9306-7bfe8a1524f4"
-    },
-    {
-      "id": "ep-089b0b6f",
-      "uuid": "089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "title": "Avis de concours de recrutement de Professeur de l'enseignement secondaire qualifié 2ème grade - Echelle 10",
-      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
-      "echelle": "Échelle 10",
-      "degree_required": "Bac+3 / Licence",
-      "posts_count": 10,
-      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/089b0b6f-62e2-4acf-bf7c-42d661636619"
     },
     {
       "id": "ep-144317d0",
