@@ -1,22 +1,36 @@
 {
-  "last_sync": "2026-11-12T10:51:19.162981",
+  "last_sync": "2026-11-12T11:47:44.030812",
   "source": "https://www.emploi-public.ma",
   "concours_count": 12,
   "convocations_count": 2,
   "concours": [
     {
-      "id": "ep-c1856307",
-      "uuid": "c1856307-e18c-4053-8079-1efd4ebd63dd",
-      "title": "Avis de concours de recrutement de Surveillant pénitentiaire adjoint 2ème grade",
+      "id": "ep-b2542f15",
+      "uuid": "b2542f15-9180-4680-9a40-56cab838599c",
+      "title": "Avis de concours de recrutement de Commandant pénitentiaire adjoint 1er grade",
       "administration": "Délégation générale à l'administration pénitentiaire et à la réinsertion",
       "echelle": "Statut Fonction Publique",
       "degree_required": "Selon arrêté ministériel",
-      "posts_count": 120,
+      "posts_count": 28,
       "deadline": "Limite de dépôt : 26 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/c1856307-e18c-4053-8079-1efd4ebd63dd",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/c1856307-e18c-4053-8079-1efd4ebd63dd",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/c1856307-e18c-4053-8079-1efd4ebd63dd",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/c1856307-e18c-4053-8079-1efd4ebd63dd"
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/b2542f15-9180-4680-9a40-56cab838599c",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/b2542f15-9180-4680-9a40-56cab838599c",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/b2542f15-9180-4680-9a40-56cab838599c",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/b2542f15-9180-4680-9a40-56cab838599c"
+    },
+    {
+      "id": "ep-cc2bd7ff",
+      "uuid": "cc2bd7ff-97cf-4de3-9665-4e7c05c3c825",
+      "title": "Avis de concours de recrutement de Surveillant pénitentiaire chef 2ème grade",
+      "administration": "Délégation générale à l'administration pénitentiaire et à la réinsertion",
+      "echelle": "Statut Fonction Publique",
+      "degree_required": "Selon arrêté ministériel",
+      "posts_count": 200,
+      "deadline": "Limite de dépôt : 26 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/cc2bd7ff-97cf-4de3-9665-4e7c05c3c825",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/cc2bd7ff-97cf-4de3-9665-4e7c05c3c825",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/cc2bd7ff-97cf-4de3-9665-4e7c05c3c825",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/cc2bd7ff-97cf-4de3-9665-4e7c05c3c825"
     },
     {
       "id": "ep-03905d86",
@@ -157,20 +171,6 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/fb2e5ca9-e80e-4765-afc1-587b15f0ae33"
-    },
-    {
-      "id": "ep-7c571fa5",
-      "uuid": "7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
-      "title": "Annulation du concours de recrutement d'un Administrateur 2ème grade - Echelle 11",
-      "administration": "Ministère de l’Agriculture, de la Pêche maritime et de la Souveraineté alimentaire - Département de l’Agriculture",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 9 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7c571fa5-42a7-46a6-8021-aed9ed9ec5f0"
     }
   ],
   "convocations": [
