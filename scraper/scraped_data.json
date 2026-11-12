@@ -1,8 +1,8 @@
 {
-  "last_sync": "2026-11-12T12:52:17.183960",
+  "last_sync": "2026-11-12T14:07:43.252279",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 8,
-  "convocations_count": 0,
+  "concours_count": 12,
+  "convocations_count": 2,
   "concours": [
     {
       "id": "ep-b2542f15",
@@ -115,7 +115,88 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/284c1fe0-0a78-4892-87df-3e083e6a65d2"
+    },
+    {
+      "id": "ep-e0775437",
+      "uuid": "e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "title": "Avis de concours de recrutement de Infirmier de premier grade - Echelle 10",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Échelle 10",
+      "degree_required": "Bac+3 / Licence",
+      "posts_count": 10,
+      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/e0775437-60f2-4958-9306-7bfe8a1524f4"
+    },
+    {
+      "id": "ep-089b0b6f",
+      "uuid": "089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "title": "Avis de concours de recrutement de Professeur de l'enseignement secondaire qualifié 2ème grade - Echelle 10",
+      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
+      "echelle": "Échelle 10",
+      "degree_required": "Bac+3 / Licence",
+      "posts_count": 10,
+      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/089b0b6f-62e2-4acf-bf7c-42d661636619",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/089b0b6f-62e2-4acf-bf7c-42d661636619"
+    },
+    {
+      "id": "ep-144317d0",
+      "uuid": "144317d0-3827-46f6-94c3-a5fbd18b2c85",
+      "title": "Avis de concours de recrutement de Administrateur 2ème grade - Echelle 11",
+      "administration": "Haut commissariat au plan",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 13 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/144317d0-3827-46f6-94c3-a5fbd18b2c85",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/144317d0-3827-46f6-94c3-a5fbd18b2c85",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/144317d0-3827-46f6-94c3-a5fbd18b2c85",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/144317d0-3827-46f6-94c3-a5fbd18b2c85"
+    },
+    {
+      "id": "ep-fb2e5ca9",
+      "uuid": "fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
+      "title": "Avis de concours de recrutement de Secrétaire juridique adjoint de 4ème grade",
+      "administration": "Conseil Supérieur du Pouvoir Judiciaire",
+      "echelle": "Statut Fonction Publique",
+      "degree_required": "Selon arrêté ministériel",
+      "posts_count": 15,
+      "deadline": "Limite de dépôt : 10 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/fb2e5ca9-e80e-4765-afc1-587b15f0ae33"
     }
   ],
-  "convocations": []
+  "convocations": [
+    {
+      "id": "conv-ep-0bc3b58e",
+      "concours_id": "ep-0bc3b58e",
+      "type": "ECRIT",
+      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Élèves officiers - Echelle 10",
+      "administration": "Ministère de l’intérieur -Direction Générale de la Protection Civile-",
+      "exam_date": "Limite de dépôt : 31 Octobre 2026",
+      "exam_center": "Maroc",
+      "candidates_count": 300,
+      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/0bc3b58e-cfd7-466e-9023-6faf53a94738",
+      "source": "emploi-public.ma"
+    },
+    {
+      "id": "conv-ep-cdda2f24",
+      "concours_id": "ep-cdda2f24",
+      "type": "ECRIT",
+      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Adjoint technique 2ème grade",
+      "administration": "Ministère de la Famille, du Développement social et de l’Égalité",
+      "exam_date": "Limite de dépôt : 8 Novembre 2026",
+      "exam_center": "Maroc",
+      "candidates_count": 90,
+      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/cdda2f24-9751-4129-85a7-220a7716847a",
+      "source": "emploi-public.ma"
+    }
+  ]
 }
