@@ -1,9 +1,51 @@
 {
-  "last_sync": "2026-11-13T18:38:51.061040",
+  "last_sync": "2026-11-13T19:45:27.154942",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 13,
-  "convocations_count": 1,
+  "concours_count": 16,
+  "convocations_count": 0,
   "concours": [
+    {
+      "id": "ep-b7f02f9d",
+      "uuid": "b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
+      "title": "Avis de concours de recrutement de Rédacteur Judiciaire 4ème grade - Echelle 8",
+      "administration": "Ministère de la justice",
+      "echelle": "Échelle 8",
+      "degree_required": "Baccalauréat / Niveau Bac",
+      "posts_count": 8,
+      "deadline": "Limite de dépôt : 2 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/b7f02f9d-4b66-4dcd-8365-f3b1001009c1"
+    },
+    {
+      "id": "ep-f13bac44",
+      "uuid": "f13bac44-60cc-4ed5-897a-905111afbeb2",
+      "title": "Avis de concours de recrutement de Rédacteur Judiciaire 3ème grade - Echelle 9",
+      "administration": "Ministère de la justice",
+      "echelle": "Échelle 9",
+      "degree_required": "Bac+2 / DUT / BTS / Technicien Spécialisé",
+      "posts_count": 9,
+      "deadline": "Limite de dépôt : 2 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/f13bac44-60cc-4ed5-897a-905111afbeb2",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/f13bac44-60cc-4ed5-897a-905111afbeb2",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/f13bac44-60cc-4ed5-897a-905111afbeb2",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/f13bac44-60cc-4ed5-897a-905111afbeb2"
+    },
+    {
+      "id": "ep-bc819c35",
+      "uuid": "bc819c35-294c-4f6e-bcb7-6ab471454c51",
+      "title": "Avis de concours de recrutement de Commissaire Judiciaire 3ème grade - Echelle 10",
+      "administration": "Ministère de la justice",
+      "echelle": "Échelle 10",
+      "degree_required": "Bac+3 / Licence",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 2 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/bc819c35-294c-4f6e-bcb7-6ab471454c51",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/bc819c35-294c-4f6e-bcb7-6ab471454c51",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/bc819c35-294c-4f6e-bcb7-6ab471454c51",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/bc819c35-294c-4f6e-bcb7-6ab471454c51"
+    },
     {
       "id": "ep-bc216516",
       "uuid": "bc216516-0478-4fb6-a857-a114988f6cb3",
@@ -187,18 +229,5 @@
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/fb2e5ca9-e80e-4765-afc1-587b15f0ae33"
     }
   ],
-  "convocations": [
-    {
-      "id": "conv-ep-0bc3b58e",
-      "concours_id": "ep-0bc3b58e",
-      "type": "ECRIT",
-      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Élèves officiers - Echelle 10",
-      "administration": "Ministère de l’intérieur -Direction Générale de la Protection Civile-",
-      "exam_date": "Limite de dépôt : 31 Octobre 2026",
-      "exam_center": "Maroc",
-      "candidates_count": 300,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/0bc3b58e-cfd7-466e-9023-6faf53a94738",
-      "source": "emploi-public.ma"
-    }
-  ]
+  "convocations": []
 }
