@@ -1,7 +1,7 @@
 {
-  "last_sync": "2026-11-13T10:48:55.859542",
+  "last_sync": "2026-11-13T11:44:56.585360",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 13,
+  "concours_count": 12,
   "convocations_count": 1,
   "concours": [
     {
@@ -117,46 +117,18 @@
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640"
     },
     {
-      "id": "ep-284c1fe0",
-      "uuid": "284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "title": "Avis de concours de recrutement de Ingénieur d'Etat 1er grade - Echelle 11",
-      "administration": "Ministère de l’intérieur -Province de Tata-",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 23 Novembre 2026",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/284c1fe0-0a78-4892-87df-3e083e6a65d2"
-    },
-    {
-      "id": "ep-e0775437",
-      "uuid": "e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "title": "Avis de concours de recrutement de Infirmier de premier grade - Echelle 10",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "echelle": "Échelle 10",
-      "degree_required": "Bac+3 / Licence",
-      "posts_count": 10,
-      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/e0775437-60f2-4958-9306-7bfe8a1524f4"
-    },
-    {
-      "id": "ep-089b0b6f",
-      "uuid": "089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "title": "Avis de concours de recrutement de Professeur de l'enseignement secondaire qualifié 2ème grade - Echelle 10",
+      "id": "ep-f773dd7f",
+      "uuid": "f773dd7f-be02-42b7-a9d8-c941fef7d31e",
+      "title": "Avis de concours de recrutement de Professeur de l'enseignement primaire 2ème grade - Echelle 10",
       "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
       "echelle": "Échelle 10",
       "degree_required": "Bac+3 / Licence",
       "posts_count": 10,
       "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/089b0b6f-62e2-4acf-bf7c-42d661636619"
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/f773dd7f-be02-42b7-a9d8-c941fef7d31e",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/f773dd7f-be02-42b7-a9d8-c941fef7d31e",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/f773dd7f-be02-42b7-a9d8-c941fef7d31e",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/f773dd7f-be02-42b7-a9d8-c941fef7d31e"
     },
     {
       "id": "ep-144317d0",
@@ -185,6 +157,20 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/fb2e5ca9-e80e-4765-afc1-587b15f0ae33"
+    },
+    {
+      "id": "ep-7cf772aa",
+      "uuid": "7cf772aa-1a10-4769-8d24-bf2e5d55a471",
+      "title": "Avis de concours de recrutement de Ingénieur d'Etat 1er grade - Echelle 11",
+      "administration": "Ministère de l’intérieur -Province de Settat-",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 9 Novembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/7cf772aa-1a10-4769-8d24-bf2e5d55a471",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/7cf772aa-1a10-4769-8d24-bf2e5d55a471",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7cf772aa-1a10-4769-8d24-bf2e5d55a471",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7cf772aa-1a10-4769-8d24-bf2e5d55a471"
     }
   ],
   "convocations": [
