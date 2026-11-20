@@ -1,7 +1,7 @@
 {
-  "last_sync": "2026-11-20T18:48:04.836900",
+  "last_sync": "2026-11-20T19:52:11.826888",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 16,
+  "concours_count": 15,
   "convocations_count": 1,
   "concours": [
     {
@@ -171,20 +171,6 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/284c1fe0-0a78-4892-87df-3e083e6a65d2"
-    },
-    {
-      "id": "ep-34f82ed2",
-      "uuid": "34f82ed2-c3fa-4496-a8e3-3a1159e4adf3",
-      "title": "Avis de concours de recrutement de Infirmier de premier grade - Echelle 10",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "echelle": "Échelle 10",
-      "degree_required": "Bac+3 / Licence",
-      "posts_count": 10,
-      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/34f82ed2-c3fa-4496-a8e3-3a1159e4adf3",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/34f82ed2-c3fa-4496-a8e3-3a1159e4adf3",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/34f82ed2-c3fa-4496-a8e3-3a1159e4adf3",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/34f82ed2-c3fa-4496-a8e3-3a1159e4adf3"
     },
     {
       "id": "ep-089b0b6f",
