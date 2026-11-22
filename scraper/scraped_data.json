@@ -1,8 +1,8 @@
 {
-  "last_sync": "2026-11-22T16:37:14.082266",
+  "last_sync": "2026-11-22T17:34:21.290508",
   "source": "https://www.emploi-public.ma",
   "concours_count": 15,
-  "convocations_count": 1,
+  "convocations_count": 2,
   "concours": [
     {
       "id": "ep-b7f02f9d",
@@ -226,6 +226,18 @@
       "exam_center": "Maroc",
       "candidates_count": 300,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4",
+      "source": "emploi-public.ma"
+    },
+    {
+      "id": "conv-ep-7cf772aa",
+      "concours_id": "ep-7cf772aa",
+      "type": "ECRIT",
+      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Ingénieur d'Etat 1er grade - Echelle 11",
+      "administration": "Ministère de l’intérieur -Province de Settat-",
+      "exam_date": "Limite de dépôt : 9 Novembre 2026\n                                                                                                                            - 16:30",
+      "exam_center": "Maroc",
+      "candidates_count": 330,
+      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7cf772aa-1a10-4769-8d24-bf2e5d55a471",
       "source": "emploi-public.ma"
     }
   ]
