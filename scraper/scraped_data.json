@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-24T15:56:59.558662",
+  "last_sync": "2026-11-24T16:56:35.888659",
   "source": "https://www.emploi-public.ma",
   "concours_count": 19,
   "convocations_count": 1,
   "concours": [
+    {
+      "id": "ep-a1c6e668",
+      "uuid": "a1c6e668-6fb2-470a-818c-6d6b8d5f574d",
+      "title": "Avis de concours de recrutement de Administrateur 2ème grade - Echelle 11",
+      "administration": "Ministère de l’Agriculture, de la Pêche maritime et de la Souveraineté alimentaire - Département de l’Agriculture",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 15 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/a1c6e668-6fb2-470a-818c-6d6b8d5f574d",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/a1c6e668-6fb2-470a-818c-6d6b8d5f574d",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/a1c6e668-6fb2-470a-818c-6d6b8d5f574d",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/a1c6e668-6fb2-470a-818c-6d6b8d5f574d"
+    },
     {
       "id": "ep-6e348f23",
       "uuid": "6e348f23-624f-4bc8-b7cd-049507d4c8f8",
@@ -255,20 +269,6 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/284c1fe0-0a78-4892-87df-3e083e6a65d2",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/284c1fe0-0a78-4892-87df-3e083e6a65d2"
-    },
-    {
-      "id": "ep-089b0b6f",
-      "uuid": "089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "title": "Avis de concours de recrutement de Professeur de l'enseignement secondaire qualifié 2ème grade - Echelle 10",
-      "administration": "Ministère de l’Education Nationale, du Préscolaire, de la Formation professionnelle et de la Qualification - Département de l’Education nationale",
-      "echelle": "Échelle 10",
-      "degree_required": "Bac+3 / Licence",
-      "posts_count": 10,
-      "deadline": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/089b0b6f-62e2-4acf-bf7c-42d661636619",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/089b0b6f-62e2-4acf-bf7c-42d661636619"
     }
   ],
   "convocations": [
