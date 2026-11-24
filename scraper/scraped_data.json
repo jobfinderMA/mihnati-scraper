@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-24T11:48:00.726105",
+  "last_sync": "2026-11-24T12:57:03.493816",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 15,
+  "concours_count": 16,
   "convocations_count": 2,
   "concours": [
+    {
+      "id": "ep-06f2df84",
+      "uuid": "06f2df84-0753-47a3-95b9-4aa040df8c72",
+      "title": "Avis de concours de recrutement de Adjoint technique 2ème grade",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Statut Fonction Publique",
+      "degree_required": "Selon arrêté ministériel",
+      "posts_count": 160,
+      "deadline": "Novembre 2026",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/06f2df84-0753-47a3-95b9-4aa040df8c72",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/06f2df84-0753-47a3-95b9-4aa040df8c72",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/06f2df84-0753-47a3-95b9-4aa040df8c72",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/06f2df84-0753-47a3-95b9-4aa040df8c72"
+    },
     {
       "id": "ep-b7f02f9d",
       "uuid": "b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
