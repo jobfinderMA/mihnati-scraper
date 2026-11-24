@@ -1,79 +1,9 @@
 {
-  "last_sync": "2026-11-24T12:57:03.493816",
+  "last_sync": "2026-11-24T14:15:38.630728",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 16,
+  "concours_count": 9,
   "convocations_count": 2,
   "concours": [
-    {
-      "id": "ep-06f2df84",
-      "uuid": "06f2df84-0753-47a3-95b9-4aa040df8c72",
-      "title": "Avis de concours de recrutement de Adjoint technique 2ème grade",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "echelle": "Statut Fonction Publique",
-      "degree_required": "Selon arrêté ministériel",
-      "posts_count": 160,
-      "deadline": "Novembre 2026",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/06f2df84-0753-47a3-95b9-4aa040df8c72",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/06f2df84-0753-47a3-95b9-4aa040df8c72",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/06f2df84-0753-47a3-95b9-4aa040df8c72",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/06f2df84-0753-47a3-95b9-4aa040df8c72"
-    },
-    {
-      "id": "ep-b7f02f9d",
-      "uuid": "b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
-      "title": "Avis de concours de recrutement de Rédacteur Judiciaire 4ème grade - Echelle 8",
-      "administration": "Ministère de la justice",
-      "echelle": "Échelle 8",
-      "degree_required": "Baccalauréat / Niveau Bac",
-      "posts_count": 8,
-      "deadline": "Limite de dépôt : 2 Décembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/b7f02f9d-4b66-4dcd-8365-f3b1001009c1",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/b7f02f9d-4b66-4dcd-8365-f3b1001009c1"
-    },
-    {
-      "id": "ep-f13bac44",
-      "uuid": "f13bac44-60cc-4ed5-897a-905111afbeb2",
-      "title": "Avis de concours de recrutement de Rédacteur Judiciaire 3ème grade - Echelle 9",
-      "administration": "Ministère de la justice",
-      "echelle": "Échelle 9",
-      "degree_required": "Bac+2 / DUT / BTS / Technicien Spécialisé",
-      "posts_count": 9,
-      "deadline": "Limite de dépôt : 2 Décembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/f13bac44-60cc-4ed5-897a-905111afbeb2",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/f13bac44-60cc-4ed5-897a-905111afbeb2",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/f13bac44-60cc-4ed5-897a-905111afbeb2",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/f13bac44-60cc-4ed5-897a-905111afbeb2"
-    },
-    {
-      "id": "ep-bc819c35",
-      "uuid": "bc819c35-294c-4f6e-bcb7-6ab471454c51",
-      "title": "Avis de concours de recrutement de Commissaire Judiciaire 3ème grade - Echelle 10",
-      "administration": "Ministère de la justice",
-      "echelle": "Échelle 10",
-      "degree_required": "Bac+3 / Licence",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 2 Décembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/bc819c35-294c-4f6e-bcb7-6ab471454c51",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/bc819c35-294c-4f6e-bcb7-6ab471454c51",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/bc819c35-294c-4f6e-bcb7-6ab471454c51",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/bc819c35-294c-4f6e-bcb7-6ab471454c51"
-    },
-    {
-      "id": "ep-bc216516",
-      "uuid": "bc216516-0478-4fb6-a857-a114988f6cb3",
-      "title": "Avis de concours de recrutement de Maître de conférences grade A - Echelle 11",
-      "administration": "Haut commissariat au plan",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 4 Décembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/bc216516-0478-4fb6-a857-a114988f6cb3",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/bc216516-0478-4fb6-a857-a114988f6cb3",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/bc216516-0478-4fb6-a857-a114988f6cb3",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/bc216516-0478-4fb6-a857-a114988f6cb3"
-    },
     {
       "id": "ep-b2542f15",
       "uuid": "b2542f15-9180-4680-9a40-56cab838599c",
@@ -199,37 +129,20 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/089b0b6f-62e2-4acf-bf7c-42d661636619",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/089b0b6f-62e2-4acf-bf7c-42d661636619",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/089b0b6f-62e2-4acf-bf7c-42d661636619"
-    },
-    {
-      "id": "ep-144317d0",
-      "uuid": "144317d0-3827-46f6-94c3-a5fbd18b2c85",
-      "title": "Avis de concours de recrutement de Administrateur 2ème grade - Echelle 11",
-      "administration": "Haut commissariat au plan",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 13 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/144317d0-3827-46f6-94c3-a5fbd18b2c85",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/144317d0-3827-46f6-94c3-a5fbd18b2c85",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/144317d0-3827-46f6-94c3-a5fbd18b2c85",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/144317d0-3827-46f6-94c3-a5fbd18b2c85"
-    },
-    {
-      "id": "ep-fb2e5ca9",
-      "uuid": "fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
-      "title": "Avis de concours de recrutement de Secrétaire juridique adjoint de 4ème grade",
-      "administration": "Conseil Supérieur du Pouvoir Judiciaire",
-      "echelle": "Statut Fonction Publique",
-      "degree_required": "Selon arrêté ministériel",
-      "posts_count": 15,
-      "deadline": "Limite de dépôt : 10 Novembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/fb2e5ca9-e80e-4765-afc1-587b15f0ae33",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/fb2e5ca9-e80e-4765-afc1-587b15f0ae33"
     }
   ],
   "convocations": [
+    {
+      "id": "conv-ecrit-e0775437",
+      "concours_id": "ep-e0775437",
+      "type": "ECRIT",
+      "title": "Liste des candidats convoqués à l'épreuve écrite - Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Infirmier de premier grade - Echelle 10",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "exam_date": "Novembre 2026",
+      "exam_center": "Rabat, Casablanca & Centres Régionaux",
+      "candidates_count": 150,
+      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4"
+    },
     {
       "id": "conv-ep-e0775437",
       "concours_id": "ep-e0775437",
@@ -240,18 +153,6 @@
       "exam_center": "Maroc",
       "candidates_count": 300,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-7cf772aa",
-      "concours_id": "ep-7cf772aa",
-      "type": "ECRIT",
-      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Ingénieur d'Etat 1er grade - Echelle 11",
-      "administration": "Ministère de l’intérieur -Province de Settat-",
-      "exam_date": "Limite de dépôt : 9 Novembre 2026\n                                                                                                                            - 16:30",
-      "exam_center": "Maroc",
-      "candidates_count": 330,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7cf772aa-1a10-4769-8d24-bf2e5d55a471",
       "source": "emploi-public.ma"
     }
   ]
