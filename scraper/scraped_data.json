@@ -1,8 +1,8 @@
 {
-  "last_sync": "2026-11-25T09:58:59.595594",
+  "last_sync": "2026-11-25T10:54:57.083460",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 19,
-  "convocations_count": 1,
+  "concours_count": 17,
+  "convocations_count": 2,
   "concours": [
     {
       "id": "ep-a1c6e668",
@@ -241,37 +241,21 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/b4147b79-25b9-4344-a801-20220a6b5cd4",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/b4147b79-25b9-4344-a801-20220a6b5cd4",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/b4147b79-25b9-4344-a801-20220a6b5cd4"
-    },
-    {
-      "id": "ep-0ce1c9ce",
-      "uuid": "0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640",
-      "title": "Avis de concours de recrutement de Administrateur 2ème grade - Echelle 11",
-      "administration": "Ministère de l’intérieur -Province de Tata-",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 23 Novembre 2026",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640"
-    },
-    {
-      "id": "ep-284c1fe0",
-      "uuid": "284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "title": "Avis de concours de recrutement de Ingénieur d'Etat 1er grade - Echelle 11",
-      "administration": "Ministère de l’intérieur -Province de Tata-",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 23 Novembre 2026",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/284c1fe0-0a78-4892-87df-3e083e6a65d2",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/284c1fe0-0a78-4892-87df-3e083e6a65d2"
     }
   ],
   "convocations": [
+    {
+      "id": "conv-ep-0ce1c9ce",
+      "concours_id": "ep-0ce1c9ce",
+      "type": "ECRIT",
+      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Administrateur 2ème grade - Echelle 11",
+      "administration": "Ministère de l’intérieur -Province de Tata-",
+      "exam_date": "Limite de dépôt : 23 Novembre 2026",
+      "exam_center": "Maroc",
+      "candidates_count": 330,
+      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640",
+      "source": "emploi-public.ma"
+    },
     {
       "id": "conv-ep-e0775437",
       "concours_id": "ep-e0775437",
