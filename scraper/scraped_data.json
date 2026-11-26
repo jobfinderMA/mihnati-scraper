@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-26T12:59:39.834537",
+  "last_sync": "2026-11-26T14:19:33.198077",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 18,
+  "concours_count": 19,
   "convocations_count": 2,
   "concours": [
+    {
+      "id": "ep-91221b77",
+      "uuid": "91221b77-0392-49e0-8e6c-b1ca9bb70b9e",
+      "title": "Avis de concours de recrutement de Technicien de 3ème grade - Echelle 9",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Échelle 9",
+      "degree_required": "Bac+2 / DUT / BTS / Technicien Spécialisé",
+      "posts_count": 9,
+      "deadline": "Novembre 2026",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/91221b77-0392-49e0-8e6c-b1ca9bb70b9e",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/91221b77-0392-49e0-8e6c-b1ca9bb70b9e",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/91221b77-0392-49e0-8e6c-b1ca9bb70b9e",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/91221b77-0392-49e0-8e6c-b1ca9bb70b9e"
+    },
     {
       "id": "ep-7d32403a",
       "uuid": "7d32403a-c665-4897-9772-13e69b32b643",
