@@ -1,9 +1,37 @@
 {
-  "last_sync": "2026-11-26T11:51:26.031090",
+  "last_sync": "2026-11-26T12:59:39.834537",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 17,
+  "concours_count": 18,
   "convocations_count": 2,
   "concours": [
+    {
+      "id": "ep-7d32403a",
+      "uuid": "7d32403a-c665-4897-9772-13e69b32b643",
+      "title": "Avis de concours de recrutement de Pharmacien premier grade - Echelle 11",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 18 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/7d32403a-c665-4897-9772-13e69b32b643",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/7d32403a-c665-4897-9772-13e69b32b643",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7d32403a-c665-4897-9772-13e69b32b643",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7d32403a-c665-4897-9772-13e69b32b643"
+    },
+    {
+      "id": "ep-9d21f49c",
+      "uuid": "9d21f49c-97f2-47af-83e0-33d28ee13922",
+      "title": "Avis de concours de recrutement de Médecins premier grade - Echelle 11",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 18 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/9d21f49c-97f2-47af-83e0-33d28ee13922",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/9d21f49c-97f2-47af-83e0-33d28ee13922",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/9d21f49c-97f2-47af-83e0-33d28ee13922",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/9d21f49c-97f2-47af-83e0-33d28ee13922"
+    },
     {
       "id": "ep-a1c6e668",
       "uuid": "a1c6e668-6fb2-470a-818c-6d6b8d5f574d",
@@ -17,20 +45,6 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/a1c6e668-6fb2-470a-818c-6d6b8d5f574d",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/a1c6e668-6fb2-470a-818c-6d6b8d5f574d",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/a1c6e668-6fb2-470a-818c-6d6b8d5f574d"
-    },
-    {
-      "id": "ep-6e348f23",
-      "uuid": "6e348f23-624f-4bc8-b7cd-049507d4c8f8",
-      "title": "Avis de concours de recrutement de Médecins premier grade - Echelle 11",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 10 Décembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/6e348f23-624f-4bc8-b7cd-049507d4c8f8",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/6e348f23-624f-4bc8-b7cd-049507d4c8f8",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/6e348f23-624f-4bc8-b7cd-049507d4c8f8",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/6e348f23-624f-4bc8-b7cd-049507d4c8f8"
     },
     {
       "id": "ep-452b86be",
