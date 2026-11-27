@@ -1,9 +1,37 @@
 {
-  "last_sync": "2026-11-27T12:56:12.625457",
+  "last_sync": "2026-11-27T14:14:27.380151",
   "source": "https://www.emploi-public.ma",
   "concours_count": 19,
   "convocations_count": 2,
   "concours": [
+    {
+      "id": "ep-32478282",
+      "uuid": "32478282-4603-43aa-954e-d392e3e2ff29",
+      "title": "Avis de concours de recrutement de Pharmacien premier grade - Echelle 11",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 16 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/32478282-4603-43aa-954e-d392e3e2ff29",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/32478282-4603-43aa-954e-d392e3e2ff29",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/32478282-4603-43aa-954e-d392e3e2ff29",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/32478282-4603-43aa-954e-d392e3e2ff29"
+    },
+    {
+      "id": "ep-4a766760",
+      "uuid": "4a766760-a2c7-424b-be18-811cecb52459",
+      "title": "Avis de concours de recrutement de Médecins premier grade - Echelle 11",
+      "administration": "Ministère de la Santé et de la Protection sociale",
+      "echelle": "Échelle 11",
+      "degree_required": "Bac+5 / Master / Ingénieur d'État",
+      "posts_count": 11,
+      "deadline": "Limite de dépôt : 16 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/4a766760-a2c7-424b-be18-811cecb52459",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/4a766760-a2c7-424b-be18-811cecb52459",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/4a766760-a2c7-424b-be18-811cecb52459",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/4a766760-a2c7-424b-be18-811cecb52459"
+    },
     {
       "id": "ep-91221b77",
       "uuid": "91221b77-0392-49e0-8e6c-b1ca9bb70b9e",
@@ -17,34 +45,6 @@
       "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/91221b77-0392-49e0-8e6c-b1ca9bb70b9e",
       "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/91221b77-0392-49e0-8e6c-b1ca9bb70b9e",
       "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/91221b77-0392-49e0-8e6c-b1ca9bb70b9e"
-    },
-    {
-      "id": "ep-7d32403a",
-      "uuid": "7d32403a-c665-4897-9772-13e69b32b643",
-      "title": "Avis de concours de recrutement de Pharmacien premier grade - Echelle 11",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 18 Décembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/7d32403a-c665-4897-9772-13e69b32b643",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/7d32403a-c665-4897-9772-13e69b32b643",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7d32403a-c665-4897-9772-13e69b32b643",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7d32403a-c665-4897-9772-13e69b32b643"
-    },
-    {
-      "id": "ep-9d21f49c",
-      "uuid": "9d21f49c-97f2-47af-83e0-33d28ee13922",
-      "title": "Avis de concours de recrutement de Médecins premier grade - Echelle 11",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "echelle": "Échelle 11",
-      "degree_required": "Bac+5 / Master / Ingénieur d'État",
-      "posts_count": 11,
-      "deadline": "Limite de dépôt : 18 Décembre 2026\n                                                                                                                            - 16:30",
-      "detail_url": "https://www.emploi-public.ma/fr/concours/details/9d21f49c-97f2-47af-83e0-33d28ee13922",
-      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/9d21f49c-97f2-47af-83e0-33d28ee13922",
-      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/9d21f49c-97f2-47af-83e0-33d28ee13922",
-      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/9d21f49c-97f2-47af-83e0-33d28ee13922"
     },
     {
       "id": "ep-a1c6e668",
