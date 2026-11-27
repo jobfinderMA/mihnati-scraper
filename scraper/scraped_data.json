@@ -1,9 +1,23 @@
 {
-  "last_sync": "2026-11-27T15:50:16.022956",
+  "last_sync": "2026-11-27T16:56:08.391750",
   "source": "https://www.emploi-public.ma",
-  "concours_count": 19,
-  "convocations_count": 2,
+  "concours_count": 20,
+  "convocations_count": 1,
   "concours": [
+    {
+      "id": "ep-7e420de1",
+      "uuid": "7e420de1-8966-4368-90fb-d80f4e230cd0",
+      "title": "Avis de concours de recrutement de Attaché de justice - Echelle 10",
+      "administration": "Conseil Supérieur du Pouvoir Judiciaire",
+      "echelle": "Échelle 10",
+      "degree_required": "Bac+3 / Licence",
+      "posts_count": 10,
+      "deadline": "Limite de dépôt : 18 Décembre 2026\n                                                                                                                            - 16:30",
+      "detail_url": "https://www.emploi-public.ma/fr/concours/details/7e420de1-8966-4368-90fb-d80f4e230cd0",
+      "detail_url_ar": "https://www.emploi-public.ma/ar/تفاصيل/المباريات/7e420de1-8966-4368-90fb-d80f4e230cd0",
+      "written_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/7e420de1-8966-4368-90fb-d80f4e230cd0",
+      "oral_list_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques_oral/7e420de1-8966-4368-90fb-d80f4e230cd0"
+    },
     {
       "id": "ep-32478282",
       "uuid": "32478282-4603-43aa-954e-d392e3e2ff29",
@@ -282,18 +296,6 @@
       "exam_center": "Maroc",
       "candidates_count": 330,
       "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/0ce1c9ce-1d0d-4ee0-a8cb-5b05f5d4e640",
-      "source": "emploi-public.ma"
-    },
-    {
-      "id": "conv-ep-e0775437",
-      "concours_id": "ep-e0775437",
-      "type": "ECRIT",
-      "title": "Publication de la liste des convoqués pour l'examen écrit du concours de recrutement d'un Infirmier de premier grade - Echelle 10",
-      "administration": "Ministère de la Santé et de la Protection sociale",
-      "exam_date": "Limite de dépôt : 19 Novembre 2026\n                                                                                                                            - 16:30",
-      "exam_center": "Maroc",
-      "candidates_count": 300,
-      "pdf_url": "https://www.emploi-public.ma/fr/concours/download/list_convoques/e0775437-60f2-4958-9306-7bfe8a1524f4",
       "source": "emploi-public.ma"
     }
   ]
